@@ -10,8 +10,6 @@ import lecho.lib.hellocharts.model.PointValue;
  * Created by rrichard39 on 3/25/2016.
  */
 public class WeightData {
-//    public static List<WeightChartItem> GraphArray;
-//    public static List<WeightItem> Weights;
 
     public static List<PointValue> GraphWeight;
     public static List<PointValue> GraphGoal;
@@ -24,6 +22,7 @@ public class WeightData {
     public static Date AchieveDate;
     public static Float StartWeight;
     public static Float LastWeight;
+    public static Float BMI;
 
     public static Boolean FirstRun;
 }

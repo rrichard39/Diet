@@ -169,29 +169,19 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_AddWeight:
-                Log.i("CYBERON", "btn_AddWeight pressed");
                 newWeight = Double.parseDouble(et_Weight.getText().toString());
                 try {
                     new EnterNewWeight().execute().get();
                     new GetWeights().execute().get();
-                    Log.i("CYBERON", "OK 1");
                     weightClass.PopulateGraphArray();
-                    Log.i("CYBERON", "OK 2");
                     weightClass.CalculateGraphArray();
-                    Log.i("CYBERON", "OK 3");
                     PopulateGraph();
-                    Log.i("CYBERON", "OK 4");
                 } catch (InterruptedException e) {
-                    Log.i("CYBERON", "1 WeightGraphActivity Error");
-                    Log.i("CYBERON", e.getMessage());
                     e.printStackTrace();
                 } catch (ExecutionException e) {
-                    Log.i("CYBERON", "2 WeightGraphActivity Error");
-                    Log.i("CYBERON", e.getMessage());
                     e.printStackTrace();
                 } catch (Exception e) {
-                    Log.i("CYBERON", "6 WeightGraphActivity Error");
-                    Log.i("CYBERON", e.getMessage());
+                    e.printStackTrace();
                 }
 
                 break;
@@ -200,7 +190,6 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
 
     private class EnterNewWeight extends AsyncTask<Void, Void, Void> {
         Boolean success;
-        //                FoodItem foodItem;
         ProgressDialog pdLoading = new ProgressDialog(WeightGraphActivity.this);
         @Override
         protected void onPreExecute() {
@@ -208,7 +197,6 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
             pdLoading.setIndeterminate(true);
             pdLoading.setCancelable(false);
             success = false;
-            Log.i("CYBERON", "WeightGraphActivity: EnterWeight");
             pdLoading.setMessage("Adding weight to database ...");
             pdLoading.show();
         }
@@ -242,15 +230,7 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
                     success = true;
 
                 } catch (Exception e) {
-//                        StackTraceElement[] stack = e.getStackTrace();
-//                        String Trace = "";
-//                        for(StackTraceElement line : stack)
-//                        {
-//                            Trace += line.toString();
-//                            Trace += "\n";
-//                        }
-//                        Log.i("CYBERON", "Stack Trace:\n" + Trace);
-                    Log.i("CYBERON", e.getMessage());
+                    e.printStackTrace();
                 }
             }while (!success);
             return null;
@@ -259,10 +239,8 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            Log.i("CYBERON", "I ran");
             WD.LastWeight = Float.parseFloat(et_Weight.getText().toString());
             pdLoading.dismiss();
-//                    new GetDailyTotalCalories().execute();
             et_Weight.setText("");
         }
     }
@@ -270,8 +248,6 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
     private class GetWeights extends AsyncTask<Void, Void, Void> {
         Boolean success;
         ProgressDialog pdLoading = new ProgressDialog(WeightGraphActivity.this);
-        double totalCalories;
-        String postString = "";
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -279,7 +255,6 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
             pdLoading.setCancelable(false);
             success = false;
             WD.FirstRun = true;
-            Log.i("CYBERON", "WeightGraphActivity: GetWeights");
             pdLoading.setMessage("Loading weights ...");
             pdLoading.show();
         }
@@ -323,28 +298,13 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
                     }
                     success = true;
                 } catch (XmlPullParserException e) {
-                    Log.i("CYBERON", "3 WeightGraphActivity Error");
-                    Log.i("CYBERON", e.getMessage());
                     e.printStackTrace();
                 } catch (SoapFault e) {
-                    Log.i("CYBERON", "4 WeightGraphActivity Error");
-                    Log.i("CYBERON", e.getMessage());
                     e.printStackTrace();
                 } catch (IOException e) {
-                    Log.i("CYBERON", "5 WeightGraphActivity Error");
-                    Log.i("CYBERON", e.getMessage());
                     e.printStackTrace();
                 } catch (Exception e) {
-//                        StackTraceElement[] stack = e.getStackTrace();
-//                        String Trace = "";
-//                        for(StackTraceElement line : stack)
-//                        {
-//                            Trace += line.toString();
-//                            Trace += "\n";
-//                        }
-//                        Log.i("CYBERON", "Stack Trace:\n" + Trace);
-                    Log.i("CYBERON", "6 WeightGraphActivity Error");
-                    Log.i("CYBERON", e.getMessage());
+                    e.printStackTrace();
                 }
             } while (!success);
             return null;

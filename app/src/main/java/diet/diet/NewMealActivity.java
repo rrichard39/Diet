@@ -41,15 +41,6 @@ public class NewMealActivity extends AppCompatActivity implements View.OnClickLi
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
-
         tv_Warning = (TextView) findViewById(R.id.tv_Warning);
         et_FoodName = (EditText) findViewById(R.id.et_FoodName);
         et_Calories = (EditText) findViewById(R.id.et_Calories);
@@ -124,7 +115,6 @@ public class NewMealActivity extends AppCompatActivity implements View.OnClickLi
             pdLoading.setIndeterminate(true);
             pdLoading.setCancelable(false);
             success = false;
-            Log.i("CYBERON", "NewMealActivity: AddNewFood");
             pdLoading.setMessage("Sending...");
             pdLoading.show();
         }
@@ -149,15 +139,7 @@ public class NewMealActivity extends AppCompatActivity implements View.OnClickLi
                     myHttpTransport.call(CS.SOAP_ACTION_ADD_NEW_FOOD, envelope);
                     success = true;
                 } catch (Exception e) {
-                    //                        StackTraceElement[] stack = e.getStackTrace();
-                    //                        String Trace = "";
-                    //                        for(StackTraceElement line : stack)
-                    //                        {
-                    //                            Trace += line.toString();
-                    //                            Trace += "\n";
-                    //                        }
-                    //                        Log.i("CYBERON", "Stack Trace:\n" + Trace);
-                    Log.i("CYBERON", e.getMessage());
+                    e.printStackTrace();
                 }
             } while(!success);
             return null;

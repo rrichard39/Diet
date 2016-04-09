@@ -42,6 +42,8 @@ public class DetailsActivity extends AppCompatActivity {
     TextView tv_WeeklyLoss;
     TextView tv_DailyLoss;
 
+    TextView tv_BMI;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +64,8 @@ public class DetailsActivity extends AppCompatActivity {
         tv_WeeklyLoss = (TextView)findViewById(R.id.tv_WeeklyLoss);
         tv_DailyLoss = (TextView)findViewById(R.id.tv_DailyLoss);
 
+        tv_BMI = (TextView)findViewById(R.id.tv_BMI);
+
         tv_StartDate.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
         tv_TargetDate.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
         tv_AchieveDate.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
@@ -73,6 +77,8 @@ public class DetailsActivity extends AppCompatActivity {
         tv_TotalLoss.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
         tv_WeeklyLoss.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
         tv_DailyLoss.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
+
+        tv_BMI.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
 
         try {
             PopulateData();
@@ -110,15 +116,17 @@ public class DetailsActivity extends AppCompatActivity {
         dayLoss = (WD.StartWeight - WD.LastWeight) / days;
 
         tv_StartDate.setText(String.format("%-19s %s", "Start date:", formatter.format(WD.StartDate)));
-        tv_TargetDate.setText(String.format("%-19s %s", "Targer date:", formatter.format(WD.TargetDate)));
+        tv_TargetDate.setText(String.format("%-19s %s", "Target date:", formatter.format(WD.TargetDate)));
         tv_AchieveDate.setText(String.format("%-19s %s", "Achieve date:", formatter.format(WD.AchieveDate)));
 
-        tv_StartWeight.setText(String.format("%-20s %s lbs", "Start weight:", WD.StartWeight.toString()));
-        tv_LastWeight.setText(String.format("%-20s %s lbs", "Last weight:", WD.LastWeight.toString()));
+        tv_StartWeight.setText(String.format("%-20s %5.1f lbs", "Start weight:", WD.StartWeight));
+        tv_LastWeight.setText(String.format("%-20s %5.1f lbs", "Last weight:", WD.LastWeight));
         tv_TargetWeight.setText(String.format("%-20s %s lbs", "Target weight:", "180.0"));
 
         tv_TotalLoss.setText(String.format("%-20s %5.1f lbs", "Total loss:",  totalLoss));
         tv_WeeklyLoss.setText(String.format("%-20s %5.1f lbs", "Weekly loss:", weekLoss));
         tv_DailyLoss.setText(String.format("%-20s %5.1f lbs", "Daily loss:", dayLoss));
+
+        tv_BMI.setText(String.format("%-20s %5.1f", "BMI:", WD.BMI));
     }
 }

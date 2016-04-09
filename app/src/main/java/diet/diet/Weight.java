@@ -43,13 +43,11 @@ public class Weight {
     {
         Integer x = 0;
         goal = 0f;
-//        WD.GraphArray = new ArrayList<WeightItem>();
 
         try
         {
             for (Integer i = 0; i < WD.GraphArray.size(); i++)
             {
-                WeightItem GraphItem = new WeightItem();
                 if (WD.GraphArray.get(i).weight1 != 0)
                 {
                     if (goal == 0) {
@@ -83,6 +81,8 @@ public class Weight {
             }
             ++x;
 
+            // Create GraphItem for every week until goal is reached
+            // based on latest least squares calculation
             while (goal >= 181f)
             {
                 WeightItem GraphItem = new WeightItem();
@@ -101,9 +101,9 @@ public class Weight {
             measureDate = WD.GraphArray.get(WD.GraphArray.size() - 1).measureDate;
             WD.TargetDate = formatter.parse(WD.GraphArray.get(WD.GraphArray.size() - 1).measureDate);
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            Log.i("CYBERON", ex.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -129,7 +129,6 @@ public class Weight {
                 if (WD.GraphArray.get(i).weight1 > 0)
                 {
                     numPts++;
-//                    sumNumPts += WD.GraphArray.get(i).recnum - 1;
                     sumNumPts += WD.GraphArray.get(i).recNum - 1;
                     sumWeight += WD.GraphArray.get(i).weight1;
                     sumXY += WD.GraphArray.get(i).xy;
@@ -153,7 +152,7 @@ public class Weight {
             actual  = WD.GraphArray.get(WD.GraphArray.size() - 1).actual;
 
             intConverter = (7 * (181 - intercept) / slope);
-//            measureDate = formatter.format(DateUtil.addDays(formatter.parse(WD.GraphArray.get(0).measureDate), intConverter.intValue()));
+
             WD.AchieveDate = DateUtil.addDays(formatter.parse(WD.GraphArray.get(0).measureDate), intConverter.intValue());
 
             if (WD.FirstRun) {
@@ -171,10 +170,12 @@ public class Weight {
                 }
                 WD.FirstRun = false;
             }
+
+            WD.BMI = (WD.LastWeight * 703f)/(70f * 70f);
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            Log.i("CYBERON", ex.getMessage());
+            e.printStackTrace();
         }
     }
 }

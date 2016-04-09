@@ -47,6 +47,7 @@
             static Boolean trigger = false;
 
             CommStrings CS;
+            URLStrings US;
             Weight weightClass;
             WeightData WD;
             Weight WT;
@@ -190,14 +191,9 @@
                 et_Quantity.addTextChangedListener(new TextWatcher() {
 
                     public void afterTextChanged(Editable s) {
-//                        String strQty;
-//                        String selItm;
                         Double totCals;
 
                         FoodItem selectedItem;
-
-//                        strQty = et_Quantity.getText().toString();
-//                        selItm = spnr_FoodList.getSelectedItem().toString();
 
                         if (!et_Quantity.getText().toString().matches("")) {
                             selectedItem = GetFoodItem(spnr_FoodList.getSelectedItem().toString());
@@ -217,27 +213,31 @@
 
                 setSupportActionBar(toolbar);
 
-//                FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//                fab.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//                        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                                .setAction("Action", null).show();
-//                    }
-//                });
-
                 WifiManager wifiManager = (WifiManager) this.getSystemService(WIFI_SERVICE);
                 WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-                Log.i("CYBERON", "SSID: " + wifiInfo.getSSID());
-                if (wifiInfo.getSSID().contains("Cyberon"))
+
+//                *****************************************************************************
+//                *****************************************************************************
+//                This next bit requires you to create a custom class as follows:
+
+//                public class URLStrings {
+//                    public static final String LAN_SSID = "<your LAN SSID>";
+                      // This is used when you're on your own WiFi
+//                    public static final String LAN_URL = "http://<IIS Server LAN IP>:<PORT>";
+                      // This is when you're anywhere else
+//                    public static final String WAN_URL = "http://<PUBLIC URL>:<PORT>";
+//                }
+//                *****************************************************************************
+//                *****************************************************************************
+
+                if (wifiInfo.getSSID().contains(US.LAN_SSID))
                 {
-                    CS.URL = "http://10.0.0.134:48484";
+                    CS.URL = US.LAN_URL;
                 }
                 else
                 {
-                    CS.URL = "http://rtrdiet.ddns.net:48484";
+                    CS.URL = US.WAN_URL;
                 }
-                Log.i("CYBERON", "URL: " + CS.URL);
             }
 
             @Override
@@ -248,17 +248,13 @@
                 {
                     spnr_FoodList.setSelection(spinnerPosition);
                 }
-//                Toast.makeText(getApplicationContext(),
-//                        String.format("Resume: Value is %d", spnr_FoodList.getSelectedItemPosition()), Toast.LENGTH_LONG).show();
             }
 
             @Override
             protected void onPostResume()
             {
-                Integer index;
                 super.onPostResume();
 
-//                if (!initialized)
                 if (WD.FirstRun)
                 {
                     try {
@@ -276,9 +272,7 @@
                 }
 
                 spnr_FoodList.setSelection(0);
-                index = spnr_FoodList.getSelectedItemPosition();
                 spnr_FoodList.setSelection(spinnerPosition);
-                index = spnr_FoodList.getSelectedItemPosition();
             }
             @Override
             public boolean onCreateOptionsMenu(Menu menu) {
@@ -310,9 +304,6 @@
                         onClick(btn_Weight);
                         return true;
                 }
-//                if (id == R.id.action_settings) {
-//                    return true;
-//                    }
 
                 super.onOptionsItemSelected(item);
                 return false;
@@ -342,7 +333,6 @@
                         // Open New Meal Activity
                         try {
                             Intent intent = new Intent(this, MealsActivity.class);
-//                            intent.putExtra("FoodTable", FoodTable);
                             startActivity(intent);
                         } catch (Exception e) {
                             Log.i("CYBERON", e.getMessage());
@@ -406,7 +396,7 @@
                         InitializeSpinner();
                     }
                 }
-            }//onActivityResult
+            }
 
             private void InitializeSpinner() {
                 foodListAdapter = new ArrayAdapter<String>(getApplicationContext(),
@@ -499,29 +489,13 @@
                                 foodItem.recNum = recNum;
                                 foodItem.food1 = food1;
                                 foodItem.calories = calories;
-//                            Food.add(foodItem);
                                 Meals.FoodTable.put(recNum, foodItem);
                                 foodList.add(food1);
                             }
                             success = true;
-/*
-                        // To retrieve a single item
-                        private String responseData;
-                        SoapPrimitive response = (SoapPrimitive)envelope.getResponse();
-                       //to get the data
-                        responseData = response.toString();
-*/
 
                         } catch (Exception e) {
-//                        StackTraceElement[] stack = e.getStackTrace();
-//                        String Trace = "";
-//                        for(StackTraceElement line : stack)
-//                        {
-//                            Trace += line.toString();
-//                            Trace += "\n";
-//                        }
-//                        Log.i("CYBERON", "Stack Trace:\n" + Trace);
-                            Log.i("CYBERON", e.getMessage());
+                            e.printStackTrace();
                         }
                     } while (!success);
                     return null;
@@ -530,7 +504,6 @@
                 @Override
                 protected void onPostExecute(Void result) {
                     super.onPostExecute(result);
-//                    spnr_FoodList.setAdapter(foodListAdapter);
                     pdLoading.dismiss();
                 }
             }
@@ -544,7 +517,6 @@
                     success = false;
                     pdLoading.setIndeterminate(true);
                     pdLoading.setCancelable(false);
-                    Log.i("CYBERON", "EnterNewMeal");
                     pdLoading.setMessage("Adding meal to database ...");
                     pdLoading.show();
                 }
@@ -578,15 +550,7 @@
                             myHttpTransport.call(CS.SOAP_ACTION_ADD_DAILY_FOOD_ITEM, envelope);
 
                         } catch (Exception e) {
-//                        StackTraceElement[] stack = e.getStackTrace();
-//                        String Trace = "";
-//                        for(StackTraceElement line : stack)
-//                        {
-//                            Trace += line.toString();
-//                            Trace += "\n";
-//                        }
-//                        Log.i("CYBERON", "Stack Trace:\n" + Trace);
-                            Log.i("CYBERON", e.getMessage());
+                            e.printStackTrace();
                         }
                         success = true;
                     } while(!success);
@@ -597,7 +561,6 @@
                 protected void onPostExecute(Void result) {
                     super.onPostExecute(result);
                     pdLoading.dismiss();
-//                    new GetDailyTotalCalories().execute();
                     spnr_FoodList.setSelection(0);
                     tv_Calories.setText("");
                     et_Quantity.setText("");
@@ -614,7 +577,6 @@
                     pdLoading.setIndeterminate(true);
                     pdLoading.setCancelable(false);
                     success = false;
-                    Log.i("CYBERON", "GetDailyTotalCalories");
                     pdLoading.setMessage("Retreiving total calories for day ...");
                     pdLoading.show();
                 }
@@ -646,31 +608,16 @@
                             Meals.TOTAL_CALORIES = totalCalories;
                             dailyTotalCalories = String.format("%1.1f", totalCalories);
                             success = true;
-/*
-                        // To retrieve a single item
-                        private String responseData;
-                        SoapPrimitive response = (SoapPrimitive)envelope.getResponse();
-                       //to get the data
-                        responseData = response.toString();
-*/
 
                             // 0 is the first object of data
-                        } catch (XmlPullParserException e1) {
-                            e1.printStackTrace();
+                        } catch (XmlPullParserException e) {
+                            e.printStackTrace();
                         } catch (SoapFault soapFault) {
                             soapFault.printStackTrace();
-                        } catch (IOException e1) {
-                            e1.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         } catch (Exception e) {
-//                        StackTraceElement[] stack = e.getStackTrace();
-//                        String Trace = "";
-//                        for(StackTraceElement line : stack)
-//                        {
-//                            Trace += line.toString();
-//                            Trace += "\n";
-//                        }
-//                        Log.i("CYBERON", "Stack Trace:\n" + Trace);
-                            Log.i("CYBERON", e.getMessage());
+                            e.printStackTrace();
                         }
                     } while(!success);
                     return null;
@@ -739,22 +686,14 @@
                                 }
                             }
                             success = true;
-                        } catch (XmlPullParserException e1) {
-                            e1.printStackTrace();
+                        } catch (XmlPullParserException e) {
+                            e.printStackTrace();
                         } catch (SoapFault soapFault) {
                             soapFault.printStackTrace();
-                        } catch (IOException e1) {
-                            e1.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         } catch (Exception e) {
-//                        StackTraceElement[] stack = e.getStackTrace();
-//                        String Trace = "";
-//                        for(StackTraceElement line : stack)
-//                        {
-//                            Trace += line.toString();
-//                            Trace += "\n";
-//                        }
-//                        Log.i("CYBERON", "Stack Trace:\n" + Trace);
-                            Log.i("CYBERON", e.getMessage());
+                            e.printStackTrace();
                         }
                     } while(!success);
                     return null;
@@ -770,8 +709,6 @@
             }
 
             private class GetMeals extends AsyncTask<Void, Void, Void> {
-//                double totalCalories;
-//                String postString = "";
                 Boolean success;
 
                 Meal meal;
@@ -782,7 +719,6 @@
                     pdLoading.setIndeterminate(true);
                     pdLoading.setCancelable(false);
                     success = false;
-                    Log.i("CYBERON", "GetMeals");
                     pdLoading.setMessage("Loading Daily Meals ...");
                     pdLoading.show();
                 }
@@ -818,8 +754,6 @@
 
 
                             // 0 is the first object of data
-//                Object meals = response.getProperty(1);
-//                Integer q = meals.length;
                             for (int i = 0; i < mealItems.getPropertyCount(); i++) {
                                 SoapObject item = (SoapObject) mealItems.getProperty(i);
 
@@ -829,29 +763,20 @@
                                     meal.Quantity = Double.parseDouble(item.getProperty("Quantity").toString());
                                     meal.Calories = Integer.parseInt(item.getProperty("Calories").toString());
                                     Meals.MealList.add(meal);
-//                                postString += String.format("%s\n", meal.Food);
                                 } else {
                                     break;
                                 }
                             }
                             success = true;
 
-                        } catch (XmlPullParserException e1) {
-                            e1.printStackTrace();
+                        } catch (XmlPullParserException e) {
+                            e.printStackTrace();
                         } catch (SoapFault soapFault) {
                             soapFault.printStackTrace();
-                        } catch (IOException e1) {
-                            e1.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         } catch (Exception e) {
-//                        StackTraceElement[] stack = e.getStackTrace();
-//                        String Trace = "";
-//                        for(StackTraceElement line : stack)
-//                        {
-//                            Trace += line.toString();
-//                            Trace += "\n";
-//                        }
-//                        Log.i("CYBERON", "Stack Trace:\n" + Trace);
-                            Log.i("CYBERON", e.getMessage());
+                            e.printStackTrace();
                         }
                     } while(!success);
                     return null;
