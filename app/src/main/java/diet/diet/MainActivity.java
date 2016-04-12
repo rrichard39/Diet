@@ -2,10 +2,7 @@
 
         import android.app.Activity;
         import android.app.ProgressDialog;
-        import android.content.Context;
         import android.content.Intent;
-        import android.net.ConnectivityManager;
-        import android.net.NetworkInfo;
         import android.net.wifi.WifiInfo;
         import android.net.wifi.WifiManager;
         import android.os.AsyncTask;
@@ -15,9 +12,9 @@
         import android.text.Editable;
         import android.text.TextWatcher;
         import android.util.Log;
-        import android.view.View;
         import android.view.Menu;
         import android.view.MenuItem;
+        import android.view.View;
         import android.widget.AdapterView;
         import android.widget.ArrayAdapter;
         import android.widget.Button;
@@ -25,12 +22,17 @@
         import android.widget.Spinner;
         import android.widget.TextView;
 
-        import org.ksoap2.*;
-        import org.ksoap2.serialization.*;
-        import org.ksoap2.transport.*;
+        import org.ksoap2.SoapEnvelope;
+        import org.ksoap2.SoapFault;
+        import org.ksoap2.serialization.SoapObject;
+        import org.ksoap2.serialization.SoapPrimitive;
+        import org.ksoap2.serialization.SoapSerializationEnvelope;
+        import org.ksoap2.transport.HttpTransportSE;
         import org.xmlpull.v1.XmlPullParserException;
 
         import java.io.IOException;
+        import java.io.PrintWriter;
+        import java.io.StringWriter;
         import java.text.SimpleDateFormat;
         import java.util.ArrayList;
         import java.util.Date;
@@ -39,12 +41,11 @@
         import java.util.List;
         import java.util.concurrent.ExecutionException;
 
-        import lecho.lib.hellocharts.model.PointValue;
-
         public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
             static Integer spinnerPosition = 0;
             static Boolean trigger = false;
+            static Integer hits;
 
             CommStrings CS;
             URLStrings US;
@@ -238,6 +239,10 @@
                 {
                     CS.URL = US.WAN_URL;
                 }
+                Log.i("CYBERON", wifiInfo.getSSID());
+                Log.i("CYBERON", CS.URL);
+
+                hits = 0;
             }
 
             @Override
@@ -255,13 +260,14 @@
             {
                 super.onPostResume();
 
+                Log.i("CYBERON", "Hits: " + (++hits).toString());
                 if (WD.FirstRun)
                 {
                     try {
-                        new FoodListLoader().execute();
+                        new FoodListLoader().execute().get();
                         new GetDailyTotalCalories().execute().get();
-                        new GetMeals().execute();
-                        new GetWeights().execute();
+                        new GetMeals().execute().get();
+                        new GetWeights().execute().get();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     } catch (ExecutionException e) {
@@ -269,11 +275,13 @@
                     }
                     InitializeSpinner();
                     initialized = true;
+                    WD.FirstRun = false;
                 }
 
                 spnr_FoodList.setSelection(0);
                 spnr_FoodList.setSelection(spinnerPosition);
             }
+
             @Override
             public boolean onCreateOptionsMenu(Menu menu) {
                 // Inflate the menu; this adds items to the action bar if it is present.
@@ -441,15 +449,14 @@
             }
 
             private class FoodListLoader extends AsyncTask<Void, Void, Void> {
+                HttpTransportSE myHttpTransport = null;
                 ProgressDialog pdLoading = new ProgressDialog(MainActivity.this);
-                Boolean success;
                 FoodItem foodItem;
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
                     pdLoading.setIndeterminate(true);
                     pdLoading.setCancelable(false);
-                    success = false;
                     Log.i("CYBERON", "FoodListLoader");
                     Meals.FoodTable = new HashMap<Integer, FoodItem>();
                     pdLoading.setMessage("Loading Food List ...");
@@ -463,41 +470,71 @@
                     SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
                     envelope.dotNet = true;
                     envelope.setOutputSoapObject(request);
-                    do {
-                        try {
+                    Log.i("CYBERON", "Envelope: " + envelope.bodyOut.toString());
+                    try {
 
-                            HttpTransportSE myHttpTransport = new HttpTransportSE(CS.URL, CS.TIMEOUT);
-                            myHttpTransport.call(CS.SOAP_ACTION_GET_FOOD_LIST, envelope);
+                        myHttpTransport = new HttpTransportSE(CS.URL, CS.TIMEOUT);
+                        myHttpTransport.debug = true;
+                        myHttpTransport.call(CS.SOAP_ACTION_GET_FOOD_LIST, envelope);
 
-                            // To retrieve a group of records
-                            SoapObject response = (SoapObject) envelope.getResponse();
+                        // 0 is the first object of data
+                        SoapObject response = (SoapObject) envelope.getResponse();
+                        SoapObject foodlist = (SoapObject) response.getProperty(0);
+                        SoapObject mealItems = (SoapObject) response.getProperty(1);
+                        SoapObject weightList = (SoapObject) response.getProperty(2);
 
-                            // 0 is the first object of data
-                            SoapObject root = (SoapObject) response.getProperty(0);
-                            SoapObject food = (SoapObject) root.getProperty("Food");
-                            //to get the data
-                            foodList.clear();
-                            foodList.add("");
-                            for (int i = 0; i < root.getPropertyCount() - 1; i++) {
-                                foodItem = new FoodItem();
-                                SoapObject item = (SoapObject) root.getProperty(i);
-                                String strRecNum = item.getProperty("recNum").toString();
-                                Integer recNum = Integer.parseInt(strRecNum);
-                                String food1 = item.getProperty("food1").toString();
-                                String strCalories = item.getProperty("calories").toString();
-                                Integer calories = Integer.parseInt(strCalories);
-                                foodItem.recNum = recNum;
-                                foodItem.food1 = food1;
-                                foodItem.calories = calories;
-                                Meals.FoodTable.put(recNum, foodItem);
-                                foodList.add(food1);
-                            }
-                            success = true;
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
+//                            SoapObject root = (SoapObject) response.getProperty(0);
+//                            SoapObject food = (SoapObject) root.getProperty("Food");
+                        //to get the data
+                        foodList.clear();
+                        foodList.add("");
+                        for (int i = 0; i < foodlist.getPropertyCount() - 1; i++) {
+                            foodItem = new FoodItem();
+                            SoapObject item = (SoapObject) foodlist.getProperty(i);
+                            String strRecNum = item.getProperty("recNum").toString();
+                            Integer recNum = Integer.parseInt(strRecNum);
+                            String food1 = item.getProperty("food1").toString();
+                            String strCalories = item.getProperty("calories").toString();
+                            Integer calories = Integer.parseInt(strCalories);
+                            foodItem.recNum = recNum;
+                            foodItem.food1 = food1;
+                            foodItem.calories = calories;
+                            Meals.FoodTable.put(recNum, foodItem);
+                            foodList.add(food1);
                         }
-                    } while (!success);
+                    } catch (XmlPullParserException e) {
+                        Log.i("CYBERON", "FoodListLoader XmlPullParserException");
+                        Log.i("CYBERON", e.getMessage());
+                        Log.i("CYBERON", "Envelope bodyin:\n" + (String)envelope.bodyIn);
+                        StringWriter sw = new StringWriter();
+                        PrintWriter pw = new PrintWriter(sw);
+                        e.printStackTrace(pw);
+                        Log.i("CYBERON", "Stack Trace:\n" + sw.toString());                        e.printStackTrace();
+                    } catch (SoapFault e) {
+                        Log.i("CYBERON", "FoodListLoader SoapFault");
+                        Log.i("CYBERON", e.getMessage());
+                        Log.i("CYBERON", "Response Dump: " + myHttpTransport.responseDump);
+                        StringWriter sw = new StringWriter();
+                        PrintWriter pw = new PrintWriter(sw);
+                        e.printStackTrace(pw);
+                        Log.i("CYBERON", "Stack Trace:\n" + sw.toString());                        e.printStackTrace();
+                    } catch (IOException e) {
+                        Log.i("CYBERON", "FoodListLoader IOException");
+                        Log.i("CYBERON", e.getMessage());
+                        Log.i("CYBERON", "Response Dump: " + myHttpTransport.responseDump);
+                        StringWriter sw = new StringWriter();
+                        PrintWriter pw = new PrintWriter(sw);
+                        e.printStackTrace(pw);
+                        Log.i("CYBERON", "Stack Trace:\n" + sw.toString());                        e.printStackTrace();
+                    } catch (Exception e) {
+                        Log.i("CYBERON", "FoodListLoader Error");
+                        Log.i("CYBERON", "Message: " + e.getMessage());
+                        Log.i("CYBERON", "Response Dump: " + myHttpTransport.responseDump);
+                        StringWriter sw = new StringWriter();
+                        PrintWriter pw = new PrintWriter(sw);
+                        e.printStackTrace(pw);
+                        Log.i("CYBERON", "Stack Trace:\n" + sw.toString());                        e.printStackTrace();
+                    }
                     return null;
                 }
 
@@ -509,12 +546,12 @@
             }
 
             private class EnterNewMeal extends AsyncTask<Void, Void, Void> {
-                Boolean success;
+                HttpTransportSE myHttpTransport;
                 ProgressDialog pdLoading = new ProgressDialog(MainActivity.this);
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
-                    success = false;
+                    Log.i("CYBERON", "EnterNewMeal");
                     pdLoading.setIndeterminate(true);
                     pdLoading.setCancelable(false);
                     pdLoading.setMessage("Adding meal to database ...");
@@ -543,18 +580,46 @@
                     MarshalDouble md = new MarshalDouble();
                     md.register(envelope);
 
-                    do {
-                        try {
+                    try {
 
-                            HttpTransportSE myHttpTransport = new HttpTransportSE(CS.URL, CS.TIMEOUT);
-                            myHttpTransport.call(CS.SOAP_ACTION_ADD_DAILY_FOOD_ITEM, envelope);
+                        myHttpTransport = new HttpTransportSE(CS.URL, CS.TIMEOUT);
+                        myHttpTransport.debug = true;
+                        myHttpTransport.call(CS.SOAP_ACTION_ADD_DAILY_FOOD_ITEM, envelope);
 
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        success = true;
-                    } while(!success);
-                    return null;
+                    } catch (XmlPullParserException e) {
+                        Log.i("CYBERON", "FoodListLoader XmlPullParserException");
+                        Log.i("CYBERON", e.getMessage());
+                        Log.i("CYBERON", "Request Dump: " + myHttpTransport.requestDump);
+                        StringWriter sw = new StringWriter();
+                        PrintWriter pw = new PrintWriter(sw);
+                        e.printStackTrace(pw);
+                        Log.i("CYBERON", "Stack Trace:\n" + sw.toString());                        e.printStackTrace();
+                    } catch (SoapFault e) {
+                        Log.i("CYBERON", "FoodListLoader SoapFault");
+                        Log.i("CYBERON", e.getMessage());
+                        Log.i("CYBERON", "Request Dump: " + myHttpTransport.requestDump);
+                        StringWriter sw = new StringWriter();
+                        PrintWriter pw = new PrintWriter(sw);
+                        e.printStackTrace(pw);
+                        Log.i("CYBERON", "Stack Trace:\n" + sw.toString());                        e.printStackTrace();
+                    } catch (IOException e) {
+                        Log.i("CYBERON", "FoodListLoader IOException");
+                        Log.i("CYBERON", e.getMessage());
+                        Log.i("CYBERON", "Request Dump: " + myHttpTransport.requestDump);
+                        StringWriter sw = new StringWriter();
+                        PrintWriter pw = new PrintWriter(sw);
+                        e.printStackTrace(pw);
+                        Log.i("CYBERON", "Stack Trace:\n" + sw.toString());                        e.printStackTrace();
+                    } catch (Exception e) {
+                        Log.i("CYBERON", "FoodListLoader Error");
+                        Log.i("CYBERON", "Message: " + e.getMessage());
+                        Log.i("CYBERON", "Request Dump: " + myHttpTransport.requestDump);
+                        StringWriter sw = new StringWriter();
+                        PrintWriter pw = new PrintWriter(sw);
+                        e.printStackTrace(pw);
+                        Log.i("CYBERON", "Stack Trace:\n" + sw.toString());                        e.printStackTrace();
+                    }
+                return null;
                 }
 
                 @Override
@@ -568,15 +633,15 @@
             }
 
             private class GetDailyTotalCalories extends AsyncTask<Void, Void, Void> {
-                Boolean success;
-                double totalCalories;
+                HttpTransportSE myHttpTransport = null;
                 ProgressDialog pdLoading = new ProgressDialog(MainActivity.this);
+                double totalCalories;
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
                     pdLoading.setIndeterminate(true);
                     pdLoading.setCancelable(false);
-                    success = false;
+                    Log.i("CYBERON", "GetDailyTotalCalories");
                     pdLoading.setMessage("Retreiving total calories for day ...");
                     pdLoading.show();
                 }
@@ -595,31 +660,52 @@
                     SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
                     envelope.dotNet = true;
                     envelope.setOutputSoapObject(request);
-                    do {
-                        try {
+                    try {
+                        myHttpTransport = new HttpTransportSE(CS.URL, CS.TIMEOUT);
+                        myHttpTransport.debug = true;
+                        myHttpTransport.call(CS.SOAP_ACTION_GET_DAILY_TOTAL, envelope);
 
-                            HttpTransportSE myHttpTransport = new HttpTransportSE(CS.URL, CS.TIMEOUT);
-                            myHttpTransport.call(CS.SOAP_ACTION_GET_DAILY_TOTAL, envelope);
+                        // To retrieve a group of records
+                        SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
 
-                            // To retrieve a group of records
-                            SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
+                        totalCalories = Double.parseDouble(response.toString());
+                        Meals.TOTAL_CALORIES = totalCalories;
+                        dailyTotalCalories = String.format("%1.1f", totalCalories);
 
-                            totalCalories = Double.parseDouble(response.toString());
-                            Meals.TOTAL_CALORIES = totalCalories;
-                            dailyTotalCalories = String.format("%1.1f", totalCalories);
-                            success = true;
-
-                            // 0 is the first object of data
-                        } catch (XmlPullParserException e) {
-                            e.printStackTrace();
-                        } catch (SoapFault soapFault) {
-                            soapFault.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    } while(!success);
+                        // 0 is the first object of data
+                    } catch (XmlPullParserException e) {
+                        Log.i("CYBERON", "GetDailyTotalCalories XmlPullParserException");
+                        Log.i("CYBERON", e.getMessage());
+                        Log.i("CYBERON", "Request Dump: " + myHttpTransport.requestDump);
+                        StringWriter sw = new StringWriter();
+                        PrintWriter pw = new PrintWriter(sw);
+                        e.printStackTrace(pw);
+                        Log.i("CYBERON", "Stack Trace:\n" + sw.toString());                        e.printStackTrace();
+                    } catch (SoapFault e) {
+                        Log.i("CYBERON", "GetDailyTotalCalories SoapFault");
+                        Log.i("CYBERON", e.getMessage());
+                        Log.i("CYBERON", "Request Dump: " + myHttpTransport.requestDump);
+                        StringWriter sw = new StringWriter();
+                        PrintWriter pw = new PrintWriter(sw);
+                        e.printStackTrace(pw);
+                        Log.i("CYBERON", "Stack Trace:\n" + sw.toString());                        e.printStackTrace();
+                    } catch (IOException e) {
+                        Log.i("CYBERON", "GetDailyTotalCalories IOException");
+                        Log.i("CYBERON", e.getMessage());
+                        Log.i("CYBERON", "Request Dump: " + myHttpTransport.requestDump);
+                        StringWriter sw = new StringWriter();
+                        PrintWriter pw = new PrintWriter(sw);
+                        e.printStackTrace(pw);
+                        Log.i("CYBERON", "Stack Trace:\n" + sw.toString());                        e.printStackTrace();
+                    } catch (Exception e) {
+                        Log.i("CYBERON", "GetDailyTotalCalories Exception");
+                        Log.i("CYBERON", e.getMessage());
+                        Log.i("CYBERON", "Request Dump: " + myHttpTransport.requestDump);
+                        StringWriter sw = new StringWriter();
+                        PrintWriter pw = new PrintWriter(sw);
+                        e.printStackTrace(pw);
+                        Log.i("CYBERON", "Stack Trace:\n" + sw.toString());                        e.printStackTrace();
+                    }
                     return null;
                 }
 
@@ -633,8 +719,8 @@
             }
 
             private class GetWeights extends AsyncTask<Void, Void, Void> {
+                HttpTransportSE myHttpTransport = null;
                 ProgressDialog pdLoading = new ProgressDialog(MainActivity.this);
-                Boolean success;
 
                 @Override
                 protected void onPreExecute() {
@@ -642,7 +728,6 @@
                     pdLoading.setIndeterminate(true);
                     pdLoading.setCancelable(false);
                     WD.FirstRun = true;
-                    success = false;
                     Log.i("CYBERON", "GetWeights");
                     pdLoading.setMessage("Loading weights ...");
                     pdLoading.show();
@@ -658,45 +743,67 @@
                     SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
                     envelope.dotNet = true;
                     envelope.setOutputSoapObject(request);
-                    do {
-                        try {
+                    try {
 
-                            HttpTransportSE myHttpTransport = new HttpTransportSE(CS.URL, CS.TIMEOUT);
-                            myHttpTransport.call(CS.SOAP_ACTION_GET_WEIGHT, envelope);
+                        myHttpTransport = new HttpTransportSE(CS.URL, CS.TIMEOUT);
+                        myHttpTransport.debug = true;
+                        myHttpTransport.call(CS.SOAP_ACTION_GET_WEIGHT, envelope);
 
-                            // To retrieve a group of records
-                            SoapObject response = (SoapObject) envelope.getResponse();
-                            SoapObject foodList = (SoapObject) response.getProperty(0);
-                            SoapObject mealItems = (SoapObject) response.getProperty(1);
-                            SoapObject weightList = (SoapObject) response.getProperty(2);
+                        // To retrieve a group of records
+                        SoapObject response = (SoapObject) envelope.getResponse();
+                        SoapObject foodList = (SoapObject) response.getProperty(0);
+                        SoapObject mealItems = (SoapObject) response.getProperty(1);
+                        SoapObject weightList = (SoapObject) response.getProperty(2);
 
 
-                            // 0 is the first object of data
-                            for (int i = 0; i < weightList.getPropertyCount(); i++) {
-                                SoapObject item = (SoapObject) weightList.getProperty(i);
+                        // 0 is the first object of data
+                        for (int i = 0; i < weightList.getPropertyCount(); i++) {
+                            SoapObject item = (SoapObject) weightList.getProperty(i);
 
-                                if (!item.getProperty("recNum").toString().equals(null)) {
-                                    weight = new WeightItem();
-                                    weight.recNum = Integer.parseInt(item.getProperty("recNum").toString());
-                                    weight.weight1 = Float.parseFloat(item.getProperty("weight1").toString());
-                                    weight.measureDate = item.getProperty("measureDate").toString();
-                                    WD.GraphArray.add(weight);
-                                } else {
-                                    break;
-                                }
+                            if (!item.getProperty("recNum").toString().equals(null)) {
+                                weight = new WeightItem();
+                                weight.recNum = Integer.parseInt(item.getProperty("recNum").toString());
+                                weight.weight1 = Float.parseFloat(item.getProperty("weight1").toString());
+                                weight.measureDate = item.getProperty("measureDate").toString();
+                                WD.GraphArray.add(weight);
+                            } else {
+                                break;
                             }
-                            success = true;
-                        } catch (XmlPullParserException e) {
-                            e.printStackTrace();
-                        } catch (SoapFault soapFault) {
-                            soapFault.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
-                    } while(!success);
-                    return null;
+                    } catch (XmlPullParserException e) {
+                        Log.i("CYBERON", "GetWeights XmlPullParserException");
+                        Log.i("CYBERON", e.getMessage());
+                        Log.i("CYBERON", "Request Dump: " + myHttpTransport.requestDump);
+                        StringWriter sw = new StringWriter();
+                        PrintWriter pw = new PrintWriter(sw);
+                        e.printStackTrace(pw);
+                        Log.i("CYBERON", "Stack Trace:\n" + sw.toString());                        e.printStackTrace();
+                    } catch (SoapFault e) {
+                        Log.i("CYBERON", "GetWeights SoapFault");
+                        Log.i("CYBERON", e.getMessage());
+                        Log.i("CYBERON", "Request Dump: " + myHttpTransport.requestDump);
+                        StringWriter sw = new StringWriter();
+                        PrintWriter pw = new PrintWriter(sw);
+                        e.printStackTrace(pw);
+                        Log.i("CYBERON", "Stack Trace:\n" + sw.toString());                        e.printStackTrace();
+                    } catch (IOException e) {
+                        Log.i("CYBERON", "GetWeights IOException");
+                        Log.i("CYBERON", e.getMessage());
+                        Log.i("CYBERON", "Request Dump: " + myHttpTransport.requestDump);
+                        StringWriter sw = new StringWriter();
+                        PrintWriter pw = new PrintWriter(sw);
+                        e.printStackTrace(pw);
+                        Log.i("CYBERON", "Stack Trace:\n" + sw.toString());                        e.printStackTrace();
+                    } catch (Exception e) {
+                        Log.i("CYBERON", "GetWeights Exception");
+                        Log.i("CYBERON", e.getMessage());
+                        Log.i("CYBERON", "Request Dump: " + myHttpTransport.requestDump);
+                        StringWriter sw = new StringWriter();
+                        PrintWriter pw = new PrintWriter(sw);
+                        e.printStackTrace(pw);
+                        Log.i("CYBERON", "Stack Trace:\n" + sw.toString());                        e.printStackTrace();
+                    }
+                return null;
                 }
 
                 @Override
@@ -709,16 +816,15 @@
             }
 
             private class GetMeals extends AsyncTask<Void, Void, Void> {
-                Boolean success;
-
-                Meal meal;
+                HttpTransportSE myHttpTransport = null;
                 ProgressDialog pdLoading = new ProgressDialog(MainActivity.this);
+                Meal meal;
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
                     pdLoading.setIndeterminate(true);
                     pdLoading.setCancelable(false);
-                    success = false;
+                    Log.i("CYBERON", "GetMeals");
                     pdLoading.setMessage("Loading Daily Meals ...");
                     pdLoading.show();
                 }
@@ -740,45 +846,53 @@
                     SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
                     envelope.dotNet = true;
                     envelope.setOutputSoapObject(request);
-                    do {
-                        try {
+                    try {
 
-                            HttpTransportSE myHttpTransport = new HttpTransportSE(CS.URL, CS.TIMEOUT);
-                            myHttpTransport.call(CS.SOAP_ACTION_GET_MEALS, envelope);
+                        myHttpTransport = new HttpTransportSE(CS.URL, CS.TIMEOUT);
+                        myHttpTransport.debug = true;
+                        myHttpTransport.call(CS.SOAP_ACTION_GET_MEALS, envelope);
 
-                            // To retrieve a group of records
-                            SoapObject response = (SoapObject) envelope.getResponse();
-                            SoapObject foodList = (SoapObject) response.getProperty(0);
-                            SoapObject mealItems = (SoapObject) response.getProperty(1);
-                            SoapObject weightList = (SoapObject) response.getProperty(2);
+                        // To retrieve a group of records
+                        SoapObject response = (SoapObject) envelope.getResponse();
+                        SoapObject foodList = (SoapObject) response.getProperty(0);
+                        SoapObject mealItems = (SoapObject) response.getProperty(1);
+                        SoapObject weightList = (SoapObject) response.getProperty(2);
 
 
-                            // 0 is the first object of data
-                            for (int i = 0; i < mealItems.getPropertyCount(); i++) {
-                                SoapObject item = (SoapObject) mealItems.getProperty(i);
+                        // 0 is the first object of data
+                        for (int i = 0; i < mealItems.getPropertyCount(); i++) {
+                            SoapObject item = (SoapObject) mealItems.getProperty(i);
 
-                                if (!item.getProperty("Food").toString().equals(null)) {
-                                    meal = new Meal();
-                                    meal.Food = item.getProperty("Food").toString();
-                                    meal.Quantity = Double.parseDouble(item.getProperty("Quantity").toString());
-                                    meal.Calories = Integer.parseInt(item.getProperty("Calories").toString());
-                                    Meals.MealList.add(meal);
-                                } else {
-                                    break;
-                                }
+                            if (!item.getProperty("Food").toString().equals(null)) {
+                                meal = new Meal();
+                                meal.Food = item.getProperty("Food").toString();
+                                meal.Quantity = Double.parseDouble(item.getProperty("Quantity").toString());
+                                meal.Calories = Integer.parseInt(item.getProperty("Calories").toString());
+                                Meals.MealList.add(meal);
+                            } else {
+                                break;
                             }
-                            success = true;
-
-                        } catch (XmlPullParserException e) {
-                            e.printStackTrace();
-                        } catch (SoapFault soapFault) {
-                            soapFault.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
-                    } while(!success);
+                    } catch (XmlPullParserException e) {
+                        Log.i("CYBERON", "GetMeals XmlPullParserException");
+                        Log.i("CYBERON", e.getMessage());
+                        Log.i("CYBERON", "Request Dump: " + myHttpTransport.requestDump);
+                    } catch (SoapFault e) {
+                        Log.i("CYBERON", "GetMeals SoapFault");
+                        Log.i("CYBERON", e.getMessage());
+                        Log.i("CYBERON", "Request Dump: " + myHttpTransport.requestDump);
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        Log.i("CYBERON", "GetMeals IOException");
+                        Log.i("CYBERON", e.getMessage());
+                        Log.i("CYBERON", "Request Dump: " + myHttpTransport.requestDump);
+                        e.printStackTrace();
+                    } catch (Exception e) {
+                        Log.i("CYBERON", "GetMeals Exception");
+                        Log.i("CYBERON", e.getMessage());
+                        Log.i("CYBERON", "Request Dump: " + myHttpTransport.requestDump);
+                        e.printStackTrace();
+                    }
                     return null;
                 }
 
