@@ -1,23 +1,11 @@
 package diet.diet;
 
-import android.app.ProgressDialog;
-import android.os.AsyncTask;
 import android.util.Log;
 
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.SoapFault;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -36,7 +24,8 @@ public class Weight {
 
     public Weight()
     {
-        WD.FirstRun = true;
+//        String hitCounts = String.format("WEIGHT WD.FirstRun: %s", (WD.FirstRun) ? "TRUE" : "FALSE");
+//        Log.i("CYBERON", hitCounts);
     }
 
     public void PopulateGraphArray()
@@ -44,6 +33,7 @@ public class Weight {
         Integer x = 0;
         goal = 0f;
 
+        Log.i("CYBERON", "PopulateGraphArray");
         try
         {
             for (Integer i = 0; i < WD.GraphArray.size(); i++)
@@ -122,6 +112,10 @@ public class Weight {
         Double intConverter = 0d;
         Integer slopeMultiplier = 0;
         Double actual = 0d;
+
+        Log.i("CYBERON", "CalculateGraphArray");
+        String hitCounts = String.format("CalculateGraphArray WD.FirstRun: %s", (WD.FirstRun) ? "TRUE" : "FALSE");
+        Log.i("CYBERON", hitCounts);
         try
         {
             for (Integer i = 0; i < WD.GraphArray.size(); i++)
@@ -156,6 +150,7 @@ public class Weight {
             WD.AchieveDate = DateUtil.addDays(formatter.parse(WD.GraphArray.get(0).measureDate), intConverter.intValue());
 
             if (WD.FirstRun) {
+                Log.i("CYBERON", "Extending actual");
                 while (actual > 181d) {
                     WeightItem GraphItem = new WeightItem();
                     measureDate = formatter.format(DateUtil.addDays(formatter.parse(measureDate), 7));

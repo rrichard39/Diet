@@ -26,13 +26,14 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ADD"
+        android:text="ADD MEAL"
         android:id="@+id/btn_Add"
         android:layout_marginTop="120dp"
         android:clickable="true"
         android:layout_below="@+id/spnr_FoodList"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentEnd="false" />
+        android:layout_alignParentEnd="false"
+        android:background="#f0d090" />
 
     <Spinner
         android:layout_width="fill_parent"
@@ -90,39 +91,44 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add New Food"
+        android:text="CREATE NEW MEAL"
         android:id="@+id/btn_NewMeal"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="29dp"
+        android:width="150dp"
         android:layout_below="@+id/btn_Add"
         android:layout_alignParentStart="true"
-        android:width="150dp" />
+        android:background="#f0d090" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Today&apos;s Meals"
         android:id="@+id/btn_TodaysMeals"
-        android:layout_alignTop="@+id/btn_NewMeal"
-        android:layout_toEndOf="@+id/tv_QuantityLabel"
-        android:width="150dp" />
+        android:width="150dp"
+        android:layout_marginTop="40dp"
+        android:layout_below="@+id/btn_NewMeal"
+        android:layout_alignParentStart="true"
+        android:background="#f0d090" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Status"
+        android:text="DETAILS"
         android:id="@+id/btn_Details"
-        android:layout_below="@+id/btn_NewMeal"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="55dp"
-        android:width="150dp" />
+        android:width="150dp"
+        android:layout_above="@+id/btn_TodaysMeals"
+        android:layout_alignStart="@+id/btn_Weight"
+        android:background="#f0d090" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Weight"
         android:id="@+id/btn_Weight"
-        android:layout_alignTop="@+id/btn_Details"
-        android:layout_alignStart="@+id/btn_TodaysMeals"
-        android:width="150dp" />
+        android:width="150dp"
+        android:layout_below="@+id/btn_Details"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="40dp"
+        android:background="#f0d090" />
 
 </RelativeLayout>

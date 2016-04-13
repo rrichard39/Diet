@@ -243,6 +243,8 @@
                 Log.i("CYBERON", CS.URL);
 
                 hits = 0;
+                Log.i("CYBERON", "MainActivity setting WD.FirstRun: True");
+                WD.FirstRun = true;
             }
 
             @Override
@@ -260,7 +262,8 @@
             {
                 super.onPostResume();
 
-                Log.i("CYBERON", "Hits: " + (++hits).toString());
+                String hitCounts = String.format("Hits: %s WD.FirstRun: %s", (++hits).toString(), (WD.FirstRun) ? "TRUE" : "FALSE");
+                Log.i("CYBERON", hitCounts);
                 if (WD.FirstRun)
                 {
                     try {
@@ -275,7 +278,7 @@
                     }
                     InitializeSpinner();
                     initialized = true;
-                    WD.FirstRun = false;
+//                    WD.FirstRun = false;
                 }
 
                 spnr_FoodList.setSelection(0);
