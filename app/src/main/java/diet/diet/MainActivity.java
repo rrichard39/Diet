@@ -469,9 +469,15 @@
 
                     SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
                     envelope.dotNet = true;
+                    envelope.implicitTypes = true;
                     envelope.setOutputSoapObject(request);
-                    Log.i("CYBERON", "Envelope: " + envelope.bodyOut.toString());
+//                    Log.i("CYBERON", "Envelope in: " + envelope.bodyIn.toString());
+                    Log.i("CYBERON", "Envelope out: " + envelope.bodyOut.toString());
                     try {
+                        Log.i("CYBERON", "CS.URL: " + CS.URL);
+                        Log.i("CYBERON", "CS.NAMESPACE: " + CS.NAMESPACE);
+                        Log.i("CYBERON", "CS.METHOD_GET_FOOD_LIST: " + CS.METHOD_GET_FOOD_LIST);
+                        Log.i("CYBERON", "CS.SOAP_ACTION_GET_FOOD_LIST: " + CS.SOAP_ACTION_GET_FOOD_LIST);
 
                         myHttpTransport = new HttpTransportSE(CS.URL, CS.TIMEOUT);
                         myHttpTransport.debug = true;
@@ -483,7 +489,7 @@
                         SoapObject mealItems = (SoapObject) response.getProperty(1);
                         SoapObject weightList = (SoapObject) response.getProperty(2);
 
-//                            SoapObject root = (SoapObject) response.getProperty(0);
+                            SoapObject root = (SoapObject) response.getProperty(0);
 //                            SoapObject food = (SoapObject) root.getProperty("Food");
                         //to get the data
                         foodList.clear();
@@ -504,12 +510,13 @@
                         }
                     } catch (XmlPullParserException e) {
                         Log.i("CYBERON", "FoodListLoader XmlPullParserException");
-                        Log.i("CYBERON", e.getMessage());
-                        Log.i("CYBERON", "Envelope bodyin:\n" + (String)envelope.bodyIn);
+                        Log.i("CYBERON", "e.getMessage:\n" + e.getMessage());
+                        Log.i("CYBERON", "envelope.bodyin:\n" + (String)envelope.bodyIn);
+                        Log.i("CYBERON", "\nmyHttpTransport.responseDump:\n" + myHttpTransport.responseDump);
                         StringWriter sw = new StringWriter();
                         PrintWriter pw = new PrintWriter(sw);
                         e.printStackTrace(pw);
-                        Log.i("CYBERON", "Stack Trace:\n" + sw.toString());                        e.printStackTrace();
+                        Log.i("CYBERON", "Stack Trace:\n" + sw.toString());
                     } catch (SoapFault e) {
                         Log.i("CYBERON", "FoodListLoader SoapFault");
                         Log.i("CYBERON", e.getMessage());
