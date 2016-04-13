@@ -4,7 +4,7 @@ package diet.diet;
  * Created by rrichard39 on 3/27/2016.
  */
 public class CommStrings {
-    public static final Integer TIMEOUT = 50000;
+    public static final Integer TIMEOUT = 180000;   // 3 minutes
 
     public static final String NAMESPACE = "http://tempuri.org/";
     // ********************************************************
