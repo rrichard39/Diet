@@ -142,12 +142,15 @@ public class Weight {
             {
                 WD.GraphArray.get(i).actual = (slope * (WD.GraphArray.get(i).recNum - 1)) + intercept;
             }
+
+            WD.Variance = (float)(WD.GraphArray.get(numPts - 1).actual - WD.GraphArray.get(numPts - 1).goal);
+
             slopeMultiplier = WD.GraphArray.size();
             actual  = WD.GraphArray.get(WD.GraphArray.size() - 1).actual;
 
             intConverter = (7 * (181 - intercept) / slope);
 
-            WD.AchieveDate = DateUtil.addDays(formatter.parse(WD.GraphArray.get(0).measureDate), intConverter.intValue());
+            WD.AchieveDate = DateUtil.addDays(formatter.parse(WD.GraphArray.get(0).measureDate), intConverter.intValue() + 7);
 
             if (WD.FirstRun) {
                 Log.i("CYBERON", "Extending actual");

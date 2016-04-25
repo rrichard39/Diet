@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:text="ADD MEAL"
         android:id="@+id/btn_Add"
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="140dp"
         android:clickable="true"
         android:layout_below="@+id/spnr_FoodList"
         android:layout_centerHorizontal="true"
@@ -51,7 +51,7 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="number"
+        android:inputType="numberDecimal"
         android:ems="10"
         android:id="@+id/et_Quantity"
         android:layout_below="@+id/et_Calories"
@@ -65,10 +65,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/Calories"
+        android:textStyle="bold"
         android:id="@+id/tv_CaloriesLabel"
         android:layout_above="@+id/et_Quantity"
         android:layout_marginLeft="85dp"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="10dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -77,7 +78,8 @@
         android:id="@+id/tv_QuantityLabel"
         android:layout_marginLeft="100dp"
         android:layout_below="@+id/et_Quantity"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp" />
 
     <TextView
         android:layout_width="wrap_content"

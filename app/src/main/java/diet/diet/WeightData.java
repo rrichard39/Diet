@@ -1,6 +1,5 @@
 package diet.diet;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,6 +18,7 @@ public class WeightData {
     public static Date StartDate;
     public static Date LastDate;
     public static Date TargetDate;
+    public static Float Variance;
     public static Date AchieveDate;
     public static Float StartWeight;
     public static Float LastWeight;

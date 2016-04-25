@@ -1,29 +1,14 @@
 package diet.diet;
 
-import android.app.ProgressDialog;
 import android.graphics.Typeface;
+import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.SoapFault;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 public class DetailsActivity extends AppCompatActivity {
@@ -33,6 +18,7 @@ public class DetailsActivity extends AppCompatActivity {
     TextView tv_StartDate;
     TextView tv_TargetDate;
     TextView tv_AchieveDate;
+    TextView tv_Variance;
 
     TextView tv_StartWeight;
     TextView tv_LastWeight;
@@ -55,6 +41,7 @@ public class DetailsActivity extends AppCompatActivity {
         tv_StartDate = (TextView)findViewById(R.id.tv_StartDate);
         tv_TargetDate = (TextView)findViewById(R.id.tv_TargetDate);
         tv_AchieveDate = (TextView)findViewById(R.id.tv_AchieveDate);
+        tv_Variance = (TextView)findViewById(R.id.tv_Variance);
 
         tv_StartWeight = (TextView)findViewById(R.id.tv_StartWeight);
         tv_LastWeight = (TextView)findViewById(R.id.tv_LastWeight);
@@ -69,6 +56,7 @@ public class DetailsActivity extends AppCompatActivity {
         tv_StartDate.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
         tv_TargetDate.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
         tv_AchieveDate.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
+        tv_Variance.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
 
         tv_StartWeight.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
         tv_LastWeight.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
@@ -122,6 +110,7 @@ public class DetailsActivity extends AppCompatActivity {
         tv_StartWeight.setText(String.format("%-20s %5.1f lbs", "Start weight:", WD.StartWeight));
         tv_LastWeight.setText(String.format("%-20s %5.1f lbs", "Last weight:", WD.LastWeight));
         tv_TargetWeight.setText(String.format("%-20s %s lbs", "Target weight:", "180.0"));
+        tv_Variance.setText(String.format("%-20s %+5.1f lbs", "Variance:", WD.Variance));
 
         tv_TotalLoss.setText(String.format("%-20s %5.1f lbs", "Total loss:",  totalLoss));
         tv_WeeklyLoss.setText(String.format("%-20s %5.1f lbs", "Weekly loss:", weekLoss));
