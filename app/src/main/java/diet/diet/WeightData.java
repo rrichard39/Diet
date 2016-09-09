@@ -22,6 +22,8 @@ public class WeightData {
     public static Date AchieveDate;
     public static Float StartWeight;
     public static Float LastWeight;
+    public static Float GainLoss;
+    public static Float LowestWeight;
     public static Float BMI;
 
     public static Boolean FirstRun;

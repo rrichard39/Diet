@@ -438,17 +438,23 @@
             }
 
             private double UpdateCalories(FoodItem currentItem) {
-                double totCals;
+                double totCals = 0;
                 double cals;
                 double qty;
-                if (!et_Quantity.getText().toString().matches("")) {
-                    qty = Double.parseDouble(et_Quantity.getText().toString());
-                    cals = (double) currentItem.calories;
-                    totCals = cals * qty;
-                    mealQuantity = qty;
+                try {
+                    if (!et_Quantity.getText().toString().matches("")) {
+                        qty = Double.parseDouble(et_Quantity.getText().toString());
+                        cals = (double) currentItem.calories;
+                        totCals = cals * qty;
+                        mealQuantity = qty;
+                    }
+                }
+                catch (NumberFormatException e) {
+                    totCals = 0;
+                }
+                finally {
                     return totCals;
                 }
-                return 0;
             }
 
             private class FoodListLoader extends AsyncTask<Void, Void, Void> {

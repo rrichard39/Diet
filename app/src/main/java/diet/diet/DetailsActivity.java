@@ -22,6 +22,8 @@ public class DetailsActivity extends AppCompatActivity {
 
     TextView tv_StartWeight;
     TextView tv_LastWeight;
+    TextView tv_GainLoss;
+    TextView tv_LowestWeight;
     TextView tv_TargetWeight;
 
     TextView tv_TotalLoss;
@@ -45,6 +47,8 @@ public class DetailsActivity extends AppCompatActivity {
 
         tv_StartWeight = (TextView)findViewById(R.id.tv_StartWeight);
         tv_LastWeight = (TextView)findViewById(R.id.tv_LastWeight);
+        tv_GainLoss = (TextView)findViewById(R.id.tv_GainLoss);
+        tv_LowestWeight = (TextView)findViewById(R.id.tv_LowestWeight);
         tv_TargetWeight = (TextView)findViewById(R.id.tv_TargetWeight);
 
         tv_TotalLoss = (TextView)findViewById(R.id.tv_TotalLoss);
@@ -60,6 +64,8 @@ public class DetailsActivity extends AppCompatActivity {
 
         tv_StartWeight.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
         tv_LastWeight.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
+        tv_GainLoss.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
+        tv_LowestWeight.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
         tv_TargetWeight.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
 
         tv_TotalLoss.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
@@ -109,12 +115,14 @@ public class DetailsActivity extends AppCompatActivity {
 
         tv_StartWeight.setText(String.format("%-20s %5.1f lbs", "Start weight:", WD.StartWeight));
         tv_LastWeight.setText(String.format("%-20s %5.1f lbs", "Last weight:", WD.LastWeight));
-        tv_TargetWeight.setText(String.format("%-20s %s lbs", "Target weight:", "180.0"));
+        tv_GainLoss.setText(String.format("%-20s %+5.1f lbs", "Week Loss/Gain:", WD.GainLoss));
+        tv_LowestWeight.setText(String.format("%-20s %5.1f lbs", "Lowest weight:", WD.LowestWeight));
+        tv_TargetWeight.setText(String.format("%-20s %s lbs", "Target weight:", "181.0"));
         tv_Variance.setText(String.format("%-20s %+5.1f lbs", "Variance:", WD.Variance));
 
         tv_TotalLoss.setText(String.format("%-20s %5.1f lbs", "Total loss:",  totalLoss));
-        tv_WeeklyLoss.setText(String.format("%-20s %5.1f lbs", "Weekly loss:", weekLoss));
-        tv_DailyLoss.setText(String.format("%-20s %5.1f lbs", "Daily loss:", dayLoss));
+        tv_WeeklyLoss.setText(String.format("%-20s %5.1f lbs", "Avg. Weekly loss:", weekLoss));
+        tv_DailyLoss.setText(String.format("%-20s %5.1f lbs", "Avg. Daily loss:", dayLoss));
 
         tv_BMI.setText(String.format("%-20s %5.1f", "BMI:", WD.BMI));
     }

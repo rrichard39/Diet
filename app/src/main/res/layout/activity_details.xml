@@ -10,27 +10,7 @@
     tools:context="diet.diet.DetailsActivity"
     android:background="@drawable/main_gradient">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:fontFeatureSettings="Typeface.MONOSPACE"
-        android:id="@+id/tv_StartWeight"
-        android:layout_marginTop="37dp"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/tv_AchieveDate" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:fontFeatureSettings="Typeface.MONOSPACE"
-        android:id="@+id/tv_LastWeight"
-        android:layout_below="@+id/tv_StartWeight"
-        android:layout_alignParentStart="true" />
-
+    <!-- StartDate -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -41,16 +21,71 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
 
+    <!-- TargetDate -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:fontFeatureSettings="Typeface.MONOSPACE"
         android:text="Medium Text"
+        android:fontFeatureSettings="Typeface.MONOSPACE"
         android:id="@+id/tv_TargetDate"
         android:layout_below="@+id/tv_StartDate"
         android:layout_alignParentStart="true" />
 
+    <!-- AchieveDate -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/tv_AchieveDate"
+        android:layout_below="@+id/tv_TargetDate"
+        android:layout_alignParentStart="true" />
+
+    <!-- StartWeight -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:fontFeatureSettings="Typeface.MONOSPACE"
+        android:id="@+id/tv_StartWeight"
+        android:layout_marginTop="37dp"
+        android:layout_below="@+id/tv_AchieveDate" />
+        android:layout_alignParentStart="true"
+
+    <!-- LastWeight -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:fontFeatureSettings="Typeface.MONOSPACE"
+        android:id="@+id/tv_LastWeight"
+        android:layout_below="@+id/tv_StartWeight"
+        android:layout_alignParentStart="true" />
+
+    <!-- LowestWeight -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/tv_GainLoss"
+        android:layout_below="@+id/tv_LastWeight"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:id="@+id/tv_LowestWeight"
+        android:layout_below="@+id/tv_GainLoss"
+        android:layout_alignParentStart="true" />
+
+    <!-- TargetWeight -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -58,9 +93,22 @@
         android:text="Medium Text"
         android:fontFeatureSettings="Typeface.MONOSPACE"
         android:id="@+id/tv_TargetWeight"
-        android:layout_below="@+id/tv_LastWeight"
+        android:layout_below="@+id/tv_LowestWeight"
         android:layout_alignParentStart="true" />
 
+    <!-- Variance -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Medium Text"
+        android:fontFeatureSettings="Typeface.MONOSPACE"
+        android:id="@+id/tv_Variance"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/tv_TargetWeight"
+        android:layout_alignParentLeft="true" />
+
+    <!-- TotalLoss -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -68,9 +116,12 @@
         android:text="Medium Text"
         android:fontFeatureSettings="Typeface.MONOSPACE"
         android:id="@+id/tv_TotalLoss"
+        android:layout_marginTop="37dp"
         android:layout_below="@+id/tv_Variance"
-        android:layout_marginTop="37dp" />
+        android:layout_alignParentStart="true" />
 
+
+    <!-- WeeklyLoss -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -81,6 +132,7 @@
         android:layout_below="@+id/tv_TotalLoss"
         android:layout_alignParentStart="true" />
 
+    <!-- DailyLoss -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -96,27 +148,9 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Medium Text"
-        android:id="@+id/tv_AchieveDate"
-        android:layout_below="@+id/tv_TargetDate"
+        android:id="@+id/tv_BMI"
+        android:layout_marginTop="38dp"
+        android:layout_below="@+id/tv_DailyLoss"
         android:layout_alignParentStart="true" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:id="@+id/tv_BMI"
-        android:layout_below="@+id/tv_DailyLoss"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="false"
-        android:layout_marginTop="37dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:id="@+id/tv_Variance"
-        android:layout_below="@+id/tv_TargetWeight"
-        android:layout_alignEnd="@+id/tv_AchieveDate" />
 </RelativeLayout>

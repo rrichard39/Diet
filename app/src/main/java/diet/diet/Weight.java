@@ -18,6 +18,7 @@ public class Weight {
     Float goal = 0f;
     Date targetDate = new Date();
     Float startWeight = 0f;
+    Float prevWeight = 0f;
     String measureDate = "";
 
     DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
@@ -44,16 +45,22 @@ public class Weight {
                         goal = WD.GraphArray.get(i).weight1;
                         startWeight = WD.GraphArray.get(i).weight1;
                         WD.StartWeight = WD.GraphArray.get(i).weight1;
+                        WD.LowestWeight = WD.GraphArray.get(i).weight1;
                         try {
                             WD.StartDate = formatter.parse(WD.GraphArray.get(0).measureDate);
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
                     }
+                    if ( WD.GraphArray.get(i).weight1 < WD.LowestWeight)
+                    {
+                        WD.LowestWeight = WD.GraphArray.get(i).weight1;
+                    }
                     WD.GraphArray.get(i).goal = goal;
                     WD.GraphArray.get(i).x = x;
                     WD.GraphArray.get(i).xy = x * WD.GraphArray.get(i).weight1;
                     WD.GraphArray.get(i).v = Math.pow((double) x, 2);
+                    prevWeight = WD.LastWeight;
                     WD.LastWeight = WD.GraphArray.get(i).weight1;
                     try {
                         WD.LastDate = formatter.parse(WD.GraphArray.get(i).measureDate);
@@ -69,6 +76,7 @@ public class Weight {
                     break;
                 }
             }
+            WD.GainLoss = WD.LastWeight - prevWeight;
             ++x;
 
             // Create GraphItem for every week until goal is reached
