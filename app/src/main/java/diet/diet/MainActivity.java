@@ -179,6 +179,8 @@
                         {
                             tv_Calories.setText("");
                             et_Quantity.setText("");
+                            foodName = null;
+                            mealQuantity = 0.0;
                         }
                     }
 
@@ -326,14 +328,17 @@
                 {
                     case R.id.btn_Add:
                         // Add meal to database here
-                        try {
-                            new EnterNewMeal().execute().get();
-                            new GetDailyTotalCalories().execute().get();
-                            new GetMeals().execute().get();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } catch (ExecutionException e) {
-                            e.printStackTrace();
+                        if (foodName != null && mealQuantity != 0.0)
+                        {
+                            try {
+                                new EnterNewMeal().execute().get();
+                                new GetDailyTotalCalories().execute().get();
+                                new GetMeals().execute().get();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            }
                         }
                         break;
                     case R.id.btn_NewMeal:
@@ -635,6 +640,8 @@
                         e.printStackTrace(pw);
                         Log.i("CYBERON", "Stack Trace:\n" + sw.toString());                        e.printStackTrace();
                     }
+                foodName = null;
+                mealQuantity = 0.0;
                 return null;
                 }
 
