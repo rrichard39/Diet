@@ -14,6 +14,7 @@ import java.util.Locale;
 public class Weight {
 
     WeightData WD;
+    PersonalData PD;
 
     Float goal = 0f;
     Date targetDate = new Date();
@@ -177,7 +178,7 @@ public class Weight {
                 WD.FirstRun = false;
             }
 
-            WD.BMI = (WD.LastWeight * 703f)/(70f * 70f);
+            WD.BMI = (WD.LastWeight * 703.0f)/(float)Math.pow(PD.height, 2);
         }
         catch (Exception e)
         {
