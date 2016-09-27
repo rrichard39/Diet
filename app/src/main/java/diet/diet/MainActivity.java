@@ -55,10 +55,6 @@
 
             private static final Integer TIMEOUT = 50000;
 
-            private static final String NAMESPACE = "http://tempuri.org/";
-//            private static final String URL = "http://50.179.137.211:48484";
-            private static String URL = "http://rtrdiet.ddns.net:48484";
-
             // Food Table
             private static final String METHOD_GET_FOOD_LIST = "GetFoodList";
             final static String SOAP_ACTION_GET_FOOD_LIST = "http://tempuri.org/IDietService/GetFoodList";
