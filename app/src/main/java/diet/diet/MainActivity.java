@@ -333,6 +333,7 @@
                             if (WD.FirstRun)
                             {
                                 try {
+                                    tv_DailyTotalCalories = (TextView) findViewById(R.id.tv_DailyTotalCalories);
                                     tv_DailyTotalCalories.setText("Loading Food List ...");
                                     new FoodListLoader().execute().get();
                                     tv_DailyTotalCalories.setText("Loading Daily Total Calories ...");
