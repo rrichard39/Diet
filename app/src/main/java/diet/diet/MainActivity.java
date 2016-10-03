@@ -46,6 +46,7 @@
             static Integer spinnerPosition = 0;
             static Boolean trigger = false;
             static Integer hits;
+            static Boolean loadData = true;
 
             CommStrings CS;
             URLStrings US;
@@ -109,6 +110,7 @@
 
                 btn_Add = (Button) findViewById(R.id.btn_Add);
                 btn_Add.setOnClickListener(this);
+                btn_Add.setText("START");
 
                 btn_NewMeal = (Button) findViewById(R.id.btn_NewMeal);
                 btn_NewMeal.setOnClickListener(this);
@@ -260,27 +262,27 @@
             {
                 super.onPostResume();
 
-                String hitCounts = String.format("Hits: %s WD.FirstRun: %s", (++hits).toString(), (WD.FirstRun) ? "TRUE" : "FALSE");
-                Log.i("CYBERON", hitCounts);
-                if (WD.FirstRun)
-                {
-                    try {
-                        new FoodListLoader().execute().get();
-                        new GetDailyTotalCalories().execute().get();
-                        new GetMeals().execute().get();
-                        new GetWeights().execute().get();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                    InitializeSpinner();
-                    initialized = true;
+//                String hitCounts = String.format("Hits: %s WD.FirstRun: %s", (++hits).toString(), (WD.FirstRun) ? "TRUE" : "FALSE");
+//                Log.i("CYBERON", hitCounts);
+//                if (WD.FirstRun)
+//                {
+//                    try {
+//                        new FoodListLoader().execute().get();
+//                        new GetDailyTotalCalories().execute().get();
+//                        new GetMeals().execute().get();
+//                        new GetWeights().execute().get();
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    } catch (ExecutionException e) {
+//                        e.printStackTrace();
+//                    }
+//                    InitializeSpinner();
+//                    initialized = true;
 //                    WD.FirstRun = false;
-                }
-
-                spnr_FoodList.setSelection(0);
-                spnr_FoodList.setSelection(spinnerPosition);
+//                }
+//
+//                spnr_FoodList.setSelection(0);
+//                spnr_FoodList.setSelection(spinnerPosition);
             }
 
             @Override
@@ -324,7 +326,40 @@
                 {
                     case R.id.btn_Add:
                         // Add meal to database here
-                        if (foodName != null && mealQuantity != 0.0)
+                        if (loadData = true)
+                        {
+                            String hitCounts = String.format("Hits: %s WD.FirstRun: %s", (++hits).toString(), (WD.FirstRun) ? "TRUE" : "FALSE");
+                            Log.i("CYBERON", hitCounts);
+                            if (WD.FirstRun)
+                            {
+                                try {
+                                    tv_DailyTotalCalories.setText("Loading Food List ...");
+                                    new FoodListLoader().execute().get();
+                                    tv_DailyTotalCalories.setText("Loading Daily Total Calories ...");
+                                    new GetDailyTotalCalories().execute().get();
+                                    tv_DailyTotalCalories.setText("Loading Meals ...");
+                                    new GetMeals().execute().get();
+                                    tv_DailyTotalCalories.setText("Loading Weight Graft ...");
+                                    new GetWeights().execute().get();
+                                    tv_DailyTotalCalories.setText("Total calories for today:");
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                } catch (ExecutionException e) {
+                                    e.printStackTrace();
+                                }
+                                InitializeSpinner();
+                                initialized = true;
+                                loadData = false;
+                                btn_Add = (Button) findViewById(R.id.btn_Add);
+                                btn_Add.setOnClickListener(this);
+                                btn_Add.setText("ADD MEAL");
+                            }
+
+                            spnr_FoodList.setSelection(0);
+                            spnr_FoodList.setSelection(spinnerPosition);
+                        }
+
+                        else if (foodName != null && mealQuantity != 0.0)
                         {
                             try {
                                 new EnterNewMeal().execute().get();
