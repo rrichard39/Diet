@@ -46,7 +46,6 @@
             static Integer spinnerPosition = 0;
             static Boolean trigger = false;
             static Integer hits;
-            static Boolean loadData = true;
 
             CommStrings CS;
             URLStrings US;
@@ -245,6 +244,7 @@
                 hits = 0;
                 Log.i("CYBERON", "MainActivity setting WD.FirstRun: True");
                 WD.FirstRun = true;
+                WD.loadData = true;
             }
 
             @Override
@@ -261,28 +261,31 @@
             protected void onPostResume()
             {
                 super.onPostResume();
+                if (!WD.loadData)
+                {
 
-//                String hitCounts = String.format("Hits: %s WD.FirstRun: %s", (++hits).toString(), (WD.FirstRun) ? "TRUE" : "FALSE");
-//                Log.i("CYBERON", hitCounts);
-//                if (WD.FirstRun)
-//                {
-//                    try {
-//                        new FoodListLoader().execute().get();
-//                        new GetDailyTotalCalories().execute().get();
-//                        new GetMeals().execute().get();
-//                        new GetWeights().execute().get();
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    } catch (ExecutionException e) {
-//                        e.printStackTrace();
-//                    }
-//                    InitializeSpinner();
-//                    initialized = true;
-//                    WD.FirstRun = false;
-//                }
-//
-//                spnr_FoodList.setSelection(0);
-//                spnr_FoodList.setSelection(spinnerPosition);
+                String hitCounts = String.format("Hits: %s WD.FirstRun: %s", (++hits).toString(), (WD.FirstRun) ? "TRUE" : "FALSE");
+                Log.i("CYBERON", hitCounts);
+                if (WD.FirstRun)
+                {
+                    try {
+                        new FoodListLoader().execute().get();
+                        new GetDailyTotalCalories().execute().get();
+                        new GetMeals().execute().get();
+                        new GetWeights().execute().get();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
+                    InitializeSpinner();
+                    initialized = true;
+                    WD.FirstRun = false;
+                }
+
+                spnr_FoodList.setSelection(0);
+                spnr_FoodList.setSelection(spinnerPosition);
+                }
             }
 
             @Override
@@ -326,7 +329,9 @@
                 {
                     case R.id.btn_Add:
                         // Add meal to database here
-                        if (loadData = true)
+                        String sLoadData = String.format("loadData: %s", (WD.loadData) ? "TRUE" : "FALSE");
+                        Log.i("CYBERON", sLoadData);
+                        if (WD.loadData)
                         {
                             String hitCounts = String.format("Hits: %s WD.FirstRun: %s", (++hits).toString(), (WD.FirstRun) ? "TRUE" : "FALSE");
                             Log.i("CYBERON", hitCounts);
@@ -350,7 +355,8 @@
                                 }
                                 InitializeSpinner();
                                 initialized = true;
-                                loadData = false;
+                                WD.loadData = false;
+                                WD.FirstRun = false;
                                 btn_Add = (Button) findViewById(R.id.btn_Add);
                                 btn_Add.setOnClickListener(this);
                                 btn_Add.setText("ADD MEAL");
