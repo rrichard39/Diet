@@ -1,10 +1,10 @@
 package diet.diet;
 
 /**
- * Created by rrichard39 on 9/26/2016.
+ * Created by rrichard39 on 10/4/2016.
  */
 
 public class PersonalData {
-    String name = "Ron Richard";
-    float height = 70.25f; /** in inches **/
+    public static String name = "Ron Richard";
+    public static float height = 70.25f; /** in inches **/
 }
