@@ -109,7 +109,6 @@
 
                 btn_Add = (Button) findViewById(R.id.btn_Add);
                 btn_Add.setOnClickListener(this);
-                btn_Add.setText("START");
 
                 btn_NewMeal = (Button) findViewById(R.id.btn_NewMeal);
                 btn_NewMeal.setOnClickListener(this);
@@ -244,7 +243,6 @@
                 hits = 0;
                 Log.i("CYBERON", "MainActivity setting WD.FirstRun: True");
                 WD.FirstRun = true;
-                WD.loadData = true;
             }
 
             @Override
@@ -261,8 +259,6 @@
             protected void onPostResume()
             {
                 super.onPostResume();
-                if (!WD.loadData)
-                {
 
                 String hitCounts = String.format("Hits: %s WD.FirstRun: %s", (++hits).toString(), (WD.FirstRun) ? "TRUE" : "FALSE");
                 Log.i("CYBERON", hitCounts);
@@ -280,12 +276,11 @@
                     }
                     InitializeSpinner();
                     initialized = true;
-                    WD.FirstRun = false;
+//                    WD.FirstRun = false;
                 }
 
                 spnr_FoodList.setSelection(0);
                 spnr_FoodList.setSelection(spinnerPosition);
-                }
             }
 
             @Override
@@ -329,44 +324,7 @@
                 {
                     case R.id.btn_Add:
                         // Add meal to database here
-                        String sLoadData = String.format("loadData: %s", (WD.loadData) ? "TRUE" : "FALSE");
-                        Log.i("CYBERON", sLoadData);
-                        if (WD.loadData)
-                        {
-                            String hitCounts = String.format("Hits: %s WD.FirstRun: %s", (++hits).toString(), (WD.FirstRun) ? "TRUE" : "FALSE");
-                            Log.i("CYBERON", hitCounts);
-                            if (WD.FirstRun)
-                            {
-                                try {
-                                    tv_DailyTotalCalories = (TextView) findViewById(R.id.tv_DailyTotalCalories);
-                                    tv_DailyTotalCalories.setText("Loading Food List ...");
-                                    new FoodListLoader().execute().get();
-                                    tv_DailyTotalCalories.setText("Loading Daily Total Calories ...");
-                                    new GetDailyTotalCalories().execute().get();
-                                    tv_DailyTotalCalories.setText("Loading Meals ...");
-                                    new GetMeals().execute().get();
-                                    tv_DailyTotalCalories.setText("Loading Weight Graft ...");
-                                    new GetWeights().execute().get();
-                                    tv_DailyTotalCalories.setText("Total calories for today:");
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                } catch (ExecutionException e) {
-                                    e.printStackTrace();
-                                }
-                                InitializeSpinner();
-                                initialized = true;
-                                WD.loadData = false;
-                                WD.FirstRun = false;
-                                btn_Add = (Button) findViewById(R.id.btn_Add);
-                                btn_Add.setOnClickListener(this);
-                                btn_Add.setText("ADD MEAL");
-                            }
-
-                            spnr_FoodList.setSelection(0);
-                            spnr_FoodList.setSelection(spinnerPosition);
-                        }
-
-                        else if (foodName != null && mealQuantity != 0.0)
+                        if (foodName != null && mealQuantity != 0.0)
                         {
                             try {
                                 new EnterNewMeal().execute().get();
