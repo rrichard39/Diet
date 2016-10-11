@@ -161,8 +161,9 @@ public class Weight {
 
             WD.AchieveDate = DateUtil.addDays(formatter.parse(WD.GraphArray.get(0).measureDate), intConverter.intValue() + 7);
 
-            if (WD.FirstRun) {
-                Log.i("CYBERON", "Extending actual");
+//            if (WD.FirstRun) {
+
+//                Log.i("CYBERON", "Extending actual");
                 while (actual > 181d) {
                     WeightItem GraphItem = new WeightItem();
                     measureDate = formatter.format(DateUtil.addDays(formatter.parse(measureDate), 7));
@@ -175,8 +176,8 @@ public class Weight {
                     WD.GraphArray.add(GraphItem);
                     slopeMultiplier++;
                 }
-                WD.FirstRun = false;
-            }
+//                WD.FirstRun = false;
+//            }
 
             WD.BMI = (WD.LastWeight * 703.0f)/(float)Math.pow(PD.height, 2);
         }
