@@ -3,6 +3,7 @@
         import android.app.Activity;
         import android.app.ProgressDialog;
         import android.content.Intent;
+        import android.graphics.Color;
         import android.net.wifi.WifiInfo;
         import android.net.wifi.WifiManager;
         import android.os.AsyncTask;
@@ -41,14 +42,16 @@
         import java.util.List;
         import java.util.concurrent.ExecutionException;
 
+        import static diet.diet.R.layout.activity_main;
+
         public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
             static Integer spinnerPosition = 0;
             static Boolean trigger = false;
-            static Integer hits;
 
             CommStrings CS;
             URLStrings US;
+            DiagVars DV;
             Weight weightClass;
             WeightData WD;
             Weight WT;
@@ -75,9 +78,6 @@
             private static final String METHOD_GET_MEALS = "GetMeals";
             final static String SOAP_ACTION_GET_MEALS = "http://tempuri.org/IDietService/GetMeals";
 
-            Boolean initialized = false;
-            Integer tracker = 0;
-
             List<String> foodList = new ArrayList<>();  // for Spinner
 
             ArrayAdapter<String> foodListAdapter;
@@ -95,13 +95,15 @@
             TextView tv_Calories;
             TextView tv_CaloriesLabel;
             TextView tv_DailyTotalCalories;
+            TextView tv_QuantityLabel;
+            TextView tv_LoadProgress;
             Spinner spnr_FoodList;
             EditText et_Quantity;
 
             @Override
             protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
-                setContentView(R.layout.activity_main);
+                setContentView(activity_main);
 
                 weightClass = new Weight();
 
@@ -127,6 +129,9 @@
                 tv_Calories = (TextView) findViewById(R.id.et_Calories);
                 tv_CaloriesLabel = (TextView) findViewById(R.id.tv_CaloriesLabel);
                 tv_DailyTotalCalories = (TextView) findViewById(R.id.tv_DailyTotalCalories);
+                tv_QuantityLabel = (TextView) findViewById(R.id.tv_QuantityLabel);
+                tv_LoadProgress = (TextView) findViewById(R.id.tv_LoadProgress);
+
                 et_Quantity = (EditText) findViewById(R.id.et_Quantity);
 
                 tv_CaloriesLabel.setMaxLines(1);
@@ -139,7 +144,22 @@
 
                 tv_DailyTotalCalories.setHeight(120);
                 tv_DailyTotalCalories.setTextSize(22);
+
+                tv_LoadProgress.setTextColor(Color.parseColor("#FFFF00"));
+                tv_LoadProgress.setText("");
                 spnr_FoodList.setMinimumHeight(60);
+
+                btn_Add.setText("Start");
+                btn_NewMeal.setVisibility(View.INVISIBLE);
+                btn_TodaysMeals.setVisibility(View.INVISIBLE);
+                btn_Details.setVisibility(View.INVISIBLE);
+                btn_Weight.setVisibility(View.INVISIBLE);
+                spnr_FoodList.setVisibility(View.INVISIBLE);
+                et_Quantity.setVisibility(View.INVISIBLE);
+                tv_DailyTotalCalories.setVisibility(View.INVISIBLE);
+                tv_CaloriesLabel.setVisibility(View.INVISIBLE);
+                tv_QuantityLabel.setVisibility(View.INVISIBLE);
+                
 
                 spnr_FoodList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
@@ -223,7 +243,7 @@
 //                    public static final String LAN_SSID = "<your LAN SSID>";
                       // This is used when you're on your own WiFi
 //                    public static final String LAN_URL = "http://<IIS Server LAN IP>:<PORT>";
-                      // This is when you're anywhere else
+                      // This is when you're not on your home WIFI
 //                    public static final String WAN_URL = "http://<PUBLIC URL>:<PORT>";
 //                }
 //                *****************************************************************************
@@ -237,17 +257,21 @@
                 {
                     CS.URL = US.WAN_URL;
                 }
-                Log.i("CYBERON", wifiInfo.getSSID());
-                Log.i("CYBERON", CS.URL);
+                Log.i("CYBERON", "SSID: " + wifiInfo.getSSID());
+                Log.i("CYBERON", "URL: " + CS.URL);
 
-                hits = 0;
+                DV.oR_hits = 0;
+                DV.oPR_hits = 0;
                 Log.i("CYBERON", "MainActivity setting WD.FirstRun: True");
                 WD.FirstRun = true;
-            }
+
+            }   // end onCreate
 
             @Override
             public void onResume(){
                 super.onResume();
+                String hitCounts = String.format("onResume Hits: %s WD.FirstRun: %s", (++DV.oR_hits).toString(), (WD.FirstRun) ? "TRUE" : "FALSE");
+                Log.i("CYBERON", hitCounts);
 
                 if (!spinnerPosition.equals(0))
                 {
@@ -260,27 +284,32 @@
             {
                 super.onPostResume();
 
-                String hitCounts = String.format("Hits: %s WD.FirstRun: %s", (++hits).toString(), (WD.FirstRun) ? "TRUE" : "FALSE");
+                String hitCounts = String.format("onPostResume Hits: %s WD.FirstRun: %s", (++DV.oPR_hits).toString(), (WD.FirstRun) ? "TRUE" : "FALSE");
                 Log.i("CYBERON", hitCounts);
-                if (WD.FirstRun)
-                {
-                    try {
-                        new FoodListLoader().execute().get();
-                        new GetDailyTotalCalories().execute().get();
-                        new GetMeals().execute().get();
-                        new GetWeights().execute().get();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                    InitializeSpinner();
-                    initialized = true;
-//                    WD.FirstRun = false;
-                }
 
-                spnr_FoodList.setSelection(0);
-                spnr_FoodList.setSelection(spinnerPosition);
+//                if (WD.FirstRun)
+//                {
+//                    Log.i("CYBERON", "Loading Database ...");
+//                    try {
+//                        tv_LoadProgress.setText("Loading FoodList ...");
+//                        new FoodListLoader().execute().get();
+//                        tv_LoadProgress.setText("Loading DailyTotalCalories ...");
+//                        new GetDailyTotalCalories().execute().get();
+//                        tv_LoadProgress.setText("Loading Meals ...");
+//                        new GetMeals().execute().get();
+//                        tv_LoadProgress.setText("Loading Weights ...");
+//                        new GetWeights().execute().get();
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    } catch (ExecutionException e) {
+//                        e.printStackTrace();
+//                    }
+//                    InitializeSpinner();
+//                    WD.FirstRun = false;
+//                }
+//
+//                spnr_FoodList.setSelection(0);
+//                spnr_FoodList.setSelection(spinnerPosition);
             }
 
             @Override
@@ -324,7 +353,42 @@
                 {
                     case R.id.btn_Add:
                         // Add meal to database here
-                        if (foodName != null && mealQuantity != 0.0)
+                        if (WD.FirstRun)
+                        {
+                            Log.i("CYBERON", "Loading Database ...");
+                            try {
+                                tv_LoadProgress.setText("Loading FoodList ...");
+                                new FoodListLoader().execute().get();
+                                tv_LoadProgress.setText("Loading DailyTotalCalories ...");
+                                new GetDailyTotalCalories().execute().get();
+                                tv_LoadProgress.setText("Loading Meals ...");
+                                new GetMeals().execute().get();
+                                tv_LoadProgress.setText("Loading Weights ...");
+                                new GetWeights().execute().get();
+                                tv_LoadProgress.setText("");
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            }
+                            InitializeSpinner();
+                            WD.FirstRun = false;
+
+                            spnr_FoodList.setSelection(0);
+                            spnr_FoodList.setSelection(spinnerPosition);
+
+                            btn_Add.setText("Add Meal");
+                            btn_NewMeal.setVisibility(View.VISIBLE);
+                            btn_TodaysMeals.setVisibility(View.VISIBLE);
+                            btn_Details.setVisibility(View.VISIBLE);
+                            btn_Weight.setVisibility(View.VISIBLE);
+                            spnr_FoodList.setVisibility(View.VISIBLE);
+                            et_Quantity.setVisibility(View.VISIBLE);
+                            tv_DailyTotalCalories.setVisibility(View.VISIBLE);
+                            tv_CaloriesLabel.setVisibility(View.VISIBLE);
+                            tv_QuantityLabel.setVisibility(View.VISIBLE);
+                        }
+                        else if (foodName != null && mealQuantity != 0.0)
                         {
                             try {
                                 new EnterNewMeal().execute().get();
@@ -482,12 +546,12 @@
                     envelope.implicitTypes = true;
                     envelope.setOutputSoapObject(request);
 //                    Log.i("CYBERON", "Envelope in: " + envelope.bodyIn.toString());
-                    Log.i("CYBERON", "Envelope out: " + envelope.bodyOut.toString());
+//                    Log.i("CYBERON", "Envelope out: " + envelope.bodyOut.toString());
                     try {
-                        Log.i("CYBERON", "CS.URL: " + CS.URL);
-                        Log.i("CYBERON", "CS.NAMESPACE: " + CS.NAMESPACE);
-                        Log.i("CYBERON", "CS.METHOD_GET_FOOD_LIST: " + CS.METHOD_GET_FOOD_LIST);
-                        Log.i("CYBERON", "CS.SOAP_ACTION_GET_FOOD_LIST: " + CS.SOAP_ACTION_GET_FOOD_LIST);
+//                        Log.i("CYBERON", "CS.URL: " + CS.URL);
+//                        Log.i("CYBERON", "CS.NAMESPACE: " + CS.NAMESPACE);
+//                        Log.i("CYBERON", "CS.METHOD_GET_FOOD_LIST: " + CS.METHOD_GET_FOOD_LIST);
+//                        Log.i("CYBERON", "CS.SOAP_ACTION_GET_FOOD_LIST: " + CS.SOAP_ACTION_GET_FOOD_LIST);
 
                         myHttpTransport = new HttpTransportSE(CS.URL, CS.TIMEOUT);
                         myHttpTransport.debug = true;
