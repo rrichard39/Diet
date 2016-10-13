@@ -13,8 +13,6 @@ import java.util.Locale;
 
 public class DetailsActivity extends AppCompatActivity {
 
-    WeightData WD;
-
     TextView tv_StartDate;
     TextView tv_TargetDate;
     TextView tv_AchieveDate;
@@ -90,40 +88,40 @@ public class DetailsActivity extends AppCompatActivity {
 
     private void PopulateData()
     {
-        Float totalLoss = 0f;
-        Long diff = 0L;
-        Long weeks = 0L;
-        Long days = 0L;
+        Float totalLoss;
+        Long diff;
+        Long weeks;
+        Long days;
 
-        Float dayLoss = 0f;
-        Float weekLoss = 0f;
+        Float dayLoss;
+        Float weekLoss;
 
         DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
 
-        totalLoss = WD.StartWeight - WD.LastWeight;
+        totalLoss = WeightData.StartWeight - WeightData.LastWeight;
 
-        diff = WD.LastDate.getTime() - WD.StartDate.getTime();
+        diff = WeightData.LastDate.getTime() - WeightData.StartDate.getTime();
         weeks = Math.abs(diff / (1000 * 60 * 60 * 24*7));
         days = weeks * 7;
 
-        weekLoss = (WD.StartWeight - WD.LastWeight) / weeks;
-        dayLoss = (WD.StartWeight - WD.LastWeight) / days;
+        weekLoss = (WeightData.StartWeight - WeightData.LastWeight) / weeks;
+        dayLoss = (WeightData.StartWeight - WeightData.LastWeight) / days;
 
-        tv_StartDate.setText(String.format("%-19s %s", "Start date:", formatter.format(WD.StartDate)));
-        tv_TargetDate.setText(String.format("%-19s %s", "Target date:", formatter.format(WD.TargetDate)));
-        tv_AchieveDate.setText(String.format("%-19s %s", "Achieve date:", formatter.format(WD.AchieveDate)));
+        tv_StartDate.setText(String.format(Locale.US, "%-19s %s", "Start date:", formatter.format(WeightData.StartDate)));
+        tv_TargetDate.setText(String.format(Locale.US, "%-19s %s", "Target date:", formatter.format(WeightData.TargetDate)));
+        tv_AchieveDate.setText(String.format(Locale.US, "%-19s %s", "Achieve date:", formatter.format(WeightData.AchieveDate)));
 
-        tv_StartWeight.setText(String.format("%-20s %5.1f lbs", "Start weight:", WD.StartWeight));
-        tv_LastWeight.setText(String.format("%-20s %5.1f lbs", "Last weight:", WD.LastWeight));
-        tv_GainLoss.setText(String.format("%-20s %+5.1f lbs", "Week Loss/Gain:", WD.GainLoss));
-        tv_LowestWeight.setText(String.format("%-20s %5.1f lbs", "Lowest weight:", WD.LowestWeight));
-        tv_TargetWeight.setText(String.format("%-20s %s lbs", "Target weight:", "181.0"));
-        tv_Variance.setText(String.format("%-20s %+5.1f lbs", "Variance:", WD.Variance));
+        tv_StartWeight.setText(String.format(Locale.US, "%-20s %5.1f lbs", "Start weight:", WeightData.StartWeight));
+        tv_LastWeight.setText(String.format(Locale.US, "%-20s %5.1f lbs", "Last weight:", WeightData.LastWeight));
+        tv_GainLoss.setText(String.format(Locale.US, "%-20s %+5.1f lbs", "Week Loss/Gain:", WeightData.GainLoss));
+        tv_LowestWeight.setText(String.format(Locale.US, "%-20s %5.1f lbs", "Lowest weight:", WeightData.LowestWeight));
+        tv_TargetWeight.setText(String.format(Locale.US, "%-20s %s lbs", "Target weight:", "181.0"));
+        tv_Variance.setText(String.format(Locale.US, "%-20s %+5.1f lbs", "Variance:", WeightData.Variance));
 
-        tv_TotalLoss.setText(String.format("%-20s %5.1f lbs", "Total loss:",  totalLoss));
-        tv_WeeklyLoss.setText(String.format("%-20s %5.1f lbs", "Avg. Weekly loss:", weekLoss));
-        tv_DailyLoss.setText(String.format("%-20s %5.1f lbs", "Avg. Daily loss:", dayLoss));
+        tv_TotalLoss.setText(String.format(Locale.US, "%-20s %5.1f lbs", "Total loss:",  totalLoss));
+        tv_WeeklyLoss.setText(String.format(Locale.US, "%-20s %5.1f lbs", "Avg. Weekly loss:", weekLoss));
+        tv_DailyLoss.setText(String.format(Locale.US, "%-20s %5.1f lbs", "Avg. Daily loss:", dayLoss));
 
-        tv_BMI.setText(String.format("%-20s %5.1f", "BMI:", WD.BMI));
+        tv_BMI.setText(String.format(Locale.US, "%-20s %5.1f", "BMI:", WeightData.BMI));
     }
 }
