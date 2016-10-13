@@ -6,11 +6,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,13 +18,10 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 public class NewMealActivity extends AppCompatActivity implements View.OnClickListener {
 
-    CommStrings CS;
     TextView tv_Warning;
     EditText et_FoodName;
     EditText et_Calories;
@@ -51,6 +45,8 @@ public class NewMealActivity extends AppCompatActivity implements View.OnClickLi
 
         tv_Warning.setTextColor(Color.RED);
         tv_Warning.setText("");
+
+//        et_Calories.setKeyListener(DigitsKeyListener.getInstance(true, true));
     }
 
     @Override
@@ -62,7 +58,7 @@ public class NewMealActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.btn_AddToMealsList:
                 if (et_FoodName.getText().toString().equals("") || et_Calories.getText().toString().equals(""))
                 {
-                    tv_Warning.setText("Please fill in both fields");
+                    tv_Warning.setText(getString(R.string.Warning));
                 }
                 else
                 {
@@ -87,8 +83,6 @@ public class NewMealActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 break;
             case R.id.btn_Cancel:
-                foodName = "CANCEL";
-                calories = 0;
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("foodName", et_FoodName.getText().toString());
                 returnIntent.putExtra("calories", et_Calories.getText().toString());
@@ -121,7 +115,7 @@ public class NewMealActivity extends AppCompatActivity implements View.OnClickLi
         @Override
         protected Void doInBackground(Void... params) {
 
-            SoapObject request = new SoapObject(CS.NAMESPACE, CS.METHOD_ADD_NEW_FOOD);
+            SoapObject request = new SoapObject(CommStrings.NAMESPACE, CommStrings.METHOD_ADD_NEW_FOOD);
             request.addProperty("foodName", foodName);   // String
             request.addProperty("calories", calories);   // Integer
 
@@ -135,8 +129,8 @@ public class NewMealActivity extends AppCompatActivity implements View.OnClickLi
             do {
                 try {
 
-                    HttpTransportSE myHttpTransport = new HttpTransportSE(CS.URL, CS.TIMEOUT);
-                    myHttpTransport.call(CS.SOAP_ACTION_ADD_NEW_FOOD, envelope);
+                    HttpTransportSE myHttpTransport = new HttpTransportSE(CommStrings.URL, CommStrings.TIMEOUT);
+                    myHttpTransport.call(CommStrings.SOAP_ACTION_ADD_NEW_FOOD, envelope);
                     success = true;
                 } catch (Exception e) {
                     e.printStackTrace();
