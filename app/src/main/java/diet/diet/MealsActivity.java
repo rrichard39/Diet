@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 public class MealsActivity extends AppCompatActivity {
 
     TextView tv_MealList;
@@ -21,7 +23,7 @@ public class MealsActivity extends AppCompatActivity {
 
     private void ListMeals()
     {
-        String mealsString = "";
+        String mealsString;
         String food;
         Double quantity;
         Double total;
@@ -34,10 +36,10 @@ public class MealsActivity extends AppCompatActivity {
             food = Meals.MealList.get(i).Food.length() > 35 ? Meals.MealList.get(i).Food.substring(0, 32) + " ..." : Meals.MealList.get(i).Food;
             quantity = Meals.MealList.get(i).Quantity;
             total = Meals.MealList.get(i).Quantity * Meals.MealList.get(i).Calories;
-            mealsString += String.format("%4.1f %-32s %+6.1f\n", quantity, food, total);
+            mealsString += String.format(Locale.US, "%4.1f %-33s %+6.1f\n", quantity, food, total);
         }
         mealsString += "---------------------------------------------\n";
-        mealsString += String.format("                       TOTAL CALORIES: %6.1f\n", Meals.TOTAL_CALORIES);
+        mealsString += String.format(Locale.US, "                       TOTAL CALORIES: %+6.1f\n", Meals.TOTAL_CALORIES);
         tv_MealList.setText(mealsString);
     }
 }
