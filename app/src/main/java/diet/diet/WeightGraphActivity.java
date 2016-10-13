@@ -2,16 +2,13 @@ package diet.diet;
 
 import android.app.ProgressDialog;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.SoapFault;
@@ -25,11 +22,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
-import lecho.lib.hellocharts.model.ChartData;
 import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.PointValue;
@@ -37,8 +34,6 @@ import lecho.lib.hellocharts.view.LineChartView;
 
 public class WeightGraphActivity extends AppCompatActivity implements View.OnClickListener {
 
-    CommStrings CS;
-    WeightData WD;
     Weight weightClass;
 
     Button btn_AddWeight;
@@ -72,36 +67,36 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
 
     public void PopulateGraph()
     {
-        WD.GraphWeight = new ArrayList<PointValue>();
-        WD.GraphGoal = new ArrayList<PointValue>();
-        WD.GraphActual = new ArrayList<PointValue>();
+        WeightData.GraphWeight = new ArrayList<>();
+        WeightData.GraphGoal = new ArrayList<>();
+        WeightData.GraphActual = new ArrayList<>();
 
-        List<AxisValue> axisLabelsForX = new ArrayList<AxisValue>();
-        List<AxisValue> axisLabelsForY = new ArrayList<AxisValue>();
+        List<AxisValue> axisLabelsForX = new ArrayList<>();
+        List<AxisValue> axisLabelsForY = new ArrayList<>();
 
         String converter;
         Integer index = 0;
 
         try {
-            for (Integer i = 0; i < WD.GraphArray.size(); i++)
+            for (Integer i = 0; i < WeightData.GraphArray.size(); i++)
             {
                 index = i;
 
-                converter = WD.GraphArray.get(i).actual.toString();
-                WD.GraphActual.add(new PointValue(i, Float.parseFloat(converter)));
+                converter = WeightData.GraphArray.get(i).actual.toString();
+                WeightData.GraphActual.add(new PointValue(i, Float.parseFloat(converter)));
 
-                if (WD.GraphArray.get(i).goal > 0) {
-                    WD.GraphGoal.add(new PointValue(i, WD.GraphArray.get(i).goal));
+                if (WeightData.GraphArray.get(i).goal > 0) {
+                    WeightData.GraphGoal.add(new PointValue(i, WeightData.GraphArray.get(i).goal));
                 }
 
-                if (WD.GraphArray.get(i).weight1 > 0)
+                if (WeightData.GraphArray.get(i).weight1 > 0)
                 {
-                    WD.GraphWeight.add(new PointValue(i, WD.GraphArray.get(i).weight1));
+                    WeightData.GraphWeight.add(new PointValue(i, WeightData.GraphArray.get(i).weight1));
                 }
 
                 converter = i.toString();
-                axisLabelsForX.add(new AxisValue(Float.parseFloat(converter)).setLabel(WD.GraphArray.get(i).measureDate));
-                axisLabelsForY.add(new AxisValue(Float.parseFloat(converter)).setLabel(String.format("%5.1f", WD.GraphArray.get(i).actual)));
+                axisLabelsForX.add(new AxisValue(Float.parseFloat(converter)).setLabel(WeightData.GraphArray.get(i).measureDate));
+                axisLabelsForY.add(new AxisValue(Float.parseFloat(converter)).setLabel(String.format(Locale.US, "%5.1f", WeightData.GraphArray.get(i).actual)));
             }
         } catch (NumberFormatException e) {
             Log.i("CYBERON", "WeightActivity: " + e.getMessage());
@@ -114,9 +109,9 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
             Axis axisYLabels = new Axis(axisLabelsForY);
 
             //In most cased you can call data model methods in builder-pattern-like manner.
-            Line weightLine = new Line(WD.GraphWeight).setColor(Color.BLUE).setCubic(false);
-            Line goalLine = new Line(WD.GraphGoal).setColor(Color.GREEN).setCubic(false);
-            Line actualLine = new Line(WD.GraphActual).setColor(Color.RED).setCubic(false);
+            Line weightLine = new Line(WeightData.GraphWeight).setColor(Color.BLUE).setCubic(false);
+            Line goalLine = new Line(WeightData.GraphGoal).setColor(Color.GREEN).setCubic(false);
+            Line actualLine = new Line(WeightData.GraphActual).setColor(Color.RED).setCubic(false);
 
             weightLine.setStrokeWidth(3);
             goalLine.setStrokeWidth(3);
@@ -129,7 +124,7 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
             goalLine.setHasLabels(true);
             goalLine.setHasLines(true);
 
-            List<Line> lines = new ArrayList<Line>();
+            List<Line> lines = new ArrayList<>();
             lines.add(weightLine);
             lines.add(goalLine);
             lines.add(actualLine);
@@ -211,7 +206,7 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
             today = new Date();
             date = formatter.format(today);
 
-            SoapObject request = new SoapObject(CS.NAMESPACE, CS.METHOD_ADD_WEIGHT);
+            SoapObject request = new SoapObject(CommStrings.NAMESPACE, CommStrings.METHOD_ADD_WEIGHT);
             request.addProperty("date", date);       // string
             request.addProperty("newWeight", newWeight);        // double
 
@@ -225,8 +220,8 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
             do {
                 try {
 
-                    HttpTransportSE myHttpTransport = new HttpTransportSE(CS.URL, CS.TIMEOUT);
-                    myHttpTransport.call(CS.SOAP_ACTION_ADD_WEIGHT, envelope);
+                    HttpTransportSE myHttpTransport = new HttpTransportSE(CommStrings.URL, CommStrings.TIMEOUT);
+                    myHttpTransport.call(CommStrings.SOAP_ACTION_ADD_WEIGHT, envelope);
                     success = true;
 
                 } catch (Exception e) {
@@ -239,7 +234,7 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            WD.LastWeight = Float.parseFloat(et_Weight.getText().toString());
+            WeightData.LastWeight = Float.parseFloat(et_Weight.getText().toString());
             pdLoading.dismiss();
             et_Weight.setText("");
         }
@@ -254,7 +249,7 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
             pdLoading.setIndeterminate(true);
             pdLoading.setCancelable(false);
             success = false;
-            WD.FirstRun = true;
+            WeightData.FirstRun = true;
             pdLoading.setMessage("Loading weights ...");
             pdLoading.show();
         }
@@ -262,9 +257,9 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
         protected Void doInBackground(Void... params) {
 
             WeightItem weight;
-            WD.GraphArray = new ArrayList<WeightItem>();
+            WeightData.GraphArray = new ArrayList<>();
 
-            SoapObject request = new SoapObject(CS.NAMESPACE, CS.METHOD_GET_WEIGHT);
+            SoapObject request = new SoapObject(CommStrings.NAMESPACE, CommStrings.METHOD_GET_WEIGHT);
             SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
             envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
@@ -272,8 +267,8 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
             {
                 try {
 
-                    HttpTransportSE myHttpTransport = new HttpTransportSE(CS.URL, CS.TIMEOUT);
-                    myHttpTransport.call(CS.SOAP_ACTION_GET_WEIGHT, envelope);
+                    HttpTransportSE myHttpTransport = new HttpTransportSE(CommStrings.URL, CommStrings.TIMEOUT);
+                    myHttpTransport.call(CommStrings.SOAP_ACTION_GET_WEIGHT, envelope);
 
                     // To retrieve a group of records
                     SoapObject response = (SoapObject) envelope.getResponse();
@@ -291,7 +286,7 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
                             weight.recNum = Integer.parseInt(item.getProperty("recNum").toString());
                             weight.weight1 = Float.parseFloat(item.getProperty("weight1").toString());
                             weight.measureDate = item.getProperty("measureDate").toString();
-                            WD.GraphArray.add(weight);
+                            WeightData.GraphArray.add(weight);
                         } else {
                             break;
                         }
