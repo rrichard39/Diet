@@ -13,9 +13,6 @@ import java.util.Locale;
  */
 public class Weight {
 
-    WeightData WD;
-    PersonalData PD;
-
     Float goal = 0f;
     Date targetDate = new Date();
     Float startWeight = 0f;
@@ -26,7 +23,7 @@ public class Weight {
 
     public Weight()
     {
-//        String hitCounts = String.format("WEIGHT WD.FirstRun: %s", (WD.FirstRun) ? "TRUE" : "FALSE");
+//        String hitCounts = String.format(Locale.US, "WEIGHT WeightData.FirstRun: %s", (WeightData.FirstRun) ? "TRUE" : "FALSE");
 //        Log.i("CYBERON", hitCounts);
     }
 
@@ -38,33 +35,33 @@ public class Weight {
         Log.i("CYBERON", "PopulateGraphArray");
         try
         {
-            for (Integer i = 0; i < WD.GraphArray.size(); i++)
+            for (Integer i = 0; i < WeightData.GraphArray.size(); i++)
             {
-                if (WD.GraphArray.get(i).weight1 != 0)
+                if (WeightData.GraphArray.get(i).weight1 != 0)
                 {
                     if (goal == 0) {
-                        goal = WD.GraphArray.get(i).weight1;
-                        startWeight = WD.GraphArray.get(i).weight1;
-                        WD.StartWeight = WD.GraphArray.get(i).weight1;
-                        WD.LowestWeight = WD.GraphArray.get(i).weight1;
+                        goal = WeightData.GraphArray.get(i).weight1;
+                        startWeight = WeightData.GraphArray.get(i).weight1;
+                        WeightData.StartWeight = WeightData.GraphArray.get(i).weight1;
+                        WeightData.LowestWeight = WeightData.GraphArray.get(i).weight1;
                         try {
-                            WD.StartDate = formatter.parse(WD.GraphArray.get(0).measureDate);
+                            WeightData.StartDate = formatter.parse(WeightData.GraphArray.get(0).measureDate);
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
                     }
-                    if ( WD.GraphArray.get(i).weight1 < WD.LowestWeight)
+                    if ( WeightData.GraphArray.get(i).weight1 < WeightData.LowestWeight)
                     {
-                        WD.LowestWeight = WD.GraphArray.get(i).weight1;
+                        WeightData.LowestWeight = WeightData.GraphArray.get(i).weight1;
                     }
-                    WD.GraphArray.get(i).goal = goal;
-                    WD.GraphArray.get(i).x = x;
-                    WD.GraphArray.get(i).xy = x * WD.GraphArray.get(i).weight1;
-                    WD.GraphArray.get(i).v = Math.pow((double) x, 2);
-                    prevWeight = WD.LastWeight;
-                    WD.LastWeight = WD.GraphArray.get(i).weight1;
+                    WeightData.GraphArray.get(i).goal = goal;
+                    WeightData.GraphArray.get(i).x = x;
+                    WeightData.GraphArray.get(i).xy = x * WeightData.GraphArray.get(i).weight1;
+                    WeightData.GraphArray.get(i).v = Math.pow((double) x, 2);
+                    prevWeight = WeightData.LastWeight;
+                    WeightData.LastWeight = WeightData.GraphArray.get(i).weight1;
                     try {
-                        WD.LastDate = formatter.parse(WD.GraphArray.get(i).measureDate);
+                        WeightData.LastDate = formatter.parse(WeightData.GraphArray.get(i).measureDate);
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
@@ -77,7 +74,7 @@ public class Weight {
                     break;
                 }
             }
-            WD.GainLoss = WD.LastWeight - prevWeight;
+            WeightData.GainLoss = WeightData.LastWeight - prevWeight;
             ++x;
 
             // Create GraphItem for every week until goal is reached
@@ -95,10 +92,10 @@ public class Weight {
                 GraphItem.v = Math.pow((double)x, 2);
                 goal -= 2.5f;
                 x++;
-                WD.GraphArray.add(GraphItem);
+                WeightData.GraphArray.add(GraphItem);
             }
-            measureDate = WD.GraphArray.get(WD.GraphArray.size() - 1).measureDate;
-            WD.TargetDate = formatter.parse(WD.GraphArray.get(WD.GraphArray.size() - 1).measureDate);
+            measureDate = WeightData.GraphArray.get(WeightData.GraphArray.size() - 1).measureDate;
+            WeightData.TargetDate = formatter.parse(WeightData.GraphArray.get(WeightData.GraphArray.size() - 1).measureDate);
         }
         catch (Exception e)
         {
@@ -110,32 +107,32 @@ public class Weight {
     {
         Integer numPts = 0;         // $S$43
         Double sumNumPts = 0d;      // $S$41
-        Double sumNumPtsSq = 0d;
+        Double sumNumPtsSq;
         Double sumWeight = 0d;      // $T$41
         Double sumXY = 0d;          // $U$41
         Double sumX_Sq = 0d;        // $V$41    sum all x's for valid weight's
-        Double slope = 0d;          // $S$44     =(($S$43  * $U$41)-($S$41     *   $T$41  ))/(($S$43  *  $V$41 )-$S$41^2)
+        Double slope;               // $S$44     =(($S$43  * $U$41)-($S$41     *   $T$41  ))/(($S$43  *  $V$41 )-$S$41^2)
         //                                       =((numPts * sumXY)-(sumNumPts * sumWeight))/((numPts * sumX_Sq)-Math.Pow(sumNumPts, 2))
-        Double intercept = 0d;      // $S$45     =(($V$41   *   $T$41  )-($S$41     * $U$41))/(($S$43  *  $V$41 )-($S$41^2))
+        Double intercept;           // $S$45     =(($V$41   *   $T$41  )-($S$41     * $U$41))/(($S$43  *  $V$41 )-($S$41^2))
         //                                       =((sumX_Sq * sumWeight)-(sumNumPts * sumXY))/((numPts * sumX_Sq)-(Math.Pow(sumNumPts, 2))
-        Double intConverter = 0d;
-        Integer slopeMultiplier = 0;
-        Double actual = 0d;
+        Double intConverter;
+        Integer slopeMultiplier;
+        Double actual;
 
         Log.i("CYBERON", "CalculateGraphArray");
-        String hitCounts = String.format("CalculateGraphArray WD.FirstRun: %s", (WD.FirstRun) ? "TRUE" : "FALSE");
+        String hitCounts = String.format(Locale.US, "CalculateGraphArray WeightData.FirstRun: %s", (WeightData.FirstRun) ? "TRUE" : "FALSE");
         Log.i("CYBERON", hitCounts);
         try
         {
-            for (Integer i = 0; i < WD.GraphArray.size(); i++)
+            for (Integer i = 0; i < WeightData.GraphArray.size(); i++)
             {
-                if (WD.GraphArray.get(i).weight1 > 0)
+                if (WeightData.GraphArray.get(i).weight1 > 0)
                 {
                     numPts++;
-                    sumNumPts += WD.GraphArray.get(i).recNum - 1;
-                    sumWeight += WD.GraphArray.get(i).weight1;
-                    sumXY += WD.GraphArray.get(i).xy;
-                    sumX_Sq += WD.GraphArray.get(i).v;
+                    sumNumPts += WeightData.GraphArray.get(i).recNum - 1;
+                    sumWeight += WeightData.GraphArray.get(i).weight1;
+                    sumXY += WeightData.GraphArray.get(i).xy;
+                    sumX_Sq += WeightData.GraphArray.get(i).v;
                 }
             }
 
@@ -147,21 +144,21 @@ public class Weight {
             //         =((sumX_Sq * sumWeight) - (sumNumPts * sumXY)) / ((numPts * sumX_Sq) - sumNumPtsSq)
             intercept = ((sumX_Sq * sumWeight) - (sumNumPts * sumXY)) / ((numPts * sumX_Sq) - sumNumPtsSq);
 
-            for (Integer i = 0; i < WD.GraphArray.size(); i++)
+            for (Integer i = 0; i < WeightData.GraphArray.size(); i++)
             {
-                WD.GraphArray.get(i).actual = (slope * (WD.GraphArray.get(i).recNum - 1)) + intercept;
+                WeightData.GraphArray.get(i).actual = (slope * (WeightData.GraphArray.get(i).recNum - 1)) + intercept;
             }
 
-            WD.Variance = (float)(WD.GraphArray.get(numPts - 1).actual - WD.GraphArray.get(numPts - 1).goal);
+            WeightData.Variance = (float)(WeightData.GraphArray.get(numPts - 1).actual - WeightData.GraphArray.get(numPts - 1).goal);
 
-            slopeMultiplier = WD.GraphArray.size();
-            actual  = WD.GraphArray.get(WD.GraphArray.size() - 1).actual;
+            slopeMultiplier = WeightData.GraphArray.size();
+            actual  = WeightData.GraphArray.get(WeightData.GraphArray.size() - 1).actual;
 
             intConverter = (7 * (181 - intercept) / slope);
 
-            WD.AchieveDate = DateUtil.addDays(formatter.parse(WD.GraphArray.get(0).measureDate), intConverter.intValue() + 7);
+            WeightData.AchieveDate = DateUtil.addDays(formatter.parse(WeightData.GraphArray.get(0).measureDate), intConverter.intValue() + 7);
 
-//            if (WD.FirstRun) {
+//            if (WeightData.FirstRun) {
 
 //                Log.i("CYBERON", "Extending actual");
                 while (actual > 181d) {
@@ -173,13 +170,13 @@ public class Weight {
                     GraphItem.actual = actual;
                     GraphItem.goal = 0f;
                     GraphItem.weight1 = 0f;
-                    WD.GraphArray.add(GraphItem);
+                    WeightData.GraphArray.add(GraphItem);
                     slopeMultiplier++;
                 }
-//                WD.FirstRun = false;
+//                WeightData.FirstRun = false;
 //            }
 
-            WD.BMI = (WD.LastWeight * 703.0f)/(float)Math.pow(PD.height, 2);
+            WeightData.BMI = (WeightData.LastWeight * 703.0f)/(float)Math.pow(PersonalData.height, 2);
         }
         catch (Exception e)
         {
