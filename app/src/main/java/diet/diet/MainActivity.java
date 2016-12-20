@@ -259,13 +259,24 @@ import static diet.diet.R.layout.activity_main;
 //                }
 //                *****************************************************************************
 //                *****************************************************************************
-
-                if (wifiInfo.getSSID().contains(URLStrings.LAN_SSID)) {
-                    CommStrings.URL = URLStrings.LAN_URL;
-                    iv_Connection.setImageResource(R.drawable.wifi);
-                } else {
+                // test for any WiFi
+                if (String.valueOf(wifiInfo.getSupplicantState()).equals("DISCONNECTED") || String.valueOf(wifiInfo.getSupplicantState()).equals("SCANNING"))
+                {
                     CommStrings.URL = URLStrings.WAN_URL;
                     iv_Connection.setImageResource(R.drawable.celldata);
+                }
+                else
+                {
+
+                    if (wifiInfo.getSSID().contains(URLStrings.LAN_SSID))
+                    {
+                        CommStrings.URL = URLStrings.LAN_URL;
+                    }
+                    else
+                    {
+                        CommStrings.URL = URLStrings.WAN_URL;
+                    }
+                    iv_Connection.setImageResource(R.drawable.wifi);
                 }
                 Log.i("CYBERON", "SSID: " + wifiInfo.getSSID());
                 Log.i("CYBERON", "URL: " + CommStrings.URL);
