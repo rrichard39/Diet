@@ -68,7 +68,7 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
     public void PopulateGraph()
     {
         WeightData.GraphWeight = new ArrayList<>();
-        WeightData.GraphGoal = new ArrayList<>();
+        WeightData.GraphTarget = new ArrayList<>();
         WeightData.GraphActual = new ArrayList<>();
 
         List<AxisValue> axisLabelsForX = new ArrayList<>();
@@ -85,8 +85,8 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
                 converter = WeightData.GraphArray.get(i).actual.toString();
                 WeightData.GraphActual.add(new PointValue(i, Float.parseFloat(converter)));
 
-                if (WeightData.GraphArray.get(i).goal > 0) {
-                    WeightData.GraphGoal.add(new PointValue(i, WeightData.GraphArray.get(i).goal));
+                if (WeightData.GraphArray.get(i).goal > 0 && WeightData.GraphArray.get(i).goal >= PersonalData.TargetWeight) {
+                    WeightData.GraphTarget.add(new PointValue(i, WeightData.GraphArray.get(i).goal));
                 }
 
                 if (WeightData.GraphArray.get(i).weight1 > 0)
@@ -110,7 +110,7 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
 
             //In most cased you can call data model methods in builder-pattern-like manner.
             Line weightLine = new Line(WeightData.GraphWeight).setColor(Color.BLUE).setCubic(false);
-            Line goalLine = new Line(WeightData.GraphGoal).setColor(Color.GREEN).setCubic(false);
+            Line goalLine = new Line(WeightData.GraphTarget).setColor(Color.GREEN).setCubic(false);
             Line actualLine = new Line(WeightData.GraphActual).setColor(Color.RED).setCubic(false);
 
             weightLine.setStrokeWidth(3);

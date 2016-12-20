@@ -115,8 +115,8 @@ public class DetailsActivity extends AppCompatActivity {
         tv_LastWeight.setText(String.format(Locale.US, "%-20s %5.1f lbs", "Last weight:", WeightData.LastWeight));
         tv_GainLoss.setText(String.format(Locale.US, "%-20s %+5.1f lbs", "Week Loss/Gain:", WeightData.GainLoss));
         tv_LowestWeight.setText(String.format(Locale.US, "%-20s %5.1f lbs", "Lowest weight:", WeightData.LowestWeight));
-        tv_TargetWeight.setText(String.format(Locale.US, "%-20s %s lbs", "Target weight:", "181.0"));
-        tv_Variance.setText(String.format(Locale.US, "%-20s %+5.1f lbs", "Variance:", WeightData.Variance));
+        tv_TargetWeight.setText(String.format(Locale.US, "%-20s %5.1f lbs", "Target weight:", PersonalData.TargetWeight));
+        tv_Variance.setText(String.format(Locale.US, "%-20s %5.1f lbs", "Left to lose:", WeightData.Variance));
 
         tv_TotalLoss.setText(String.format(Locale.US, "%-20s %5.1f lbs", "Total loss:",  totalLoss));
         tv_WeeklyLoss.setText(String.format(Locale.US, "%-20s %5.1f lbs", "Avg. Weekly loss:", weekLoss));

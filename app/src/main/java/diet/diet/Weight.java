@@ -79,7 +79,7 @@ public class Weight {
 
             // Create GraphItem for every week until goal is reached
             // based on latest least squares calculation
-            while (goal >= 181f)
+            while (goal >= PersonalData.TargetWeight)
             {
                 WeightItem GraphItem = new WeightItem();
                 targetDate = DateUtil.addDays(targetDate, 7);
@@ -149,19 +149,20 @@ public class Weight {
                 WeightData.GraphArray.get(i).actual = (slope * (WeightData.GraphArray.get(i).recNum - 1)) + intercept;
             }
 
-            WeightData.Variance = (float)(WeightData.GraphArray.get(numPts - 1).actual - WeightData.GraphArray.get(numPts - 1).goal);
+//            WeightData.Variance = (float)(WeightData.GraphArray.get(numPts - 1).actual - WeightData.GraphArray.get(numPts - 1).goal);
+            WeightData.Variance = WeightData.LastWeight - PersonalData.TargetWeight;
 
             slopeMultiplier = WeightData.GraphArray.size();
             actual  = WeightData.GraphArray.get(WeightData.GraphArray.size() - 1).actual;
 
-            intConverter = (7 * (181 - intercept) / slope);
+            intConverter = (7 * (PersonalData.TargetWeight - intercept) / slope);
 
             WeightData.AchieveDate = DateUtil.addDays(formatter.parse(WeightData.GraphArray.get(0).measureDate), intConverter.intValue() + 7);
 
 //            if (WeightData.FirstRun) {
 
 //                Log.i("CYBERON", "Extending actual");
-                while (actual > 181d) {
+                while (actual > PersonalData.TargetWeight) {
                     WeightItem GraphItem = new WeightItem();
                     measureDate = formatter.format(DateUtil.addDays(formatter.parse(measureDate), 7));
                     GraphItem.measureDate = measureDate;

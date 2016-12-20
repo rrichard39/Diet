@@ -7,4 +7,5 @@ package diet.diet;
 public class PersonalData {
     public static String name = "Ron Richard";
     public static float height = 70.25f; /** in inches **/
+    public static Double TargetWeight = 171.0;
 }

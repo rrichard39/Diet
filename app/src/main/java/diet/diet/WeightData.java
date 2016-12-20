@@ -11,15 +11,16 @@ import lecho.lib.hellocharts.model.PointValue;
 public class WeightData {
 
     public static List<PointValue> GraphWeight;
-    public static List<PointValue> GraphGoal;
+    public static List<PointValue> GraphTarget;
     public static List<PointValue> GraphActual;
 
     public static List<WeightItem> GraphArray;
     public static Date StartDate;
     public static Date LastDate;
     public static Date TargetDate;
-    public static Float Variance;
+    public static Double Variance;
     public static Date AchieveDate;
+//    public static Float TargetWeight = 171f;
     public static Float StartWeight;
     public static Float LastWeight;
     public static Float GainLoss;
