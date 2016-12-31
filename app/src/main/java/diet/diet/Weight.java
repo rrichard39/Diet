@@ -154,8 +154,9 @@ public class Weight {
 
             slopeMultiplier = WeightData.GraphArray.size();
             actual  = WeightData.GraphArray.get(WeightData.GraphArray.size() - 1).actual;
+            WeightData.DevFromLS = WeightData.LastWeight - actual.floatValue();
 
-            intConverter = (7 * (PersonalData.TargetWeight - intercept) / slope);
+                    intConverter = (7 * (PersonalData.TargetWeight - intercept) / slope);
 
             WeightData.AchieveDate = DateUtil.addDays(formatter.parse(WeightData.GraphArray.get(0).measureDate), intConverter.intValue() + 7);
 

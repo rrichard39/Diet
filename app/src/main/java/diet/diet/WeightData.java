@@ -23,9 +23,10 @@ public class WeightData {
 //    public static Float TargetWeight = 171f;
     public static Float StartWeight;
     public static Float LastWeight;
+    public static Float DevFromLS;
     public static Float GainLoss;
     public static Float LowestWeight;
     public static Float BMI;
 
-    public static Boolean FirstRun;
+    public static Boolean FirstRun = null;
 }

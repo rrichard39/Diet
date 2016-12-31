@@ -1,17 +1,22 @@
 package diet.diet;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-public class DetailsActivity extends AppCompatActivity {
+import static diet.diet.MainActivity.returnFromActivity;
+
+public class DetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
     TextView tv_StartDate;
     TextView tv_TargetDate;
@@ -20,6 +25,7 @@ public class DetailsActivity extends AppCompatActivity {
 
     TextView tv_StartWeight;
     TextView tv_LastWeight;
+    TextView tv_DevFromLS;
     TextView tv_GainLoss;
     TextView tv_LowestWeight;
     TextView tv_TargetWeight;
@@ -29,6 +35,8 @@ public class DetailsActivity extends AppCompatActivity {
     TextView tv_DailyLoss;
 
     TextView tv_BMI;
+
+    Button btn_Return;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +53,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         tv_StartWeight = (TextView)findViewById(R.id.tv_StartWeight);
         tv_LastWeight = (TextView)findViewById(R.id.tv_LastWeight);
+        tv_DevFromLS = (TextView)findViewById(R.id.tv_DevFromLS);
         tv_GainLoss = (TextView)findViewById(R.id.tv_GainLoss);
         tv_LowestWeight = (TextView)findViewById(R.id.tv_LowestWeight);
         tv_TargetWeight = (TextView)findViewById(R.id.tv_TargetWeight);
@@ -55,6 +64,9 @@ public class DetailsActivity extends AppCompatActivity {
 
         tv_BMI = (TextView)findViewById(R.id.tv_BMI);
 
+        btn_Return = (Button) findViewById(R.id.btn_Return);
+        btn_Return.setOnClickListener(this);
+
         tv_StartDate.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
         tv_TargetDate.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
         tv_AchieveDate.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
@@ -62,6 +74,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         tv_StartWeight.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
         tv_LastWeight.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
+        tv_DevFromLS.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
         tv_GainLoss.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
         tv_LowestWeight.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
         tv_TargetWeight.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
@@ -113,6 +126,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         tv_StartWeight.setText(String.format(Locale.US, "%-20s %5.1f lbs", "Start weight:", WeightData.StartWeight));
         tv_LastWeight.setText(String.format(Locale.US, "%-20s %5.1f lbs", "Last weight:", WeightData.LastWeight));
+        tv_DevFromLS.setText(String.format(Locale.US, "%-20s %+5.1f lbs", "Dev. From LS:", WeightData.DevFromLS));
         tv_GainLoss.setText(String.format(Locale.US, "%-20s %+5.1f lbs", "Week Loss/Gain:", WeightData.GainLoss));
         tv_LowestWeight.setText(String.format(Locale.US, "%-20s %5.1f lbs", "Lowest weight:", WeightData.LowestWeight));
         tv_TargetWeight.setText(String.format(Locale.US, "%-20s %5.1f lbs", "Target weight:", PersonalData.TargetWeight));
@@ -123,5 +137,15 @@ public class DetailsActivity extends AppCompatActivity {
         tv_DailyLoss.setText(String.format(Locale.US, "%-20s %5.1f lbs", "Avg. Daily loss:", dayLoss));
 
         tv_BMI.setText(String.format(Locale.US, "%-20s %5.1f", "BMI:", WeightData.BMI));
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent returnIntent = new Intent(this, MainActivity.class);
+        returnIntent.putExtra("true", returnFromActivity);
+        returnIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        startActivity(returnIntent);
+//        setResult(Activity.RESULT_OK, returnIntent);
+        finish();
     }
 }
