@@ -5,9 +5,9 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
+        import android.net.wifi.WifiInfo;
+        import android.net.wifi.WifiManager;
+        import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -41,8 +41,14 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+        import java.io.PrintStream;
+        import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -59,7 +65,7 @@ import static diet.diet.R.layout.activity_main;
 
             static Integer spinnerPosition = 0;
             static Boolean trigger = false;
-
+            public static String returnFromActivity = "false";
             DiagVars DV;
             Weight weightClass;
 
@@ -164,63 +170,55 @@ import static diet.diet.R.layout.activity_main;
                 tv_LoadProgress.setText("");
                 spnr_FoodList.setMinimumHeight(60);
 
-                btn_Add.setText("Start");
-                btn_NewMeal.setVisibility(View.INVISIBLE);
-                btn_TodaysMeals.setVisibility(View.INVISIBLE);
-                btn_Details.setVisibility(View.INVISIBLE);
-                btn_Weight.setVisibility(View.INVISIBLE);
-                spnr_FoodList.setVisibility(View.INVISIBLE);
-                et_Quantity.setVisibility(View.INVISIBLE);
-                tv_DailyTotalCalories.setVisibility(View.INVISIBLE);
-                tv_CaloriesLabel.setVisibility(View.INVISIBLE);
-                tv_QuantityLabel.setVisibility(View.INVISIBLE);
+                spnr_FoodList.setOnItemSelectedListener(
+                        new AdapterView.OnItemSelectedListener()
+                        {
+                            @Override
+                            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id)
+                            {
+                                // your code here
+                                FoodItem currentItem;
+                                Integer index;
+                                String food;
 
-//                tv_LoadProgress.setVisibility(View.INVISIBLE);
+                                if (!spinnerPosition.equals(0) && trigger) {
+                                    spnr_FoodList.setSelection(spinnerPosition);
+                                    spinnerPosition = -1;
+                                    trigger = false;
+                                } else {
+                                    trigger = true;
+                                }
 
-                spnr_FoodList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                        // your code here
-                        FoodItem currentItem;
-                        Integer index;
-                        String food;
+                                index = spnr_FoodList.getSelectedItemPosition();
+                                food = spnr_FoodList.getSelectedItem().toString();
 
-                        if (!spinnerPosition.equals(0) && trigger) {
-                            spnr_FoodList.setSelection(spinnerPosition);
-                            spinnerPosition = -1;
-                            trigger = false;
-                        } else {
-                            trigger = true;
+                                if (!index.equals(0)) {
+                                    et_Quantity.setText("1");
+                                    et_Quantity.setSelection(et_Quantity.getText().length());
+                                    currentItem = GetFoodItem(food);
+                                    tv_Calories.setText(currentItem.calories.toString());
+                                    foodName = currentItem.food1;
+                                    UpdateCalories(currentItem);
+                                } else {
+                                    tv_Calories.setText("");
+                                    et_Quantity.setText("");
+                                    foodName = null;
+                                    mealQuantity = 0.0;
+                                }
+                            }
+
+                            @Override
+                            public void onNothingSelected(AdapterView<?> parentView) {
+                                // your code here
+                            }
+
                         }
+                );
 
-                        index = spnr_FoodList.getSelectedItemPosition();
-                        food = spnr_FoodList.getSelectedItem().toString();
-
-                        if (!index.equals(0)) {
-                            et_Quantity.setText("1");
-                            et_Quantity.setSelection(et_Quantity.getText().length());
-                            currentItem = GetFoodItem(food);
-                            tv_Calories.setText(currentItem.calories.toString());
-                            foodName = currentItem.food1;
-                            UpdateCalories(currentItem);
-                        } else {
-                            tv_Calories.setText("");
-                            et_Quantity.setText("");
-                            foodName = null;
-                            mealQuantity = 0.0;
-                        }
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parentView) {
-                        // your code here
-                    }
-
-                });
-
-                et_Quantity.addTextChangedListener(new TextWatcher() {
-
-                    public void afterTextChanged(Editable s) {
+                et_Quantity.addTextChangedListener(new TextWatcher()
+                {
+                    public void afterTextChanged(Editable s)
+                    {
                         Double totCals;
 
                         FoodItem selectedItem;
@@ -232,70 +230,68 @@ import static diet.diet.R.layout.activity_main;
                         }
                     }
 
-                    public void beforeTextChanged(CharSequence s, int start,
-                                                  int count, int after) {
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after)
+                    {
                     }
 
-                    public void onTextChanged(CharSequence s, int start,
-                                              int before, int count) {
+                    public void onTextChanged(CharSequence s, int start, int before, int count)
+                    {
                     }
-                });
+                }
+                );
 
                 setSupportActionBar(toolbar);
 
-                WifiManager wifiManager = (WifiManager) this.getSystemService(WIFI_SERVICE);
-                WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-
-//                *****************************************************************************
-//                *****************************************************************************
-//                This next bit requires you to create a custom class as follows:
-
-//                public class URLStrings {
-//                    public static final String LAN_SSID = "<your LAN SSID>";
-                // This is used when you're on your own WiFi
-//                    public static final String LAN_URL = "http://<IIS Server LAN IP>:<PORT>";
-                // This is when you're not on your home WIFI
-//                    public static final String WAN_URL = "http://<PUBLIC URL>:<PORT>";
-//                }
-//                *****************************************************************************
-//                *****************************************************************************
-                // test for any WiFi
-                if (String.valueOf(wifiInfo.getSupplicantState()).equals("DISCONNECTED") || String.valueOf(wifiInfo.getSupplicantState()).equals("SCANNING"))
-                {
-                    CommStrings.URL = URLStrings.WAN_URL;
-                    iv_Connection.setImageResource(R.drawable.celldata);
-                }
-                else
-                {
-
-                    if (wifiInfo.getSSID().contains(URLStrings.LAN_SSID))
-                    {
-                        CommStrings.URL = URLStrings.LAN_URL;
-                    }
-                    else
-                    {
-                        CommStrings.URL = URLStrings.WAN_URL;
-                    }
-                    iv_Connection.setImageResource(R.drawable.wifi);
-                }
-                Log.i("CYBERON", "SSID: " + wifiInfo.getSSID());
-                Log.i("CYBERON", "URL: " + CommStrings.URL);
+                SetUpCommumications();
 
                 DV.oR_hits = 0;
                 DV.oPR_hits = 0;
-                Log.i("CYBERON", "MainActivity setting WeightData.FirstRun: True");
-                WeightData.FirstRun = true;
 
                 // ATTENTION: This was auto-generated to implement the App Indexing API.
                 // See https://g.co/AppIndexing/AndroidStudio for more information.
                 client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+                // trying to maintain proper screen and data state after returning from other activities
+
+                // ********************************************************************
+//                DeleteFirstRun();   // TEMPORARY - to run clean until logic figured out
+                // ********************************************************************
+
+                if (!TestFirstRun())    // Should only fire on new run
+                {
+                    WeightData.FirstRun = true;
+                    SetStartScreen();
+                }
+                else
+                {
+                    if (ReadFirstRun())
+                    {
+                        WeightData.FirstRun = true;
+                        SetStartScreen();
+                    }
+                    else
+                    {
+                        WeightData.FirstRun = false;
+                        LoadDatabase();
+                        SetMainScreen();
+                    }
+                }
+                returnFromActivity = "false";
             }   // end onCreate
 
             @Override
-            public void onResume() {
+            public void onResume()
+            {
                 super.onResume();
                 String hitCounts = String.format(Locale.US, "onResume Hits: %s WeightData.FirstRun: %s", (++DV.oR_hits).toString(), (WeightData.FirstRun) ? "TRUE" : "FALSE");
                 Log.i("CYBERON", hitCounts);
+
+                if (DV.oR_hits > 1)
+                {
+                    WeightData.FirstRun = false;
+                    Log.i("CYBERON", "OnResume clearing FirstRun");
+                    SetMainScreen();
+                }
 
                 if (!spinnerPosition.equals(0)) {
                     spnr_FoodList.setSelection(spinnerPosition);
@@ -303,7 +299,8 @@ import static diet.diet.R.layout.activity_main;
             }
 
             @Override
-            protected void onPostResume() {
+            protected void onPostResume()
+            {
                 super.onPostResume();
 
                 String hitCounts = String.format(Locale.US, "onPostResume Hits: %s WeightData.FirstRun: %s", (++DV.oPR_hits).toString(), (WeightData.FirstRun) ? "TRUE" : "FALSE");
@@ -335,14 +332,32 @@ import static diet.diet.R.layout.activity_main;
             }
 
             @Override
-            public boolean onCreateOptionsMenu(Menu menu) {
+            protected void onDestroy()
+            {
+                super.onDestroy();
+                if (returnFromActivity.equals("false"))
+                    DeleteFirstRun();
+                if (returnFromActivity.equals("true"))
+                {
+                    try {
+                        SetFirstRun("false");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public boolean onCreateOptionsMenu(Menu menu)
+            {
                 // Inflate the menu; this adds items to the action bar if it is present.
                 getMenuInflater().inflate(R.menu.menu_main, menu);
                 return true;
             }
 
             @Override
-            public boolean onOptionsItemSelected(MenuItem item) {
+            public boolean onOptionsItemSelected(MenuItem item)
+            {
                 // Handle action bar item clicks here. The action bar will
                 // automatically handle clicks on the Home/Up button, so long
                 // as you specify a parent activity in AndroidManifest.xml.
@@ -369,49 +384,56 @@ import static diet.diet.R.layout.activity_main;
             }
 
             @Override
-            public void onClick(View view) {
+            public void onClick(View view)
+            {
                 switch (view.getId()) {
                     case R.id.btn_Add:
-                        // Add meal to database here
-                        if (WeightData.FirstRun) {
+                        if (WeightData.FirstRun)
+                        {
+                            String dirPath = getFilesDir().getAbsolutePath() + File.separator + "DietData";
+                            File d = new File(dirPath);
+
+                            if (!d.exists())
+                            {
+                                startActivityForResult(new Intent(this, PersonalDataActivity.class), 1);
+                            }
+
+                            Log.i("CYBERON", "Directory Exists");
+                            ReadPersonalData();
+
+                            // Add meal to database here
                             Log.i("CYBERON", "Loading Database ...");
-                            new FoodListLoader().execute();
-                            new GetDailyTotalCalories().execute();
-                            new GetMeals().execute();
-                            new GetWeights().execute();
-                            InitializeSpinner();
+                            LoadDatabase();
+//                            new FoodListLoader().execute();
+//                            new GetDailyTotalCalories().execute();
+//                            new GetMeals().execute();
+//                            new GetWeights().execute();
+//                            InitializeSpinner();
                             WeightData.FirstRun = false;
 
-                            spnr_FoodList.setSelection(0);
-                            spnr_FoodList.setSelection(spinnerPosition);
+                            SetMainScreen();
 
-                            btn_Add.setText("Add Meal");
-                            btn_NewMeal.setVisibility(View.VISIBLE);
-                            btn_TodaysMeals.setVisibility(View.VISIBLE);
-                            btn_Details.setVisibility(View.VISIBLE);
-                            btn_Weight.setVisibility(View.VISIBLE);
-                            spnr_FoodList.setVisibility(View.VISIBLE);
-                            et_Quantity.setVisibility(View.VISIBLE);
-                            tv_DailyTotalCalories.setVisibility(View.VISIBLE);
-                            tv_CaloriesLabel.setVisibility(View.VISIBLE);
-                            tv_QuantityLabel.setVisibility(View.VISIBLE);
-                        } else if (foodName != null && mealQuantity != 0.0) {
-                            try {
-                                new EnterNewMeal().execute().get();
-                                new GetDailyTotalCalories().execute().get();
-                                new GetMeals().execute().get();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            } catch (ExecutionException e) {
-                                e.printStackTrace();
-                            }
+                        } else if (foodName != null && mealQuantity != 0.0)
+                        {
+                            AddNewMeal();
+//                            try {
+//                                new EnterNewMeal().execute().get();
+//                                new GetDailyTotalCalories().execute().get();
+//                                new GetMeals().execute().get();
+//                            } catch (InterruptedException e) {
+//                                e.printStackTrace();
+//                            } catch (ExecutionException e) {
+//                                e.printStackTrace();
+//                            }
                         }
                         break;
                     case R.id.btn_NewMeal:
+                        returnFromActivity = "true";
                         // Open New Meal Activity
                         startActivityForResult(new Intent(this, NewMealActivity.class), 1);
                         break;
                     case R.id.btn_TodaysMeals:
+                        returnFromActivity = "true";
                         // Open New Meal Activity
                         try {
                             Intent intent = new Intent(this, MealsActivity.class);
@@ -423,16 +445,27 @@ import static diet.diet.R.layout.activity_main;
                         new GetDailyTotalCalories().execute();
                         break;
                     case R.id.btn_Details:
-                        // Open New Meal Activity
+                        returnFromActivity = "true";
+                        // Open Details Activity
                         try {
                             Intent intent = new Intent(this, DetailsActivity.class);
-                            startActivity(intent);
+                            startActivityForResult(intent, 1);
                         } catch (Exception e) {
                             Log.i("CYBERON", e.getMessage());
                             e.printStackTrace();
                         }
+                        WeightData.FirstRun = false;
+
+                        try {
+                            SetFirstRun("false");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Log.i("CYBERON", "SetFirstRun FAILED");
+                        }
+
                         break;
                     case R.id.btn_Weight:
+                        returnFromActivity = "true";
                         // Open New Meal Activity
                         try {
                             Intent intent = new Intent(this, WeightGraphActivity.class);
@@ -478,6 +511,212 @@ import static diet.diet.R.layout.activity_main;
                         InitializeSpinner();
                     }
                 }
+            }
+
+            // FirstRun Methods
+            // ----------------------------
+            private void SetFirstRun(String... status)  throws IOException
+            {
+                String filePath = getFilesDir().getAbsolutePath() + File.separator + "DietData" + File.separator + "FirstRun.txt";
+                PrintStream fileStream = new PrintStream(new File(filePath));
+                for (int i = 0; i < status.length; i++)
+                    fileStream.println(status[i]);
+                fileStream.flush();
+                fileStream.close();
+            }
+
+            private boolean ReadFirstRun()
+            {
+                String filePath = getFilesDir().getAbsolutePath() + File.separator + "DietData" + File.separator + "FirstRun.txt";
+                InputStream instream = null;
+                ArrayList<String> data = new ArrayList<String>();
+                String aLine = "";
+                boolean result;
+                try {
+                    // open the file for reading
+                    instream = new FileInputStream(filePath);
+                    // if file the available for reading
+                    if (instream != null) {
+                        // prepare the file for reading
+                        InputStreamReader inputreader = new InputStreamReader(instream);
+                        BufferedReader buffreader = new BufferedReader(inputreader);
+                        aLine = buffreader.readLine();
+                        do {
+                            data.add(aLine);
+                            aLine = buffreader.readLine();
+                        } while (!aLine.equals(null));
+                        instream.close();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // print stack trace.
+                    result = false;
+                }
+
+                if(data.get(0).equals("true"))
+                {
+                    result = true;
+                }
+                else
+                {
+                    result = false;
+                }
+                return result;
+            }
+
+            private boolean TestFirstRun()
+            {
+                String filePath = getFilesDir().getAbsolutePath() + File.separator + "DietData" + File.separator + "FirstRun.txt";
+                File f = new File(filePath);
+                if (f.exists())
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            private void DeleteFirstRun()
+            {
+                String filePath = getFilesDir().getAbsolutePath() + File.separator + "DietData" + File.separator + "FirstRun.txt";
+                File file = new File(filePath);
+                file.delete();
+            }
+            // ----------------------------
+
+            // MainActivity Screes Setup Methods
+            // ----------------------------
+            private void SetMainScreen()
+            {
+                spnr_FoodList.setSelection(0);
+                spnr_FoodList.setSelection(spinnerPosition);
+
+                btn_Add.setText("Add Meal");
+                btn_NewMeal.setVisibility(View.VISIBLE);
+                btn_TodaysMeals.setVisibility(View.VISIBLE);
+                btn_Details.setVisibility(View.VISIBLE);
+                btn_Weight.setVisibility(View.VISIBLE);
+                spnr_FoodList.setVisibility(View.VISIBLE);
+                et_Quantity.setVisibility(View.VISIBLE);
+                tv_DailyTotalCalories.setVisibility(View.VISIBLE);
+                tv_CaloriesLabel.setVisibility(View.VISIBLE);
+                tv_QuantityLabel.setVisibility(View.VISIBLE);
+            }
+
+            private void SetStartScreen()
+            {
+                btn_Add.setText("Start");
+                btn_NewMeal.setVisibility(View.INVISIBLE);
+                btn_TodaysMeals.setVisibility(View.INVISIBLE);
+                btn_Details.setVisibility(View.INVISIBLE);
+                btn_Weight.setVisibility(View.INVISIBLE);
+                spnr_FoodList.setVisibility(View.INVISIBLE);
+                et_Quantity.setVisibility(View.INVISIBLE);
+                tv_DailyTotalCalories.setVisibility(View.INVISIBLE);
+                tv_CaloriesLabel.setVisibility(View.INVISIBLE);
+                tv_QuantityLabel.setVisibility(View.INVISIBLE);
+            }
+            // ----------------------------
+
+            private void AddNewMeal()
+            {
+                try {
+                    new EnterNewMeal().execute().get();
+                    new GetDailyTotalCalories().execute().get();
+                    new GetMeals().execute().get();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            private void LoadDatabase()
+            {
+                new FoodListLoader().execute();
+                new GetDailyTotalCalories().execute();
+                new GetMeals().execute();
+                new GetWeights().execute();
+                InitializeSpinner();
+            }
+            private void SetUpCommumications()
+            {
+                WifiManager wifiManager = (WifiManager) this.getSystemService(WIFI_SERVICE);
+                WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+
+//                *****************************************************************************
+//                *****************************************************************************
+//                This next bit requires you to create a custom class as follows:
+
+//                public class URLStrings {
+//                    public static final String LAN_SSID = "<your LAN SSID>";
+                // This is used when you're on your own WiFi
+//                    public static final String LAN_URL = "http://<IIS Server LAN IP>:<PORT>";
+                // This is when you're not on your home WIFI
+//                    public static final String WAN_URL = "http://<PUBLIC URL>:<PORT>";
+//                }
+//                *****************************************************************************
+//                *****************************************************************************
+                // test for any WiFi
+                if (String.valueOf(wifiInfo.getSupplicantState()).equals("DISCONNECTED") || String.valueOf(wifiInfo.getSupplicantState()).equals("SCANNING"))
+                {
+                    CommStrings.URL = URLStrings.WAN_URL;
+                    iv_Connection.setImageResource(R.drawable.celldata);
+                }
+                else
+                {
+
+                    if (wifiInfo.getSSID().contains(URLStrings.LAN_SSID))
+                    {
+                        CommStrings.URL = URLStrings.LAN_URL;
+                    }
+                    else
+                    {
+                        CommStrings.URL = URLStrings.WAN_URL;
+                    }
+                    iv_Connection.setImageResource(R.drawable.wifi);
+                }
+                Log.i("CYBERON", "SSID: " + wifiInfo.getSSID());
+                Log.i("CYBERON", "URL: " + CommStrings.URL);
+            }
+
+            private boolean ReadPersonalData()
+            {
+                String filePath = getFilesDir().getAbsolutePath() + File.separator + "DietData" + File.separator + "DietData.txt";
+
+                InputStream instream = null;
+                try {
+                    // open the file for reading
+                    instream = new FileInputStream(filePath);
+                    // if file the available for reading
+                    if (instream != null) {
+                        // prepare the file for reading
+                        InputStreamReader inputreader = new InputStreamReader(instream);
+                        BufferedReader buffreader = new BufferedReader(inputreader);
+
+                        String line;
+
+                        line = buffreader.readLine();
+                        PersonalData.name = line;
+                        line = buffreader.readLine();
+                        PersonalData.height = Float.parseFloat(line);
+                        line = buffreader.readLine();
+                        PersonalData.InitialWeight = Double.parseDouble(line);
+                        line = buffreader.readLine();
+                        PersonalData.TargetWeight = Double.parseDouble(line);
+
+                        instream.close();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // print stack trace.
+                    return false;
+                }
+                return true;
             }
 
             private void InitializeSpinner() {

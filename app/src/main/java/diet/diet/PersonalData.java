@@ -5,7 +5,13 @@ package diet.diet;
  */
 
 public class PersonalData {
-    public static String name = "Ron Richard";
-    public static float height = 70.25f; /** in inches **/
-    public static Double TargetWeight = 171.0;
+//    public static String name = "Ron Richard";
+//    public static float height = 70.25f; /** in inches **/
+//    public static Double InitialWeight = 276.0;
+//    public static Double TargetWeight = 171.0;
+
+    public static String name;
+    public static float height; /** in inches **/
+    public static Double InitialWeight;
+    public static Double TargetWeight;
 }
