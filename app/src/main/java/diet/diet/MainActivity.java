@@ -716,6 +716,8 @@ import static diet.diet.R.layout.activity_main;
                         PersonalData.InitialWeight = Double.parseDouble(line);
                         line = buffreader.readLine();
                         PersonalData.TargetWeight = Double.parseDouble(line);
+                        line = buffreader.readLine();
+                        PersonalData.SSID = line;
 
                         instream.close();
                     }
