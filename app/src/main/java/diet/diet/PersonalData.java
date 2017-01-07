@@ -10,8 +10,9 @@ public class PersonalData {
 //    public static Double InitialWeight = 276.0;
 //    public static Double TargetWeight = 171.0;
 
-    public static String name;
-    public static float height; /** in inches **/
+    public static String Name = "";
+    public static float Height; /** in inches **/
     public static Double InitialWeight;
     public static Double TargetWeight;
+    public  static String SSID = "";
 }

@@ -178,7 +178,7 @@ public class Weight {
 //                WeightData.FirstRun = false;
 //            }
 
-            WeightData.BMI = (WeightData.LastWeight * 703.0f)/(float)Math.pow(PersonalData.height, 2);
+            WeightData.BMI = (WeightData.LastWeight * 703.0f)/(float)Math.pow(PersonalData.Height, 2);
         }
         catch (Exception e)
         {

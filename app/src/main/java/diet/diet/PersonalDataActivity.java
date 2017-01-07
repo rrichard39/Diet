@@ -23,6 +23,7 @@ public class PersonalDataActivity extends AppCompatActivity implements View.OnCl
     EditText et_Height;
     EditText et_InitialWeight;
     EditText et_TargetWeight;
+    EditText et_SSID;
     TextView tv_Warning;
 
     @Override
@@ -39,6 +40,7 @@ public class PersonalDataActivity extends AppCompatActivity implements View.OnCl
         et_Height = (EditText) findViewById(R.id.et_Height);
         et_InitialWeight = (EditText) findViewById(R.id.et_InitialWeight);
         et_TargetWeight = (EditText) findViewById(R.id.et_TargetWeight);
+        et_SSID = (EditText) findViewById(R.id.et_SSID);
         tv_Warning = (TextView) findViewById(R.id.tv_Warning);
         tv_Warning.setTextColor(Color.RED);
         tv_Warning.setText("");
@@ -52,6 +54,14 @@ public class PersonalDataActivity extends AppCompatActivity implements View.OnCl
 //            }
 //        }
 //    );
+        if (PersonalData.Name != "")
+        {
+            et_Name.setText(PersonalData.Name);
+            et_Height.setText(String.format("%.2f", PersonalData.Height));
+            et_InitialWeight.setText(String.format("%.0f", PersonalData.InitialWeight));
+            et_TargetWeight.setText(String.format("%.0f", PersonalData.TargetWeight));
+            et_SSID.setText(PersonalData.SSID);
+        }
     }
 
     @Override
@@ -62,11 +72,11 @@ public class PersonalDataActivity extends AppCompatActivity implements View.OnCl
         }
         else
         {
-            PersonalData.name = et_Name.getText().toString();
-            PersonalData.height = Float.parseFloat(et_Height.getText().toString());
+            PersonalData.Name = et_Name.getText().toString();
+            PersonalData.Height = Float.parseFloat(et_Height.getText().toString());
             PersonalData.InitialWeight = Double.parseDouble(et_InitialWeight.getText().toString());
             PersonalData.TargetWeight = Double.parseDouble(et_TargetWeight.getText().toString());
-
+            PersonalData.SSID = et_SSID.getText().toString();
             try {
                 savePersonalData();
             } catch (IOException e) {
@@ -92,6 +102,7 @@ public class PersonalDataActivity extends AppCompatActivity implements View.OnCl
         fileStream.println(et_Height.getText().toString());
         fileStream.println(et_InitialWeight.getText().toString());
         fileStream.println(et_TargetWeight.getText().toString());
+        fileStream.println(et_SSID.getText().toString());
         fileStream.flush();
         fileStream.close();
     }

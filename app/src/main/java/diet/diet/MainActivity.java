@@ -377,6 +377,15 @@ import static diet.diet.R.layout.activity_main;
                     case R.id.action_weightGraph:
                         onClick(btn_Weight);
                         return true;
+                    case R.id.action_PersonalData:
+                        try {
+                            Intent intent = new Intent(this, PersonalDataActivity.class);
+                            startActivity(intent);
+                        } catch (Exception e) {
+                            Log.i("CYBERON", e.getMessage());
+                            e.printStackTrace();
+                        }
+                        return true;
                 }
 
                 super.onOptionsItemSelected(item);
@@ -669,7 +678,7 @@ import static diet.diet.R.layout.activity_main;
                 else
                 {
 
-                    if (wifiInfo.getSSID().contains(URLStrings.LAN_SSID))
+                    if (wifiInfo.getSSID().contains(PersonalData.SSID))
                     {
                         CommStrings.URL = URLStrings.LAN_URL;
                     }
@@ -700,9 +709,9 @@ import static diet.diet.R.layout.activity_main;
                         String line;
 
                         line = buffreader.readLine();
-                        PersonalData.name = line;
+                        PersonalData.Name = line;
                         line = buffreader.readLine();
-                        PersonalData.height = Float.parseFloat(line);
+                        PersonalData.Height = Float.parseFloat(line);
                         line = buffreader.readLine();
                         PersonalData.InitialWeight = Double.parseDouble(line);
                         line = buffreader.readLine();
@@ -771,7 +780,7 @@ import static diet.diet.R.layout.activity_main;
              */
             public Action getIndexApiAction() {
                 Thing object = new Thing.Builder()
-                        .setName("Main Page") // TODO: Define a title for the content shown.
+                        .setName("Diet")
                         // TODO: Make sure this auto-generated URL is correct.
                         .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
                         .build();
