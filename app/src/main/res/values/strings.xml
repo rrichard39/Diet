@@ -1,5 +1,12 @@
 <resources>
     <string name="app_name">Diet</string>
     <string name="Calories">Calories:</string>
-
+    <string name="Warning">Please fill in both fields</string>
+    <string name="Warning2">Please fill in all fields</string>
+    <string name="LoadFL">Loading Food List ...</string>
+    <string name="LoadDTC">Loading Daily Total Calories ...</string>
+    <string name="LoadM">Loading Meals ...</string>
+    <string name="LoadW">Loading Weights ...</string>
+    <string name="LoadNull"></string>
+    <string name="title_activity_personal_data">Personal Data</string>
 </resources>
