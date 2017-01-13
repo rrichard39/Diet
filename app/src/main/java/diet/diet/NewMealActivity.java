@@ -84,8 +84,8 @@ public class NewMealActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.btn_Cancel:
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("foodName", et_FoodName.getText().toString());
-                returnIntent.putExtra("calories", et_Calories.getText().toString());
+                returnIntent.putExtra("foodName", "CANCEL");
+                returnIntent.putExtra("calories", "CANCEL");
                 // return result value
                 setResult(Activity.RESULT_CANCELED, returnIntent);
                 finish();
