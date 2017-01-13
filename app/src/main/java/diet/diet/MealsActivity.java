@@ -39,7 +39,7 @@ public class MealsActivity extends AppCompatActivity {
             mealsString += String.format(Locale.US, "%4.1f %-33s %+6.1f\n", quantity, food, total);
         }
         mealsString += "---------------------------------------------\n";
-        mealsString += String.format(Locale.US, "                       TOTAL CALORIES: %+6.1f\n", Meals.TOTAL_CALORIES);
+        mealsString += String.format(Locale.US, "                      TOTAL CALORIES: %+6.1f\n", Meals.TOTAL_CALORIES);
         tv_MealList.setText(mealsString);
     }
 }
