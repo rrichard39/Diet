@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_personal_data"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_gradient"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="diet.diet.PersonalDataActivity"
+    tools:showIn="@layout/activity_personal_data">
+
+    <TextView
+        android:text="Name:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:ems="10"
+        android:width="50dp"
+        android:id="@+id/tv_Name" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:width="220dp"
+        android:inputType="textCapWords|textPersonName"
+        android:ems="10"
+        android:id="@+id/et_Name"
+        android:layout_alignBaseline="@+id/tv_Name"
+        android:layout_alignBottom="@+id/tv_Name"
+        android:layout_alignParentEnd="true"
+        android:background="@android:color/white" />
+
+    <TextView
+        android:text="Height:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:id="@+id/tv_Height"
+        android:layout_below="@+id/et_Name" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:ems="10"
+        android:id="@+id/et_Height"
+        android:background="@android:color/white"
+        android:width="50dp"
+        android:layout_alignTop="@+id/tv_Height"
+        android:layout_alignStart="@+id/et_Name" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="77dp"
+        android:id="@+id/tv_Inches"
+        android:text="Inches"
+        android:layout_alignStart="@+id/et_Name"
+        android:layout_alignBottom="@+id/et_Height" />
+
+    <TextView
+        android:text="Initial Weight:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_Height"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="25dp"
+        android:id="@+id/tv_InitialWeight" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:width="50dp"
+        android:ems="10"
+        android:id="@+id/et_InitialWeight"
+        android:background="@android:color/white"
+        android:layout_alignTop="@+id/tv_InitialWeight"
+        android:layout_alignStart="@+id/et_Height" />
+
+    <TextView
+        android:text="lbs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_InitialLbs"
+        android:layout_alignBaseline="@+id/et_InitialWeight"
+        android:layout_alignBottom="@+id/et_InitialWeight"
+        android:layout_alignStart="@+id/tv_Inches" />
+
+    <TextView
+        android:text="Target Weight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_InitialWeight"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="25dp"
+        android:id="@+id/tv_TargetWeight" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:width="50dp"
+        android:ems="10"
+        android:id="@+id/et_TargetWeight"
+        android:background="@android:color/white"
+        android:layout_alignTop="@+id/tv_TargetWeight"
+        android:layout_alignStart="@+id/et_InitialWeight" />
+
+    <TextView
+        android:text="lbs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_TargetLbs"
+        android:layout_alignBaseline="@+id/et_TargetWeight"
+        android:layout_alignBottom="@+id/et_TargetWeight"
+        android:layout_alignStart="@+id/tv_Inches" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/tv_Warning"
+        tools:foreground="?android:attr/colorControlActivated"
+        android:text="WARNING" />
+
+    <TextView
+        android:text="Home SSID:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_TargetWeight"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="16dp"
+        android:id="@+id/tv_SSID" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:width="150dp"
+        android:ems="10"
+        android:id="@+id/et_SSID"
+        android:background="@android:color/white"
+        android:layout_alignStart="@+id/et_TargetWeight"
+        android:layout_alignTop="@+id/tv_SSID" />
+
+    <Button
+        android:text="Enter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/et_SSID"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="33dp"
+        android:id="@+id/btn_Enter" />
+    />
+
+</RelativeLayout>
