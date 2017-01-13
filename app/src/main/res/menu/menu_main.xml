@@ -22,4 +22,9 @@
         android:orderInCategory="300"
         android:title="Weight Graph"
         app:showAsAction="never" />
+    <item
+        android:title="Edit Personal Data"
+        android:orderInCategory="301"
+        android:id="@+id/action_PersonalData"
+        app:showAsAction="never" />
 </menu>

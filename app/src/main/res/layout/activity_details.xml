@@ -1,156 +1,180 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<ScrollView android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="diet.diet.DetailsActivity"
-    android:background="@drawable/main_gradient">
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context="diet.diet.DetailsActivity"
+        android:background="@drawable/main_gradient">
 
-    <!-- StartDate -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:fontFeatureSettings="Typeface.MONOSPACE"
-        android:id="@+id/tv_StartDate"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        <!-- StartDate -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:fontFeatureSettings="Typeface.MONOSPACE"
+            android:id="@+id/tv_StartDate"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
 
-    <!-- TargetDate -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:fontFeatureSettings="Typeface.MONOSPACE"
-        android:id="@+id/tv_TargetDate"
-        android:layout_below="@+id/tv_StartDate"
-        android:layout_alignParentStart="true" />
+        <!-- TargetDate -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:fontFeatureSettings="Typeface.MONOSPACE"
+            android:id="@+id/tv_TargetDate"
+            android:layout_below="@+id/tv_StartDate"
+            android:layout_alignParentStart="true" />
 
-    <!-- AchieveDate -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:id="@+id/tv_AchieveDate"
-        android:layout_below="@+id/tv_TargetDate"
-        android:layout_alignParentStart="true" />
+        <!-- AchieveDate -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/tv_AchieveDate"
+            android:layout_below="@+id/tv_TargetDate"
+            android:layout_alignParentStart="true" />
 
-    <!-- StartWeight -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:fontFeatureSettings="Typeface.MONOSPACE"
-        android:id="@+id/tv_StartWeight"
-        android:layout_marginTop="37dp"
-        android:layout_below="@+id/tv_AchieveDate" />
-        android:layout_alignParentStart="true"
+        <!-- StartWeight -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:fontFeatureSettings="Typeface.MONOSPACE"
+            android:id="@+id/tv_StartWeight"
+            android:layout_marginTop="37dp"
+            android:layout_below="@+id/tv_AchieveDate" />
+            android:layout_alignParentStart="true"
 
-    <!-- LastWeight -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:fontFeatureSettings="Typeface.MONOSPACE"
-        android:id="@+id/tv_LastWeight"
-        android:layout_below="@+id/tv_StartWeight"
-        android:layout_alignParentStart="true" />
+        <!-- LastWeight -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:fontFeatureSettings="Typeface.MONOSPACE"
+            android:id="@+id/tv_LastWeight"
+            android:layout_below="@+id/tv_StartWeight"
+            android:layout_alignParentStart="true" />
 
-    <!-- LowestWeight -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:id="@+id/tv_GainLoss"
-        android:layout_below="@+id/tv_LastWeight"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentStart="true" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:fontFeatureSettings="Typeface.MONOSPACE"
+            android:layout_below="@+id/tv_LastWeight"
+            android:id="@+id/tv_DevFromLS"
+            android:layout_alignParentStart="true" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:id="@+id/tv_LowestWeight"
-        android:layout_below="@+id/tv_GainLoss"
-        android:layout_alignParentStart="true" />
+        <!-- LowestWeight -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/tv_GainLoss"
+            android:layout_below="@+id/tv_DevFromLS"
+            android:layout_alignParentEnd="false"
+            android:layout_alignParentStart="true" />
 
-    <!-- TargetWeight -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:fontFeatureSettings="Typeface.MONOSPACE"
-        android:id="@+id/tv_TargetWeight"
-        android:layout_below="@+id/tv_LowestWeight"
-        android:layout_alignParentStart="true" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/tv_LowestWeight"
+            android:layout_below="@+id/tv_GainLoss"
+            android:layout_alignParentStart="true" />
 
-    <!-- Variance -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:fontFeatureSettings="Typeface.MONOSPACE"
-        android:id="@+id/tv_Variance"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/tv_TargetWeight"
-        android:layout_alignParentLeft="true" />
+        <!-- TargetWeight -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:fontFeatureSettings="Typeface.MONOSPACE"
+            android:id="@+id/tv_TargetWeight"
+            android:layout_below="@+id/tv_LowestWeight"
+            android:layout_alignParentStart="true" />
 
-    <!-- TotalLoss -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:fontFeatureSettings="Typeface.MONOSPACE"
-        android:id="@+id/tv_TotalLoss"
-        android:layout_marginTop="37dp"
-        android:layout_below="@+id/tv_Variance"
-        android:layout_alignParentStart="true" />
+        <!-- Variance -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:fontFeatureSettings="Typeface.MONOSPACE"
+            android:id="@+id/tv_Variance"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/tv_TargetWeight"
+            android:layout_alignParentLeft="true" />
+
+        <!-- TotalLoss -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:fontFeatureSettings="Typeface.MONOSPACE"
+            android:id="@+id/tv_TotalLoss"
+            android:layout_marginTop="37dp"
+            android:layout_below="@+id/tv_Variance"
+            android:layout_alignParentStart="true" />
 
 
-    <!-- WeeklyLoss -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:fontFeatureSettings="Typeface.MONOSPACE"
-        android:id="@+id/tv_WeeklyLoss"
-        android:layout_below="@+id/tv_TotalLoss"
-        android:layout_alignParentStart="true" />
+        <!-- WeeklyLoss -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:fontFeatureSettings="Typeface.MONOSPACE"
+            android:id="@+id/tv_WeeklyLoss"
+            android:layout_below="@+id/tv_TotalLoss"
+            android:layout_alignParentStart="true" />
 
-    <!-- DailyLoss -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:fontFeatureSettings="Typeface.MONOSPACE"
-        android:id="@+id/tv_DailyLoss"
-        android:layout_below="@+id/tv_WeeklyLoss"
-        android:layout_alignParentStart="true" />
+        <!-- DailyLoss -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:fontFeatureSettings="Typeface.MONOSPACE"
+            android:id="@+id/tv_DailyLoss"
+            android:layout_below="@+id/tv_WeeklyLoss"
+            android:layout_alignParentStart="true" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:id="@+id/tv_BMI"
-        android:layout_marginTop="38dp"
-        android:layout_below="@+id/tv_DailyLoss"
-        android:layout_alignParentStart="true" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:id="@+id/tv_BMI"
+            android:layout_marginTop="38dp"
+            android:layout_below="@+id/tv_DailyLoss"
+            android:layout_alignParentStart="true" />
 
-</RelativeLayout>
+        <Button
+            android:text="Return"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_BMI"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/btn_Return"
+            android:layout_marginTop="10dp"
+            android:width="70dp" />
+
+    </RelativeLayout>
+</ScrollView>
