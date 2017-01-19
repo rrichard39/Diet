@@ -41,4 +41,12 @@ public class CommStrings {
     // Add Weight
     public static final String METHOD_ADD_WEIGHT = "AddWeight";
     public final static String SOAP_ACTION_ADD_WEIGHT = "http://tempuri.org/IDietService/AddWeight";
+
+    // Get Personal Data
+    public static final String METHOD_GET_PERSONAL_DATA = "GetPersonalData";
+    public final static String SOAP_ACTION_GET_PERSONAL_DATA = "http://tempuri.org/IDietService/GetPersonalData";
+
+    // Set Personal Data
+    public static final String METHOD_ADD_PERSONAL_DATA = "AddPersonalData";
+    public final static String SOAP_ACTION_ADD_PERSONAL_DATA = "http://tempuri.org/IDietService/AddPersonalData";
 }
