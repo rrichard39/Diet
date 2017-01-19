@@ -12,7 +12,7 @@ public class PersonalData {
 
     public static String Name = "";
     public static float Height; /** in inches **/
-    public static Double InitialWeight;
-    public static Double TargetWeight;
+    public static double InitialWeight;
+    public static double TargetWeight;
     public  static String SSID = "";
 }

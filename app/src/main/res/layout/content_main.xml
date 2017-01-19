@@ -148,6 +148,18 @@
         android:id="@+id/iv_Connection"
         android:layout_below="@+id/btn_TodaysMeals"
         android:layout_marginTop="27dp"
-        android:adjustViewBounds="false" />
+        android:adjustViewBounds="false"
+        android:layout_toStartOf="@+id/et_Quantity" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#f0d090"
+        android:id="@+id/tv_SSID"
+        android:layout_alignLeft="@id/iv_Connection"
+        android:layout_alignBottom="@+id/tv_LoadProgress"
+        android:layout_marginLeft="95dp"
+        android:layout_toEndOf="@+id/iv_Connection" />
 
 </RelativeLayout>
