@@ -158,25 +158,30 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
             Log.i("CYBERON", "Chart Setup: " + e.getMessage());
             e.printStackTrace();
         }
+        et_Weight.setText("");
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
+        switch (v.getId())
+        {
             case R.id.btn_AddWeight:
-                newWeight = Double.parseDouble(et_Weight.getText().toString());
-                try {
-                    new EnterNewWeight().execute().get();
-                    new GetWeights().execute().get();
-                    weightClass.PopulateGraphArray();
-                    weightClass.CalculateGraphArray();
-                    PopulateGraph();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (!et_Weight.getText().toString().equals(""))
+                {
+                    newWeight = Double.parseDouble(et_Weight.getText().toString());
+                    try {
+                        new EnterNewWeight().execute().get();
+                        new GetWeights().execute().get();
+                        weightClass.PopulateGraphArray();
+                        weightClass.CalculateGraphArray();
+                        PopulateGraph();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 break;
