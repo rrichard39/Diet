@@ -5,9 +5,9 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
-        import android.net.wifi.WifiInfo;
-        import android.net.wifi.WifiManager;
-        import android.os.AsyncTask;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -43,12 +43,11 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-        import java.io.PrintStream;
-        import java.io.PrintWriter;
+import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -297,6 +296,7 @@ import static diet.diet.R.layout.activity_main;
                     SetMainScreen();
                 }
 
+                InitializeSpinner();
                 if (!spinnerPosition.equals(0)) {
                     spnr_FoodList.setSelection(spinnerPosition);
                 }
@@ -487,52 +487,46 @@ import static diet.diet.R.layout.activity_main;
             // ----------------------------
             private void SetSSID(String ssid)  throws IOException
             {
-                String filePath = getFilesDir().getAbsolutePath() + File.separator + "SSID.txt";
-                Log.i("CYBERON", "SetSSID path: " + filePath);
-                PrintStream fileStream = new PrintStream(new File(filePath));
-                fileStream.println(ssid);
-                fileStream.flush();
-                fileStream.close();
-            }
+//                Context context = App.instance.getApplicationContext();
+                try {
+                    FileWriter out = new FileWriter(new File(this.getFilesDir(), "SSID.txt"));
+                    out.write(ssid);
+                    out.close();
+                } catch (IOException e) {
+                    Log.i("CYBERON", "SetSSID Error: " + e.toString());
+                }
+           }
 
             private boolean ReadSSID()
             {
-                String filePath = getFilesDir().getAbsolutePath() + File.separator + "SSID.txt";
-                Log.i("CYBERON", "ReadSSID path: " + filePath);
-                InputStream instream = null;
+                StringBuilder stringBuilder = new StringBuilder();
+                String line;
                 String data = "";
-                boolean result = false;
-                try
-                {
-                    // open the file for reading
-                    instream = new FileInputStream(filePath);
-                    // if file the available for reading
-                    if (instream != null)
-                    {
-                        // prepare the file for reading
-                        InputStreamReader inputreader = new InputStreamReader(instream);
-                        BufferedReader buffreader = new BufferedReader(inputreader);
-                        data = buffreader.readLine();
-                        PersonalData.SSID = data;
-                    }
-                    instream.close();
-                }
-                catch (Exception ex)
-                {
-                    // print stack trace.
-                    Log.i("CYBERON", "ReadSSID Exception: " + ex.toString());
-                    result = false;
-                }
+                BufferedReader in = null;
+                Boolean result = true;
 
-                Log.i("CYBERON", "ReadSSID data: " + data);
-                if (data != "")
+                try {
+                    in = new BufferedReader(new FileReader(new File(this.getFilesDir(), "SSID.txt")));
+                    while ((line = in.readLine()) != null) stringBuilder.append(line);
+
+                } catch (FileNotFoundException e) {
+                    Log.i("CYBERON", "ReadSSID Error FNF: " + e.toString());
+                } catch (IOException e) {
+                    Log.i("CYBERON", "ReadSSID Error IO: " + e.toString());
+                }
+                data = stringBuilder.toString();
+                PersonalData.SSID = data;
+
+                if (data == "")
                 {
-                    result = true;
+                    result = false;
                 }
                 else
                 {
-                    result = false;
+                    result = true;
                 }
+
+
                 return result;
             }
 
