@@ -7,6 +7,6 @@ import java.io.Serializable;
  */
 public class FoodItem implements Serializable {
     public Integer recNum;
-    public String food1;
+    public String food;
     public Integer calories;
 }
