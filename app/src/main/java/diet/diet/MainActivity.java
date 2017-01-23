@@ -308,16 +308,6 @@ import static diet.diet.R.layout.activity_main;
             protected void onDestroy()
             {
                 super.onDestroy();
-//                if (returnFromActivity.equals("true"))
-//                {
-//                    try
-//                    {
-//                        SetSSID(PersonalData.SSID);
-//                    } catch (IOException e)
-//                    {
-//                        e.printStackTrace();
-//                    }
-//                }
             }
 
             @Override
@@ -372,7 +362,6 @@ import static diet.diet.R.layout.activity_main;
                     case R.id.btn_Add:
                         if (WeightData.FirstRun)
                         {
-                            // TODO Check Personal Data
                             try {
                                 new GetPersonalData().execute().get();
                             } catch (InterruptedException e) {
@@ -505,17 +494,20 @@ import static diet.diet.R.layout.activity_main;
                 BufferedReader in = null;
                 Boolean result = true;
 
-                try {
-                    in = new BufferedReader(new FileReader(new File(this.getFilesDir(), "SSID.txt")));
-                    while ((line = in.readLine()) != null) stringBuilder.append(line);
+                File f = new File("SSID.txt");
+                if(f.exists() && !f.isDirectory()) {
+                    try {
+                        in = new BufferedReader(new FileReader(new File(this.getFilesDir(), "SSID.txt")));
+                        while ((line = in.readLine()) != null) stringBuilder.append(line);
 
-                } catch (FileNotFoundException e) {
-                    Log.i("CYBERON", "ReadSSID Error FNF: " + e.toString());
-                } catch (IOException e) {
-                    Log.i("CYBERON", "ReadSSID Error IO: " + e.toString());
+                    } catch (FileNotFoundException e) {
+                        Log.i("CYBERON", "ReadSSID Error FNF: " + e.toString());
+                    } catch (IOException e) {
+                        Log.i("CYBERON", "ReadSSID Error IO: " + e.toString());
+                    }
+                    data = stringBuilder.toString();
+                    PersonalData.SSID = data;
                 }
-                data = stringBuilder.toString();
-                PersonalData.SSID = data;
 
                 if (data == "")
                 {
@@ -1019,6 +1011,7 @@ import static diet.diet.R.layout.activity_main;
 
                     Meals.MealList = new ArrayList<>();
                     List<Meal> MealList = new ArrayList<>();
+
                     Date today;
                     String date;
                     SimpleDateFormat formatter;
@@ -1026,12 +1019,14 @@ import static diet.diet.R.layout.activity_main;
                     formatter = new SimpleDateFormat("MM/dd/yyyy");
                     today = new Date();
                     date = formatter.format(today);
+
                     SoapObject request = new SoapObject(CommStrings.NAMESPACE, CommStrings.METHOD_GET_MEALS);
                     request.addProperty("date", date);
 
                     SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
                     envelope.dotNet = true;
                     envelope.setOutputSoapObject(request);
+
                     try {
 
                         myHttpTransport = new HttpTransportSE(CommStrings.URL, CommStrings.TIMEOUT);
@@ -1224,6 +1219,7 @@ import static diet.diet.R.layout.activity_main;
                     date = formatter.format(today);
 
                     SoapObject request = new SoapObject(CommStrings.NAMESPACE, CommStrings.METHOD_ADD_DAILY_FOOD_ITEM);
+                    // TODO Move date to Service
                     request.addProperty("date", date);       // string
                     request.addProperty("foodName", foodName);   // string
                     request.addProperty("qty", mealQuantity);        // double
