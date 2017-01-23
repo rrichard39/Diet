@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -99,6 +100,14 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
     private void PopulateData()
     {
         Float totalLoss;
@@ -140,7 +149,8 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View v)
+    {
         Intent returnIntent = new Intent(this, MainActivity.class);
         returnIntent.putExtra("true", returnFromActivity);
         returnIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
