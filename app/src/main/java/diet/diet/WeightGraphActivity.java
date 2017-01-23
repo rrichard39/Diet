@@ -12,6 +12,7 @@ import android.widget.EditText;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.SoapFault;
+import org.ksoap2.serialization.MarshalFloat;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
@@ -40,10 +41,11 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
     EditText et_Weight;
     LineChartView chart;
 
-    Double newWeight;
+    float newWeight;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weight_graph);
 
@@ -53,14 +55,17 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
         btn_AddWeight.setOnClickListener(this);
 
         chart = (LineChartView) findViewById(R.id.chart);
-        et_Weight.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        et_Weight.setOnFocusChangeListener(new View.OnFocusChangeListener()
+        {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
+            public void onFocusChange(View v, boolean hasFocus)
+            {
                 if (hasFocus) {
                     et_Weight.setText("");
                 }
             }
-        });
+        }
+        );
 
         PopulateGraph();
     }
@@ -168,7 +173,7 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
             case R.id.btn_AddWeight:
                 if (!et_Weight.getText().toString().equals(""))
                 {
-                    newWeight = Double.parseDouble(et_Weight.getText().toString());
+                    newWeight = Float.parseFloat(et_Weight.getText().toString());
                     try {
                         new EnterNewWeight().execute().get();
                         new GetWeights().execute().get();
@@ -212,15 +217,15 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
             date = formatter.format(today);
 
             SoapObject request = new SoapObject(CommStrings.NAMESPACE, CommStrings.METHOD_ADD_WEIGHT);
-            request.addProperty("date", date);       // string
-            request.addProperty("newWeight", newWeight);        // double
+            request.addProperty("date", date);                          // string
+            request.addProperty("newWeight", newWeight);                // float
 
             SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
             envelope.dotNet = true;
             envelope.setOutputSoapObject(request);
 
-            MarshalDouble md = new MarshalDouble();
-            md.register(envelope);
+            MarshalFloat mf = new MarshalFloat();
+            mf.register(envelope);
 
             do {
                 try {
@@ -239,7 +244,7 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            WeightData.LastWeight = Float.parseFloat(et_Weight.getText().toString());
+            WeightData.LastWeight = newWeight;
             pdLoading.dismiss();
             et_Weight.setText("");
         }
@@ -279,7 +284,8 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
                     SoapObject response = (SoapObject) envelope.getResponse();
                     SoapObject foodList = (SoapObject) response.getProperty(0);
                     SoapObject mealItems = (SoapObject) response.getProperty(1);
-                    SoapObject weightList = (SoapObject) response.getProperty(2);
+                    SoapObject personalData = (SoapObject) response.getProperty(2);
+                    SoapObject weightList = (SoapObject) response.getProperty(3);
 
 
                     // 0 is the first object of data
