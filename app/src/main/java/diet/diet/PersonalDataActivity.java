@@ -75,11 +75,6 @@ public class PersonalDataActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onClick(View v) {
-//        String name;
-//        double height;
-//        double iWeight;
-//        double tWeight;
-//        String ssid;
 
         if (et_Name.getText().toString().equals("") || et_Height.getText().toString().equals("") || et_InitialWeight.getText().toString().equals("") || et_TargetWeight.getText().toString().equals(""))
         {
@@ -123,13 +118,7 @@ public class PersonalDataActivity extends AppCompatActivity implements View.OnCl
     }
 
     public void savePersonalData() throws IOException {
-        // TODO Write to Database
         Intent returnIntent = new Intent();
-//        returnIntent.putExtra("name", PersonalData.Name);
-//        returnIntent.putExtra("height", PersonalData.Height);
-//        returnIntent.putExtra("iWeight", Float.parseFloat(et_InitialWeight.getText().toString()));
-//        returnIntent.putExtra("tWeight", Float.parseFloat(et_TargetWeight.getText().toString()));
-//        returnIntent.putExtra("ssid", PersonalData.SSID);
 
         try {
             new SetPersonalData(
@@ -147,24 +136,6 @@ public class PersonalDataActivity extends AppCompatActivity implements View.OnCl
 
         // return result value
         setResult(Activity.RESULT_OK, returnIntent);
-        // or, if no result
-        // setResult(Activity.RESULT_CANCELED, returnIntent);
-
-//        String dirPath = getFilesDir().getAbsolutePath() + File.separator + "DietData";
-//        File d = new File(dirPath);
-//        String filePath = getFilesDir().getAbsolutePath() + File.separator + "DietData" + File.separator + "DietData.txt";
-//        if (!d.exists())
-//        {
-//            d.mkdirs();
-//        }
-//        PrintStream fileStream = new PrintStream(new File(filePath));
-//        fileStream.println(et_Name.getText().toString());
-//        fileStream.println(et_Height.getText().toString());
-//        fileStream.println(et_InitialWeight.getText().toString());
-//        fileStream.println(et_TargetWeight.getText().toString());
-//        fileStream.println(et_SSID.getText().toString());
-//        fileStream.flush();
-//        fileStream.close();
     }
 
     private class SetPersonalData extends AsyncTask<Void, Void, Void> {
