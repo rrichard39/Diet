@@ -1,7 +1,7 @@
         package diet.diet;
 
         import android.app.Activity;
-import android.app.ProgressDialog;
+        import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -51,7 +51,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+        import java.util.Collections;
+        import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -128,7 +129,8 @@ import static diet.diet.R.layout.activity_main;
             private GoogleApiClient client;
 
             @Override
-            protected void onCreate(Bundle savedInstanceState) {
+            protected void onCreate(Bundle savedInstanceState)
+            {
                 super.onCreate(savedInstanceState);
                 setContentView(activity_main);
 
@@ -209,7 +211,7 @@ import static diet.diet.R.layout.activity_main;
                                     et_Quantity.setSelection(et_Quantity.getText().length());
                                     currentItem = GetFoodItem(food);
                                     tv_Calories.setText(currentItem.calories.toString());
-                                    foodName = currentItem.food1;
+                                    foodName = currentItem.food;
                                     UpdateCalories(currentItem);
                                 } else {
                                     tv_Calories.setText("");
@@ -255,7 +257,6 @@ import static diet.diet.R.layout.activity_main;
                 setSupportActionBar(toolbar);
 
                 SetUpCommumications();
-
                 // ATTENTION: This was auto-generated to implement the App Indexing API.
                 // See https://g.co/AppIndexing/AndroidStudio for more information.
                 client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -274,6 +275,74 @@ import static diet.diet.R.layout.activity_main;
                 }
                 returnFromActivity = "false";
             }   // end onCreate
+
+            @Override
+            protected void onActivityResult(int requestCode, int resultCode, Intent data)
+            {
+                super.onActivityResult(requestCode, resultCode, data);
+                Integer calories;
+                if (requestCode == 1) // NewMealActivity
+                {
+                    if (resultCode == Activity.RESULT_OK)
+                    {
+
+                        String food = data.getStringExtra("foodName");
+                        String cals = data.getStringExtra("calories");
+                        if (!food.contains("CANCEL")) {
+                            calories = Integer.parseInt(cals);
+                            try {
+                                new FoodListLoader().execute().get();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            }
+                            InitializeSpinner();
+                            spinnerPosition = foodListAdapter.getPosition(food);
+                        }
+                    }
+
+                    if (resultCode == Activity.RESULT_CANCELED) {
+                        String food = data.getStringExtra("foodName");
+                        String cals = data.getStringExtra("calories");
+                        try {
+                            new FoodListLoader().execute().get();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        }
+                        InitializeFoodList();
+                        InitializeSpinner();
+                        tv_DailyTotalCalories.setText("Total calories for today: " + Double.toString(Meals.TOTAL_CALORIES));
+                    }
+                }
+
+                if (requestCode == 2)           // PersonalDataActivity
+                {
+                    InitializeFoodList();
+                    InitializeSpinner();
+                }
+
+                if (requestCode == 3)           // MealsActivity
+                {
+                    InitializeFoodList();
+                    InitializeSpinner();
+                }
+
+                if (requestCode == 4)           // DetailsActivity
+                {
+                    InitializeFoodList();
+                    InitializeSpinner();
+                }
+
+                if (requestCode == 5)           // WeightGraphActivity
+                {
+                    InitializeFoodList();
+                    InitializeSpinner();
+
+                }
+            }
 
             @Override
             public void onResume()
@@ -295,7 +364,7 @@ import static diet.diet.R.layout.activity_main;
                     Log.i("CYBERON", "OnResume clearing FirstRun");
                     SetMainScreen();
                 }
-
+                InitializeFoodList();
                 InitializeSpinner();
                 if (!spinnerPosition.equals(0)) {
                     spnr_FoodList.setSelection(spinnerPosition);
@@ -342,8 +411,7 @@ import static diet.diet.R.layout.activity_main;
                         return true;
                     case R.id.action_PersonalData:
                         try {
-                            Intent intent = new Intent(this, PersonalDataActivity.class);
-                            startActivity(intent);
+                            startActivityForResult(new Intent(this, PersonalDataActivity.class), 2);
                         } catch (Exception e) {
                             Log.i("CYBERON", e.getMessage());
                             e.printStackTrace();
@@ -360,7 +428,7 @@ import static diet.diet.R.layout.activity_main;
             {
                 switch (view.getId()) {
                     case R.id.btn_Add:
-                        if (WeightData.FirstRun)
+                        if (WeightData.FirstRun)        // Button set to Start
                         {
                             try {
                                 new GetPersonalData().execute().get();
@@ -375,100 +443,45 @@ import static diet.diet.R.layout.activity_main;
                                 startActivityForResult(new Intent(this, PersonalDataActivity.class), 2);
                             }
 
-                            // Add meal to database here
                             Log.i("CYBERON", "Loading Database ...");
                             LoadDatabase();
                             WeightData.FirstRun = false;
 
                             SetMainScreen();
+                        }
 
-                        } else if (foodName != null && mealQuantity != 0.0)
+                        else if (foodName != null && mealQuantity != 0.0)   // Button set to AddNewMeal
                         {
                             AddNewMeal();
                         }
                         break;
-                    case R.id.btn_NewMeal:
+                    case R.id.btn_NewMeal:              // resultCode = 1
                         returnFromActivity = "true";
-                        // Open New Meal Activity
-                        startActivityForResult(new Intent(this, NewMealActivity.class), 1);
+                        // Open NewMealActivity
+                        Intent intent1 = new Intent(this, NewMealActivity.class);
+                        startActivityForResult(intent1, 1);
                         break;
-                    case R.id.btn_TodaysMeals:
+                    case R.id.btn_TodaysMeals:          // resultCode = 3
                         returnFromActivity = "true";
-                        // Open New Meal Activity
-                        try {
-                            Intent intent = new Intent(this, MealsActivity.class);
-                            startActivity(intent);
-                        } catch (Exception e) {
-                            Log.i("CYBERON", e.getMessage());
-                            e.printStackTrace();
-                        }
+                        // Open MealActivity
+                        Intent intent3 = new Intent(this, MealsActivity.class);
+                        startActivityForResult(intent3, 3);
                         new GetDailyTotalCalories().execute();
                         break;
-                    case R.id.btn_Details:
+                    case R.id.btn_Details:              // resultCode = 4
                         returnFromActivity = "true";
-                        // Open Details Activity
-                        try {
-                            Intent intent = new Intent(this, DetailsActivity.class);
-                            startActivityForResult(intent, 1);
-                        } catch (Exception e) {
-                            Log.i("CYBERON", e.getMessage());
-                            e.printStackTrace();
-                        }
+                        // Open DetailsActivity
+                        Intent intent4 = new Intent(this, DetailsActivity.class);
+                        startActivityForResult(intent4, 4);
                         WeightData.FirstRun = false;
 
                         break;
-                    case R.id.btn_Weight:
+                    case R.id.btn_Weight:               // resultCode = 5
                         returnFromActivity = "true";
                         // Open New Meal Activity
-                        try {
-                            Intent intent = new Intent(this, WeightGraphActivity.class);
-                            startActivity(intent);
-                        } catch (Exception e) {
-                            Log.i("CYBERON", e.getMessage());
-                            e.printStackTrace();
-                        }
+                        Intent intent5 = new Intent(this, WeightGraphActivity.class);
+                        startActivityForResult(intent5, 5);
                         break;
-                }
-            }
-
-            @Override
-            protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-                super.onActivityResult(requestCode, resultCode, data);
-                Integer calories;
-                if (requestCode == 1) {
-                    if (resultCode == Activity.RESULT_OK) {
-
-                        String food = data.getStringExtra("foodName");
-                        String cals = data.getStringExtra("calories");
-                        if (!food.contains("CANCEL")) {
-                            calories = Integer.parseInt(cals);
-                            try {
-                                new FoodListLoader().execute().get();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            } catch (ExecutionException e) {
-                                e.printStackTrace();
-                            }
-                            InitializeSpinner();
-                            spinnerPosition = foodListAdapter.getPosition(food);
-                        }
-                    }
-
-                    if (resultCode == 2)    // Get Personal Data
-                    {
-
-                    }
-
-                    if (resultCode == Activity.RESULT_CANCELED) {
-                        try {
-                            new FoodListLoader().execute().get();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        } catch (ExecutionException e) {
-                            e.printStackTrace();
-                        }
-                        InitializeSpinner();
-                    }
                 }
             }
 
@@ -595,8 +608,8 @@ import static diet.diet.R.layout.activity_main;
             {
                 try {
                     new EnterNewMeal().execute().get();
-                    new GetDailyTotalCalories().execute().get();
-                    new GetMeals().execute().get();
+//                    new GetDailyTotalCalories().execute().get();
+//                    new GetMeals().execute().get();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
@@ -695,7 +708,8 @@ import static diet.diet.R.layout.activity_main;
 //                return true;
 //            }
 
-            private void InitializeSpinner() {
+            private void InitializeSpinner()
+            {
                 foodListAdapter = new ArrayAdapter<String>(getApplicationContext(),
                         R.layout.my_spinner_layout, foodList);
 
@@ -704,18 +718,38 @@ import static diet.diet.R.layout.activity_main;
                 spnr_FoodList.setAdapter(foodListAdapter);
             }
 
-            private FoodItem GetFoodItem(String food) {
+            private  void InitializeFoodList()
+            {
+                FoodItem value = null;
+                FoodItem foodItem = null;
+                Integer key;
+                String food;
+
+                foodList.clear();
+                foodList.add("");
+                if (!WeightData.FirstRun) {
+                    Iterator i = Meals.FoodTable.keySet().iterator();
+                    while (i.hasNext()) {
+                        key = (Integer) i.next();
+                        foodItem = Meals.FoodTable.get(key);
+                        foodList.add(foodItem.food);
+                        Collections.sort(foodList);
+                    }
+                }
+            }
+
+            private FoodItem GetFoodItem(String foodSelection) {
                 FoodItem value = null;
                 FoodItem tempValue = null;
                 Integer key;
-                String food1;
+                String food;
                 Iterator i = Meals.FoodTable.keySet().iterator();
 
                 while (i.hasNext()) {
                     key = (Integer) i.next();
                     tempValue = Meals.FoodTable.get(key);
-                    food1 = tempValue.food1;
-                    if (food1.equals(food)) {
+                    food = tempValue.food;
+                    if (food.equals(foodSelection)) {
                         value = Meals.FoodTable.get(key);
                         break;
                     }
@@ -823,6 +857,7 @@ import static diet.diet.R.layout.activity_main;
 
                             SoapObject root = (SoapObject) response.getProperty(0);
                             //to get the data
+
                             foodList.clear();
                             foodList.add("");
                             for (int i = 0; i < foodlist.getPropertyCount() - 1; i++) {
@@ -830,14 +865,14 @@ import static diet.diet.R.layout.activity_main;
                                 SoapObject item = (SoapObject) foodlist.getProperty(i);
                                 String strRecNum = item.getProperty("recNum").toString();
                                 Integer recNum = Integer.parseInt(strRecNum);
-                                String food1 = item.getProperty("food1").toString();
+                                String food = item.getProperty("food1").toString();
                                 String strCalories = item.getProperty("calories").toString();
                                 Integer calories = Integer.parseInt(strCalories);
                                 foodItem.recNum = recNum;
-                                foodItem.food1 = food1;
+                                foodItem.food = food;
                                 foodItem.calories = calories;
                                 Meals.FoodTable.put(recNum, foodItem);
-                                foodList.add(food1);
+                                foodList.add(food);
                             }
                         } catch (XmlPullParserException e) {
                             Log.i("CYBERON", "FoodListLoader XmlPullParserException");
@@ -1204,7 +1239,7 @@ import static diet.diet.R.layout.activity_main;
                     Log.i("CYBERON", "EnterNewMeal");
                     pdLoading.setIndeterminate(true);
                     pdLoading.setCancelable(false);
-                    pdLoading.setMessage("Adding meal to database ...");
+                    pdLoading.setMessage("Adding daily meal to Today's Meals ...");
                     pdLoading.show();
                 }
 

@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.concurrent.ExecutionException;
 
+import static diet.diet.MainActivity.returnFromActivity;
+
 public class PersonalDataActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button btn_Enter;
@@ -118,8 +120,6 @@ public class PersonalDataActivity extends AppCompatActivity implements View.OnCl
     }
 
     public void savePersonalData() throws IOException {
-        Intent returnIntent = new Intent();
-
         try {
             new SetPersonalData(
                     et_Name.getText().toString(),
@@ -133,9 +133,11 @@ public class PersonalDataActivity extends AppCompatActivity implements View.OnCl
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-
-        // return result value
-        setResult(Activity.RESULT_OK, returnIntent);
+        Intent returnIntent = new Intent(this, MainActivity.class);
+        returnIntent.putExtra("true", returnFromActivity);
+        returnIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        startActivity(returnIntent);
+        finish();
     }
 
     private class SetPersonalData extends AsyncTask<Void, Void, Void> {
