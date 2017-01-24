@@ -11,5 +11,5 @@ class Meals {
     static HashMap<Integer, FoodItem> FoodTable;
     static List<Meal> MealList;
     static double TOTAL_CALORIES;
-    static String DATE;
+    static String DATE = "01/01/2000";
 }
