@@ -23,6 +23,7 @@ import org.ksoap2.transport.HttpTransportSE;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 import static diet.diet.MainActivity.returnFromActivity;
@@ -65,12 +66,12 @@ public class PersonalDataActivity extends AppCompatActivity implements View.OnCl
 //            }
 //        }
 //    );
-        if (PersonalData.Name != "")
+        if (!PersonalData.Name.equals(""))
         {
             et_Name.setText(PersonalData.Name);
-            et_Height.setText(String.format("%.2f", PersonalData.Height));
-            et_InitialWeight.setText(String.format("%.0f", PersonalData.InitialWeight));
-            et_TargetWeight.setText(String.format("%.0f", PersonalData.TargetWeight));
+            et_Height.setText(String.format(Locale.US, "%.2f", PersonalData.Height));
+            et_InitialWeight.setText(String.format(Locale.US, "%.0f", PersonalData.InitialWeight));
+            et_TargetWeight.setText(String.format(Locale.US, "%.0f", PersonalData.TargetWeight));
             et_SSID.setText(PersonalData.SSID);
         }
     }
@@ -130,8 +131,10 @@ public class PersonalDataActivity extends AppCompatActivity implements View.OnCl
                     ).execute().get();
         } catch (InterruptedException e) {
             e.printStackTrace();
+            Log.i("CYBERON", "PersonDataActivity Interrupt Exception: " + e.toString());
         } catch (ExecutionException e) {
             e.printStackTrace();
+            Log.i("CYBERON", "PersonDataActivity Execution Exception: " + e.toString());
         }
         Intent returnIntent = new Intent(this, MainActivity.class);
         returnIntent.putExtra("true", returnFromActivity);
@@ -150,7 +153,7 @@ public class PersonalDataActivity extends AppCompatActivity implements View.OnCl
 
         ProgressDialog pdLoading = new ProgressDialog(PersonalDataActivity.this);
 
-        public SetPersonalData(String name, float height, float iWeight, float tWeight, String ssid)
+        SetPersonalData(String name, float height, float iWeight, float tWeight, String ssid)
         {
             this.userName = name;
             this.userHeight = height;
