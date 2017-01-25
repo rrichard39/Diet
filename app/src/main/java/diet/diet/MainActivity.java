@@ -180,7 +180,7 @@ import static diet.diet.R.layout.activity_main;
                                     et_Quantity.setText("1");
                                     et_Quantity.setSelection(et_Quantity.getText().length());
                                     currentItem = GetFoodItem(food);
-                                    tv_Calories.setText(String.format(Locale.US, "{0}", currentItem.calories.toString()));
+                                    tv_Calories.setText(String.format(Locale.US, "%d", currentItem.calories));
                                     foodName = currentItem.food;
                                     UpdateCalories(currentItem);
                                 } else {
