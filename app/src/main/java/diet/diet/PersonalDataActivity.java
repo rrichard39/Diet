@@ -15,15 +15,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import org.ksoap2.SoapEnvelope;
+import org.ksoap2.SoapFault;
 import org.ksoap2.serialization.MarshalFloat;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
+import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
@@ -40,7 +44,8 @@ public class PersonalDataActivity extends AppCompatActivity implements View.OnCl
     TextView tv_Warning;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_data);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -78,7 +83,8 @@ public class PersonalDataActivity extends AppCompatActivity implements View.OnCl
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View v)
+    {
 
         if (!et_Name.getText().toString().equals("DELETE"))
         {
@@ -115,7 +121,7 @@ public class PersonalDataActivity extends AppCompatActivity implements View.OnCl
         finish();
     }
 
-    private void WritePersonalData()  throws IOException  //write PersonalData.txt
+    private void WritePersonalData()  throws IOException  //write PersonalData.txt local file
     {
         String fileName = "PersonalData.txt";
         Log.i("CYBERON", "PersonalData path: " + getApplicationContext().getCacheDir().toString());
@@ -142,8 +148,24 @@ public class PersonalDataActivity extends AppCompatActivity implements View.OnCl
         String filename = "PersonalData.txt";
         File file = new File(getCacheDir(), filename);
         file.delete();
+
+        try {
+            new DeletePersonalData().execute().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Log.i("CYBERON", "SavePersonData Interrupt Exception: " + e.toString());
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            Log.i("CYBERON", "SavePersonData Execution Exception: " + e.toString());
+        }
+        Intent returnIntent = new Intent(this, MainActivity.class);
+        returnIntent.putExtra("true", returnFromActivity);
+        returnIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        startActivity(returnIntent);
+        finish();
     }
-    public void savePersonalData() throws IOException
+
+    public void savePersonalData() throws IOException  // save PersonalData to database
     {
         try {
             new SetPersonalData(
@@ -155,10 +177,10 @@ public class PersonalDataActivity extends AppCompatActivity implements View.OnCl
                     ).execute().get();
         } catch (InterruptedException e) {
             e.printStackTrace();
-            Log.i("CYBERON", "PersonDataActivity Interrupt Exception: " + e.toString());
+            Log.i("CYBERON", "SavePersonData Interrupt Exception: " + e.toString());
         } catch (ExecutionException e) {
             e.printStackTrace();
-            Log.i("CYBERON", "PersonDataActivity Execution Exception: " + e.toString());
+            Log.i("CYBERON", "SavePersonData Execution Exception: " + e.toString());
         }
         Intent returnIntent = new Intent(this, MainActivity.class);
         returnIntent.putExtra("true", returnFromActivity);
@@ -232,4 +254,82 @@ public class PersonalDataActivity extends AppCompatActivity implements View.OnCl
             pdLoading.dismiss();
         }
     }
+
+    private class DeletePersonalData extends AsyncTask<Void, Void, Void> {
+        HttpTransportSE myHttpTransport;
+        ProgressDialog pdLoading = new ProgressDialog(PersonalDataActivity.this);
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Log.i("CYBERON", "DeletePersonalData");
+            pdLoading.setIndeterminate(true);
+            pdLoading.setCancelable(false);
+            pdLoading.setMessage("Deleting Personal Data from Database");
+            pdLoading.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            SoapObject request = new SoapObject(CommStrings.NAMESPACE, CommStrings.METHOD_DELETE_PERSONAL_DATA);
+            // TODO Move date to Service
+            request.addProperty("name", PersonalData.Name);       // string
+
+            SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+            envelope.dotNet = true;
+            envelope.setOutputSoapObject(request);
+
+            try {
+
+                myHttpTransport = new HttpTransportSE(CommStrings.URL, CommStrings.TIMEOUT);
+                myHttpTransport.debug = true;
+                myHttpTransport.call(CommStrings.SOAP_ACTION_DELETE_PERSONAL_DATA, envelope);
+
+            } catch (XmlPullParserException e) {
+                Log.i("CYBERON", "DeletePersonalData XmlPullParserException");
+                Log.i("CYBERON", e.getMessage());
+                Log.i("CYBERON", "Request Dump: " + myHttpTransport.requestDump);
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                Log.i("CYBERON", "Stack Trace:\n" + sw.toString());
+                e.printStackTrace();
+            } catch (SoapFault e) {
+                Log.i("CYBERON", "DeletePersonalData SoapFault");
+                Log.i("CYBERON", e.getMessage());
+                Log.i("CYBERON", "Request Dump: " + myHttpTransport.requestDump);
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                Log.i("CYBERON", "Stack Trace:\n" + sw.toString());
+                e.printStackTrace();
+            } catch (IOException e) {
+                Log.i("CYBERON", "DeletePersonalData IOException");
+                Log.i("CYBERON", e.getMessage());
+                Log.i("CYBERON", "Request Dump: " + myHttpTransport.requestDump);
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                Log.i("CYBERON", "Stack Trace:\n" + sw.toString());
+                e.printStackTrace();
+            } catch (Exception e) {
+                Log.i("CYBERON", "DeletePersonalDatar Error");
+                Log.i("CYBERON", "Message: " + e.getMessage());
+                Log.i("CYBERON", "Request Dump: " + myHttpTransport.requestDump);
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                Log.i("CYBERON", "Stack Trace:\n" + sw.toString());
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            pdLoading.dismiss();
+        }
+    }
+
 }

@@ -49,4 +49,8 @@ public class CommStrings {
     // Set Personal Data
     public static final String METHOD_ADD_PERSONAL_DATA = "AddPersonalData";
     public final static String SOAP_ACTION_ADD_PERSONAL_DATA = "http://tempuri.org/IDietService/AddPersonalData";
+
+    // Delete Personal Data
+    public static final String METHOD_DELETE_PERSONAL_DATA = "DeletePersonalData";
+    public final static String SOAP_ACTION_DELETE_PERSONAL_DATA = "http://tempuri.org/IDietService/DeletePersonalData";
 }
