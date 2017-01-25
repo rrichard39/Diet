@@ -21,6 +21,7 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Locale;
@@ -92,7 +93,7 @@ public class PersonalDataActivity extends AppCompatActivity implements View.OnCl
             PersonalData.SSID = et_SSID.getText().toString();
 
             try {
-                SetSSID(PersonalData.SSID);
+                SetPersonalData();
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.i("CYBERON", "SSID file creation failed: " + e.toString());
@@ -110,14 +111,26 @@ public class PersonalDataActivity extends AppCompatActivity implements View.OnCl
         finish();
     }
 
-    private void SetSSID(String ssid)  throws IOException
+    private void SetPersonalData()  throws IOException
     {
-        String filePath = getFilesDir().getAbsolutePath() + File.separator + "SSID.txt";
-        Log.i("CYBERON", "SetSSID path: " + filePath);
-        PrintStream fileStream = new PrintStream(new File(filePath));
-        fileStream.println(ssid);
-        fileStream.flush();
-        fileStream.close();
+        String fileName = "PersonalData.txt";
+        Log.i("CYBERON", "PersonalData path: " + getApplicationContext().getCacheDir().toString());
+        try {
+            PrintStream fileStream = new PrintStream(new File(getCacheDir(), fileName));
+            fileStream.println(PersonalData.Name);
+            fileStream.println(String.format(Locale.US, "%f", PersonalData.Height));
+            fileStream.println(String.format(Locale.US, "%f", PersonalData.InitialWeight));
+            fileStream.println(String.format(Locale.US, "%f", PersonalData.TargetWeight));
+            fileStream.println(PersonalData.SSID);
+            fileStream.flush();
+            fileStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            Log.i("CYBERON", "SetPersonalData Errot: " + e.toString());
+        }
     }
 
     public void savePersonalData() throws IOException {
