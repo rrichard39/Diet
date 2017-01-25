@@ -80,38 +80,42 @@ public class PersonalDataActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onClick(View v) {
 
-        if (et_Name.getText().toString().equals("") || et_Height.getText().toString().equals("") || et_InitialWeight.getText().toString().equals("") || et_TargetWeight.getText().toString().equals(""))
+        if (!et_Name.getText().toString().equals("DELETE"))
         {
-            tv_Warning.setText(getString(R.string.Warning2));
+            if (et_Name.getText().toString().equals("") || et_Height.getText().toString().equals("") || et_InitialWeight.getText().toString().equals("") || et_TargetWeight.getText().toString().equals("")) {
+                tv_Warning.setText(getString(R.string.Warning2));
+            } else {
+                PersonalData.Name = et_Name.getText().toString();
+                PersonalData.Height = Float.parseFloat(et_Height.getText().toString());
+                PersonalData.InitialWeight = Double.parseDouble(et_InitialWeight.getText().toString());
+                PersonalData.TargetWeight = Double.parseDouble(et_TargetWeight.getText().toString());
+                PersonalData.SSID = et_SSID.getText().toString();
+
+                try {
+                    WritePersonalData();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Log.i("CYBERON", "SSID file creation failed: " + e.toString());
+                }
+
+                try {
+                    savePersonalData();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Log.i("CYBERON", "Data file creation failed");
+                }
+            }
         }
         else
         {
-            PersonalData.Name = et_Name.getText().toString();
-            PersonalData.Height = Float.parseFloat(et_Height.getText().toString());
-            PersonalData.InitialWeight = Double.parseDouble(et_InitialWeight.getText().toString());
-            PersonalData.TargetWeight = Double.parseDouble(et_TargetWeight.getText().toString());
-            PersonalData.SSID = et_SSID.getText().toString();
-
-            try {
-                SetPersonalData();
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.i("CYBERON", "SSID file creation failed: " + e.toString());
-            }
-
-            try {
-                savePersonalData();
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.i("CYBERON", "Data file creation failed");
-            }
+            DeletePersonalData();
         }
         Intent returnIntent = new Intent();
         setResult(Activity.RESULT_OK, returnIntent);
         finish();
     }
 
-    private void SetPersonalData()  throws IOException
+    private void WritePersonalData()  throws IOException  //write PersonalData.txt
     {
         String fileName = "PersonalData.txt";
         Log.i("CYBERON", "PersonalData path: " + getApplicationContext().getCacheDir().toString());
@@ -129,11 +133,18 @@ public class PersonalDataActivity extends AppCompatActivity implements View.OnCl
         }
         catch (Exception e) {
             e.printStackTrace();
-            Log.i("CYBERON", "SetPersonalData Errot: " + e.toString());
+            Log.i("CYBERON", "SetPersonalData Error: " + e.toString());
         }
     }
 
-    public void savePersonalData() throws IOException {
+    private void DeletePersonalData()
+    {
+        String filename = "PersonalData.txt";
+        File file = new File(getCacheDir(), filename);
+        file.delete();
+    }
+    public void savePersonalData() throws IOException
+    {
         try {
             new SetPersonalData(
                     et_Name.getText().toString(),
@@ -156,7 +167,8 @@ public class PersonalDataActivity extends AppCompatActivity implements View.OnCl
         finish();
     }
 
-    private class SetPersonalData extends AsyncTask<Void, Void, Void> {
+    private class SetPersonalData extends AsyncTask<Void, Void, Void>
+    {
         Boolean success;
         private String userName;
         private float userHeight;
