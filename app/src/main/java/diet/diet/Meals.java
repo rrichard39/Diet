@@ -1,5 +1,6 @@
 package diet.diet;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -8,8 +9,8 @@ import java.util.List;
  * Modified 1/23/2017
  */
 class Meals {
-    static HashMap<Integer, FoodItem> FoodTable;
-    static List<Meal> MealList;
+    static HashMap<Integer, FoodItem> FoodTable = new HashMap<Integer, FoodItem>();
+    static List<Meal> MealList = new ArrayList<>();
     static double TOTAL_CALORIES;
     static String DATE = "01/01/2000";
 }
