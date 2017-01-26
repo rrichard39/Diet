@@ -1,7 +1,7 @@
         package diet.diet;
 
         import android.app.Activity;
-        import android.app.ProgressDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -51,9 +51,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-        import java.util.Collections;
-        import java.util.Date;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -288,26 +287,26 @@ import static diet.diet.R.layout.activity_main;
 
                 if (requestCode == 2)           // PersonalDataActivity
                 {
-                    InitializeFoodList();
-                    InitializeSpinner();
+//                    InitializeFoodList();
+//                    InitializeSpinner();
                 }
 
                 if (requestCode == 3)           // MealsActivity
                 {
-                    InitializeFoodList();
-                    InitializeSpinner();
+//                    InitializeFoodList();
+//                    InitializeSpinner();
                 }
 
                 if (requestCode == 4)           // DetailsActivity
                 {
-                    InitializeFoodList();
-                    InitializeSpinner();
+//                    InitializeFoodList();
+//                    InitializeSpinner();
                 }
 
                 if (requestCode == 5)           // WeightGraphActivity
                 {
-                    InitializeFoodList();
-                    InitializeSpinner();
+//                    InitializeFoodList();
+//                    InitializeSpinner();
 
                 }
             }
@@ -624,10 +623,19 @@ import static diet.diet.R.layout.activity_main;
 
             private void LoadDatabase()
             {
-                new FoodListLoader().execute();
-                new GetDailyTotalCalories().execute();
-                new GetMeals().execute();
-                new GetWeights().execute();
+                if (Meals.FoodTable.isEmpty())
+                {
+                    new FoodListLoader().execute();
+                }
+                if (Meals.MealList.isEmpty())
+                {
+                    new GetDailyTotalCalories().execute();
+                    new GetMeals().execute();
+                }
+                if (WeightData.GraphArray.isEmpty())
+                {
+                    new GetWeights().execute();
+                }
                 InitializeSpinner();
             }
             private void SetUpCommumications()
@@ -825,7 +833,7 @@ import static diet.diet.R.layout.activity_main;
 //                    pdLoading.setIndeterminate(true);
 //                    pdLoading.setCancelable(false);
                     Log.i("CYBERON", "FoodListLoader");
-                    Meals.FoodTable = new HashMap<Integer, FoodItem>();
+//                    Meals.FoodTable = new HashMap<Integer, FoodItem>();
                     pdLoading.setMessage("Loading Food List ...");
                     pdLoading.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     WindowManager.LayoutParams wmlp = pdLoading.getWindow().getAttributes();
@@ -1044,7 +1052,7 @@ import static diet.diet.R.layout.activity_main;
                 @Override
                 protected Void doInBackground(Void... params) {
 
-                    Meals.MealList = new ArrayList<>();
+//                    Meals.MealList = new ArrayList<>();
 
                     Date today;
                     String date;
@@ -1142,7 +1150,7 @@ import static diet.diet.R.layout.activity_main;
                 protected Void doInBackground(Void... params) {
 
                     WeightItem weight;
-                    WeightData.GraphArray = new ArrayList<WeightItem>();
+//                    WeightData.GraphArray = new ArrayList<WeightItem>();
 
                     SoapObject request = new SoapObject(CommStrings.NAMESPACE, CommStrings.METHOD_GET_WEIGHT);
 
