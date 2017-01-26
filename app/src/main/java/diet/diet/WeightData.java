@@ -1,5 +1,6 @@
 package diet.diet;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class WeightData {
     public static List<PointValue> GraphTarget;
     public static List<PointValue> GraphActual;
 
-    public static List<WeightItem> GraphArray;
+    public static List<WeightItem> GraphArray = new ArrayList<WeightItem>();
     public static Date StartDate;
     public static Date LastDate;
     public static Date TargetDate;
