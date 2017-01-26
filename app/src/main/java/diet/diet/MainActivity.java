@@ -595,9 +595,19 @@ import static diet.diet.R.layout.activity_main;
                 today = new Date();
                 date = formatter.format(today);
 
-                if (!Meals.DATE.equals(date))
+                if (Meals.DATE == null)
                 {
-                    Meals.DATE = date;
+                    Meals.DATE = today;
+                }
+                
+                if (Meals.MealList.isEmpty())
+                {
+                    Meals.DATE = today;
+                }
+
+                if (!Meals.DATE.equals(today))
+                {
+                    Meals.DATE = today;
                     Meals.MealList.clear();
                 }
 
@@ -638,6 +648,7 @@ import static diet.diet.R.layout.activity_main;
                 }
                 InitializeSpinner();
             }
+
             private void SetUpCommumications()
             {
                 WifiManager wifiManager = (WifiManager) this.getSystemService(WIFI_SERVICE);

@@ -1,6 +1,7 @@
 package diet.diet;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -12,5 +13,5 @@ class Meals {
     static HashMap<Integer, FoodItem> FoodTable = new HashMap<Integer, FoodItem>();
     static List<Meal> MealList = new ArrayList<>();
     static double TOTAL_CALORIES;
-    static String DATE = "01/01/2000";
+    static Date DATE = null;
 }
