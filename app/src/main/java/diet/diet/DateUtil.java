@@ -14,4 +14,10 @@ public class DateUtil {
         cal.add(Calendar.DATE, days); //minus number would decrement the days
         return cal.getTime();
     }
+
+    // Version Numbers
+    public static final String MAJOR = "1"; // ALL NEW
+    public static final String MINOR = "2"; // new feature
+    public static final String DEBUG = "3";
+    public static final String BUILD = Integer.toString(BuildConfig.VERSION_CODE);
 }

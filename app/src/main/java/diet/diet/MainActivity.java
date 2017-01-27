@@ -1,64 +1,66 @@
         package diet.diet;
 
         import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.TextView;
+        import android.app.ProgressDialog;
+        import android.content.DialogInterface;
+        import android.content.Intent;
+        import android.graphics.Color;
+        import android.net.Uri;
+        import android.net.wifi.WifiInfo;
+        import android.net.wifi.WifiManager;
+        import android.os.AsyncTask;
+        import android.os.Bundle;
+        import android.support.v7.app.AlertDialog;
+        import android.support.v7.app.AppCompatActivity;
+        import android.support.v7.widget.Toolbar;
+        import android.text.Editable;
+        import android.text.TextWatcher;
+        import android.util.Log;
+        import android.view.Gravity;
+        import android.view.Menu;
+        import android.view.MenuItem;
+        import android.view.View;
+        import android.view.Window;
+        import android.view.WindowManager;
+        import android.widget.AdapterView;
+        import android.widget.ArrayAdapter;
+        import android.widget.Button;
+        import android.widget.EditText;
+        import android.widget.ImageView;
+        import android.widget.Spinner;
+        import android.widget.TextView;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
+        import com.google.android.gms.appindexing.Action;
+        import com.google.android.gms.appindexing.AppIndex;
+        import com.google.android.gms.appindexing.Thing;
+        import com.google.android.gms.common.api.GoogleApiClient;
 
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.SoapFault;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapPrimitive;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
-import org.xmlpull.v1.XmlPullParserException;
+        import org.ksoap2.SoapEnvelope;
+        import org.ksoap2.SoapFault;
+        import org.ksoap2.serialization.SoapObject;
+        import org.ksoap2.serialization.SoapPrimitive;
+        import org.ksoap2.serialization.SoapSerializationEnvelope;
+        import org.ksoap2.transport.HttpTransportSE;
+        import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.ExecutionException;
+        import java.io.BufferedReader;
+        import java.io.File;
+        import java.io.FileNotFoundException;
+        import java.io.FileReader;
+        import java.io.FileWriter;
+        import java.io.IOException;
+        import java.io.PrintWriter;
+        import java.io.StringWriter;
+        import java.text.SimpleDateFormat;
+        import java.util.ArrayList;
+        import java.util.Collections;
+        import java.util.Date;
+        import java.util.Iterator;
+        import java.util.List;
+        import java.util.Locale;
+        import java.util.concurrent.ExecutionException;
 
-import static diet.diet.R.layout.activity_main;
+        import static diet.diet.R.layout.activity_main;
 
         public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -384,6 +386,34 @@ import static diet.diet.R.layout.activity_main;
                             e.printStackTrace();
                         }
                         return true;
+                    case R.id.about: {
+                        String version = "Version: ";
+                        version += DateUtil.MAJOR;
+                        version += ".";
+                        version += DateUtil.MINOR;
+                        version += ".";
+                        version += DateUtil.DEBUG;
+                        version += ".";
+                        version += DateUtil.BUILD;
+
+                        AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
+
+                        // set the message to display
+                        alertbox.setMessage(version);
+
+                        // add a neutral button to the alert box and assign a click listener
+                        alertbox.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+
+                            // click listener on the alert box
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                // the button was clicked
+
+                            }
+                        });
+
+                        // show it
+                        alertbox.show();
+                    }
                 }
 
                 super.onOptionsItemSelected(item);
