@@ -53,6 +53,7 @@
         import java.io.StringWriter;
         import java.text.SimpleDateFormat;
         import java.util.ArrayList;
+        import java.util.Calendar;
         import java.util.Collections;
         import java.util.Date;
         import java.util.Iterator;
@@ -245,6 +246,10 @@
                     SetMainScreen();
                 }
                 returnFromActivity = "false";
+
+                Calendar c = Calendar.getInstance();
+                SimpleDateFormat df = new SimpleDateFormat("MMM dd, yyyy");
+                DateUtil.DATE = df.format(c.getTime());
             }   // end onCreate
 
             @Override
@@ -387,6 +392,11 @@
                         }
                         return true;
                     case R.id.about: {
+                        String appName = DateUtil.APP_NAME;
+
+                        String author = "Author: ";
+                        author += DateUtil.AUTHOR;
+
                         String version = "Version: ";
                         version += DateUtil.MAJOR;
                         version += ".";
@@ -396,10 +406,15 @@
                         version += ".";
                         version += DateUtil.BUILD;
 
+                        String buildDate = "Build Date: ";
+                        buildDate += DateUtil.DATE;
+
+                        String message = String.format("%s\n\n%s\n%s\n%s", appName, author, version, buildDate);
+
                         AlertDialog.Builder alertbox = new AlertDialog.Builder(this);
 
                         // set the message to display
-                        alertbox.setMessage(version);
+                        alertbox.setMessage(message);
 
                         // add a neutral button to the alert box and assign a click listener
                         alertbox.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
