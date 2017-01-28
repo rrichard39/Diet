@@ -12,6 +12,10 @@ android {
         versionProps.load(new FileInputStream(versionPropsFile))
 
         def code = versionProps['BUILD_NUMBER'].toInteger() + 1
+        def majorVersion = versionProps['MAJORver'].toInteger()
+        def minorVersion = versionProps['MINORver'].toInteger()
+        def debugVersion = versionProps['DEBUGver'].toInteger()
+        def author = versionProps['AUTHOR']
 
         versionProps['BUILD_NUMBER']=code.toString()
         versionProps.store(versionPropsFile.newWriter(), null)
@@ -22,19 +26,16 @@ android {
             targetSdkVersion 19
             versionCode code
             versionName code.toString() + ".0"
+            buildConfigField ("String", "AUTHOR", author)
+            buildConfigField ("int", "MAJORver", majorVersion + "")
+            buildConfigField ("int", "MINORver", minorVersion + "")
+            buildConfigField ("int", "DEBUGver", debugVersion + "")
+            buildConfigField ("long", "TIMESTAMP", System.currentTimeMillis() + "L")
         }
     }
     else {
         throw new GradleException("Could not read build.properties!")
     }
-
-//    defaultConfig {
-//        applicationId "diet.diet"
-//        minSdkVersion 19
-//        targetSdkVersion 19
-//        versionCode 1
-//        versionName "1.0"
-//    }
 
     buildTypes {
         release {
