@@ -248,9 +248,9 @@ import static diet.diet.R.layout.activity_main;
                 }
                 returnFromActivity = "false";
 
-                Calendar c = Calendar.getInstance();
-                SimpleDateFormat df = new SimpleDateFormat("MMM dd, yyyy");
-                buildDate = df.format(c.getTime());
+//                Calendar c = Calendar.getInstance();
+//                SimpleDateFormat df = new SimpleDateFormat("MMM dd, yyyy");
+//                buildDate = df.format(c.getTime());
             }   // end onCreate
 
             @Override
