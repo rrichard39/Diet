@@ -1,5 +1,6 @@
 package diet.diet;
 
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +28,7 @@ public class MealsActivity extends AppCompatActivity {
         String food;
         Double quantity;
         Double total;
+        tv_MealList.setTextColor(Color.BLACK);
         mealsString =  "                                        TOTAL\n";
         mealsString += "QTY  MEAL                                CAL\n";
         mealsString += "---------------------------------------------\n";
@@ -39,6 +41,14 @@ public class MealsActivity extends AppCompatActivity {
             mealsString += String.format(Locale.US, "%4.1f %-33s %+6.1f\n", quantity, food, total);
         }
         mealsString += "---------------------------------------------\n";
+        if (Meals.TOTAL_CALORIES > 800 && Meals.TOTAL_CALORIES <= 1200)
+        {
+            tv_MealList.setTextColor(Color.YELLOW);
+        }
+        else if (Meals.TOTAL_CALORIES > 1200)
+        {
+            tv_MealList.setTextColor(Color.RED);
+        }
         mealsString += String.format(Locale.US, "                     TOTAL CALORIES: %+8.1f\n", Meals.TOTAL_CALORIES);
         tv_MealList.setText(mealsString);
     }
