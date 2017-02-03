@@ -14,6 +14,8 @@ public class WeightData {
     public static List<PointValue> GraphWeight;
     public static List<PointValue> GraphTarget;
     public static List<PointValue> GraphActual;
+    public static List<PointValue> GraphFirstLabel;
+    public static List<PointValue> GraphLastLabel;
 
     public static List<WeightItem> GraphArray = new ArrayList<WeightItem>();
     public static Date StartDate;

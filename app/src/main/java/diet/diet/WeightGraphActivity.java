@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
+import lecho.lib.hellocharts.formatter.SimpleLineChartValueFormatter;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Line;
@@ -75,6 +76,8 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
         WeightData.GraphWeight = new ArrayList<>();
         WeightData.GraphTarget = new ArrayList<>();
         WeightData.GraphActual = new ArrayList<>();
+        WeightData.GraphFirstLabel = new ArrayList<>();
+        WeightData.GraphLastLabel = new ArrayList<>();
 
         List<AxisValue> axisLabelsForX = new ArrayList<>();
         List<AxisValue> axisLabelsForY = new ArrayList<>();
@@ -97,6 +100,14 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
                 if (WeightData.GraphArray.get(i).weight1 > 0)
                 {
                     WeightData.GraphWeight.add(new PointValue(i, WeightData.GraphArray.get(i).weight1));
+                    if (i == 0)
+                    {
+                        WeightData.GraphFirstLabel.add(new PointValue(i, WeightData.GraphArray.get(i).weight1));
+                    }
+                    if (WeightData.GraphArray.get(i + 1).weight1 == 0)
+                    {
+                        WeightData.GraphLastLabel.add(new PointValue(i, WeightData.GraphArray.get(i).weight1));
+                    }
                 }
 
                 converter = i.toString();
@@ -117,22 +128,42 @@ public class WeightGraphActivity extends AppCompatActivity implements View.OnCli
             Line weightLine = new Line(WeightData.GraphWeight).setColor(Color.BLUE).setCubic(false);
             Line goalLine = new Line(WeightData.GraphTarget).setColor(Color.GREEN).setCubic(false);
             Line actualLine = new Line(WeightData.GraphActual).setColor(Color.RED).setCubic(false);
+            Line labelFirstLine = new Line(WeightData.GraphFirstLabel).setColor(Color.BLUE).setCubic(false);
+            Line labelLastLine = new Line(WeightData.GraphLastLabel).setColor(Color.BLUE).setCubic(false);
+
 
             weightLine.setStrokeWidth(3);
             goalLine.setStrokeWidth(3);
             actualLine.setStrokeWidth(3);
+            labelFirstLine.setStrokeWidth(1);
+            labelLastLine.setStrokeWidth(1);
 
             weightLine.setHasPoints(false);
             goalLine.setHasPoints(false);
             actualLine.setHasPoints(false);
+            labelFirstLine.setHasPoints(false);
+            labelLastLine.setHasPoints(false);
 
             goalLine.setHasLabels(true);
             goalLine.setHasLines(true);
+
+            labelFirstLine.setHasLabels(true);
+            labelFirstLine.setHasLines(false);
+
+            labelLastLine.setHasLabels(true);
+            labelLastLine.setHasLines(false);
+
+            SimpleLineChartValueFormatter formatter = new SimpleLineChartValueFormatter();
+            formatter.setDecimalDigitsNumber(1);
+            labelFirstLine.setFormatter(formatter);
+            labelLastLine.setFormatter(formatter);
 
             List<Line> lines = new ArrayList<>();
             lines.add(weightLine);
             lines.add(goalLine);
             lines.add(actualLine);
+            lines.add(labelFirstLine);
+            lines.add(labelLastLine);
 
             LineChartData data = new LineChartData();
             data.setLines(lines);
