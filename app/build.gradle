@@ -25,7 +25,7 @@ android {
             minSdkVersion 19
             targetSdkVersion 19
             versionCode code
-            versionName code.toString() + ".0"
+            versionName majorVersion.toString() + "." + minorVersion.toString() + "." + debugVersion.toString() + "." + code.toString()
             buildConfigField ("String", "AUTHOR", author)
             buildConfigField ("int", "MAJORver", majorVersion + "")
             buildConfigField ("int", "MINORver", minorVersion + "")
@@ -45,13 +45,6 @@ android {
                 variant.outputs.each { output ->
                     output.outputFile = new File(output.outputFile.parent,
                             output.outputFile.name.replace("app-release", "Diet"))
-//                    def date = new Date();
-//                    def formattedDate = date.format('yyyyMMddHHmmss')
-//                    output.outputFile = new File(output.outputFil.parent,
-//                            output.outputFile.name.replace("-release", "-" + formattedDate)
-                            //for Debug use output.outputFile = new File(output.outputFile.parent,
-//                            output.outputFile.name.replace("-debug", "-" + formattedDate)
-//                    )
                 }
             }
         }
