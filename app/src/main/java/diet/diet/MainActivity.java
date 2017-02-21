@@ -230,6 +230,7 @@ import static diet.diet.R.layout.activity_main;
                 setSupportActionBar(toolbar);
 
                 SetUpCommumications();
+
                 // ATTENTION: This was auto-generated to implement the App Indexing API.
                 // See https://g.co/AppIndexing/AndroidStudio for more information.
                 client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -248,9 +249,7 @@ import static diet.diet.R.layout.activity_main;
                 }
                 returnFromActivity = "false";
 
-//                Calendar c = Calendar.getInstance();
-//                SimpleDateFormat df = new SimpleDateFormat("MMM dd, yyyy");
-//                buildDate = df.format(c.getTime());
+                Log.i("CYBERON", "OnCreate Complete");
             }   // end onCreate
 
             @Override
@@ -323,21 +322,24 @@ import static diet.diet.R.layout.activity_main;
             public void onResume()
             {
                 super.onResume();
-                if (ReadPersonalData())
-                    try {
-                        new GetPersonalData().execute().get();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    }
+                Log.i("CYBERON", "OnResume Starting");
 
+//                if (ReadPersonalData())     // Retrieve from file
+//                {
+//                    try {
+//                        new GetPersonalData().execute().get(); // Retrieve from database
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    } catch (ExecutionException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
 
                 if (!PersonalData.Name.equals(""))
                 {
                     WeightData.FirstRun = false;
                     Log.i("CYBERON", "OnResume clearing FirstRun");
-                    SetMainScreen();
+//                    SetMainScreen();
                 }
                 InitializeFoodList();
                 InitializeSpinner();
@@ -346,6 +348,13 @@ import static diet.diet.R.layout.activity_main;
                 }
 
                 tv_DailyTotalCalories.setText("Total calories for today: " + Double.toString(Meals.TOTAL_CALORIES));
+            }
+
+            @Override
+            public void onPostResume()
+            {
+                super.onPostResume();
+//                LoadDatabase();
             }
 
             @Override
@@ -450,7 +459,7 @@ import static diet.diet.R.layout.activity_main;
                         if (WeightData.FirstRun)        // Button set to Start
                         {
                             try {
-                                new GetPersonalData().execute().get();
+                                new GetPersonalData().execute().get();  // Retrieve from database
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             } catch (ExecutionException e) {
@@ -697,6 +706,10 @@ import static diet.diet.R.layout.activity_main;
                 if (WeightData.GraphArray.isEmpty())
                 {
                     new GetWeights().execute();
+                }
+                if (PersonalData.Name.equals(""))
+                {
+                    new GetPersonalData().execute();
                 }
                 InitializeSpinner();
             }
