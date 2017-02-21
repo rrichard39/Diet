@@ -23,7 +23,8 @@ public class WeightData {
     public static Date TargetDate;
     public static Double Variance;
     public static Date AchieveDate;
-//    public static Float TargetWeight = 171f;
+    public static String LowestWeightDate;
+
     public static Float StartWeight;
     public static Float LastWeight;
     public static Float DevFromLS;
@@ -31,5 +32,5 @@ public class WeightData {
     public static Float LowestWeight;
     public static Float BMI;
 
-    public static Boolean FirstRun = null;
+    public static Boolean FirstRun = true;
 }

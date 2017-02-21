@@ -12,7 +12,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 import static diet.diet.MainActivity.returnFromActivity;
@@ -20,6 +22,7 @@ import static diet.diet.MainActivity.returnFromActivity;
 public class DetailsActivity extends AppCompatActivity implements View.OnClickListener {
 
     TextView tv_StartDate;
+    TextView tv_LowestWeightDate;
     TextView tv_TargetDate;
     TextView tv_AchieveDate;
     TextView tv_Variance;
@@ -48,6 +51,7 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         StrictMode.setThreadPolicy(policy);
 
         tv_StartDate = (TextView)findViewById(R.id.tv_StartDate);
+        tv_LowestWeightDate = (TextView)findViewById(R.id.tv_LowestWeightDate);
         tv_TargetDate = (TextView)findViewById(R.id.tv_TargetDate);
         tv_AchieveDate = (TextView)findViewById(R.id.tv_AchieveDate);
         tv_Variance = (TextView)findViewById(R.id.tv_Variance);
@@ -69,6 +73,7 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         btn_Return.setOnClickListener(this);
 
         tv_StartDate.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
+        tv_LowestWeightDate.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
         tv_TargetDate.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
         tv_AchieveDate.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
         tv_Variance.setTypeface(Typeface.MONOSPACE, Typeface.BOLD);
@@ -114,6 +119,7 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         Long diff;
         Long weeks;
         Long days;
+        Date LowestWeightDate = null;
 
         Float dayLoss;
         Float weekLoss;
@@ -126,10 +132,17 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         weeks = Math.abs(diff / (1000 * 60 * 60 * 24*7));
         days = weeks * 7;
 
+        try {
+            LowestWeightDate = formatter.parse(WeightData.LowestWeightDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         weekLoss = (WeightData.StartWeight - WeightData.LastWeight) / weeks;
         dayLoss = (WeightData.StartWeight - WeightData.LastWeight) / days;
 
         tv_StartDate.setText(String.format(Locale.US, "%-19s %s", "Start date:", formatter.format(WeightData.StartDate)));
+        tv_LowestWeightDate.setText(String.format(Locale.US, "%-19s %s", "Lowest weight date:", WeightData.LowestWeightDate));
         tv_TargetDate.setText(String.format(Locale.US, "%-19s %s", "Target date:", formatter.format(WeightData.TargetDate)));
         tv_AchieveDate.setText(String.format(Locale.US, "%-19s %s", "Achieve date:", formatter.format(WeightData.AchieveDate)));
 

@@ -52,6 +52,7 @@ public class Weight {
                     }
                     if ( WeightData.GraphArray.get(i).weight1 < WeightData.LowestWeight)
                     {
+                        WeightData.LowestWeightDate = WeightData.GraphArray.get(i).measureDate;
                         WeightData.LowestWeight = WeightData.GraphArray.get(i).weight1;
                     }
                     WeightData.GraphArray.get(i).goal = goal;
