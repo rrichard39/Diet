@@ -14,7 +14,7 @@ android {
         def code = versionProps['BUILD_NUMBER'].toInteger() + 1
         def majorVersion = versionProps['MAJORver'].toInteger()
         def minorVersion = versionProps['MINORver'].toInteger()
-        def debugVersion = versionProps['DEBUGver'].toInteger()
+        def bugfixVersion = versionProps['BUGFIXver'].toInteger()
         def author = versionProps['AUTHOR']
 
         versionProps['BUILD_NUMBER']=code.toString()
@@ -25,11 +25,11 @@ android {
             minSdkVersion 19
             targetSdkVersion 19
             versionCode code
-            versionName majorVersion.toString() + "." + minorVersion.toString() + "." + debugVersion.toString() + "." + code.toString()
+            versionName majorVersion.toString() + "." + minorVersion.toString() + "." + bugfixVersion.toString() + "." + code.toString()
             buildConfigField ("String", "AUTHOR", author)
             buildConfigField ("int", "MAJORver", majorVersion + "")
             buildConfigField ("int", "MINORver", minorVersion + "")
-            buildConfigField ("int", "DEBUGver", debugVersion + "")
+            buildConfigField ("int", "BUGFIXver", bugfixVersion + "")
             buildConfigField ("long", "TIMESTAMP", System.currentTimeMillis() + "L")
         }
     }

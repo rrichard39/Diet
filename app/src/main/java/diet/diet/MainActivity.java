@@ -412,7 +412,7 @@ import static diet.diet.R.layout.activity_main;
                         version += ".";
                         version += Integer.toString(BuildConfig.MINORver);
                         version += ".";
-                        version += Integer.toString(BuildConfig.DEBUGver);
+                        version += Integer.toString(BuildConfig.BUGFIXver);
                         version += ".";
                         version += Integer.toString(BuildConfig.VERSION_CODE);
 
