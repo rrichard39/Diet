@@ -31,6 +31,7 @@ public class Weight {
     {
         Integer x = 0;
         goal = 0f;
+        boolean targetDateSet = false;
 
         Log.i("CYBERON", "PopulateGraphArray");
         try
@@ -67,7 +68,14 @@ public class Weight {
                         e.printStackTrace();
                     }
 
-                    goal -= 2.5f;
+                    if (goal > PersonalData.TargetWeight) {
+                        goal -= 2.5f;
+                    }
+                    if (goal <= PersonalData.TargetWeight && !targetDateSet) {
+                        WeightData.TargetDate = formatter.parse(WeightData.GraphArray.get(i).measureDate);
+                        WeightData.TargetDate = DateUtil.addDays(WeightData.TargetDate, 7);
+                        targetDateSet = true;
+                    }
                     x++;
                 }
                 else
@@ -96,7 +104,7 @@ public class Weight {
                 WeightData.GraphArray.add(GraphItem);
             }
             measureDate = WeightData.GraphArray.get(WeightData.GraphArray.size() - 1).measureDate;
-            WeightData.TargetDate = formatter.parse(WeightData.GraphArray.get(WeightData.GraphArray.size() - 1).measureDate);
+//            WeightData.TargetDate = formatter.parse(WeightData.GraphArray.get(WeightData.GraphArray.size() - 1).measureDate);
         }
         catch (Exception e)
         {
