@@ -69,6 +69,7 @@ import static diet.diet.R.layout.activity_main;
             static Boolean trigger = false;
             public static String returnFromActivity = "false";
             Weight weightClass;
+            static Meals MealList = new Meals();
 
             List<String> foodList = new ArrayList<>();  // for Spinner
 
@@ -288,7 +289,7 @@ import static diet.diet.R.layout.activity_main;
                         }
                         InitializeFoodList();
                         InitializeSpinner();
-                        tv_DailyTotalCalories.setText("Total calories for today: " + Double.toString(Meals.TOTAL_CALORIES));
+                        tv_DailyTotalCalories.setText("Total calories for today: " + Double.toString(MealList.TOTAL_CALORIES));
                     }
                 }
 
@@ -347,7 +348,7 @@ import static diet.diet.R.layout.activity_main;
                     spnr_FoodList.setSelection(spinnerPosition);
                 }
 
-                tv_DailyTotalCalories.setText("Total calories for today: " + Double.toString(Meals.TOTAL_CALORIES));
+                tv_DailyTotalCalories.setText("Total calories for today: " + Double.toString(MealList.TOTAL_CALORIES));
             }
 
             @Override
@@ -656,30 +657,30 @@ import static diet.diet.R.layout.activity_main;
                 today = new Date();
                 date = formatter.format(today);
 
-                if (Meals.DATE == null)
+                if (MealList.DATE == null)
                 {
-                    Meals.DATE = today;
+                    MealList.DATE = today;
                 }
                 
-                if (Meals.MealList.isEmpty())
+                if (MealList.MealList.isEmpty())
                 {
-                    Meals.DATE = today;
+                    MealList.DATE = today;
                 }
 
-                if (!Meals.DATE.equals(today))
+                if (!MealList.DATE.equals(today))
                 {
-                    Meals.DATE = today;
-                    Meals.MealList.clear();
+                    MealList.DATE = today;
+                    MealList.MealList.clear();
                 }
 
                 thisMeal = GetFoodItem(foodName);
                 meal.Food = foodName;
                 meal.Calories = thisMeal.calories;
                 meal.Quantity = mealQuantity;
-                Meals.MealList.add(meal);
+                MealList.MealList.add(meal);
 
-                Meals.TOTAL_CALORIES = Meals.TOTAL_CALORIES + (thisMeal.calories * mealQuantity);
-                tv_DailyTotalCalories.setText("Total calories for today: " + Double.toString(Meals.TOTAL_CALORIES));
+                MealList.TOTAL_CALORIES = MealList.TOTAL_CALORIES + (thisMeal.calories * mealQuantity);
+                tv_DailyTotalCalories.setText("Total calories for today: " + Double.toString(MealList.TOTAL_CALORIES));
                 new EnterNewMeal().execute();
 //                try {
 //                    new EnterNewMeal().execute();
@@ -694,11 +695,11 @@ import static diet.diet.R.layout.activity_main;
 
             private void LoadDatabase()
             {
-                if (Meals.FoodTable.isEmpty())
+                if (MealList.FoodTable.isEmpty())
                 {
                     new FoodListLoader().execute();
                 }
-                if (Meals.MealList.isEmpty())
+                if (MealList.MealList.isEmpty())
                 {
                     new GetDailyTotalCalories().execute();
                     new GetMeals().execute();
@@ -815,10 +816,10 @@ import static diet.diet.R.layout.activity_main;
                 foodList.clear();
                 foodList.add("");
                 if (!WeightData.FirstRun) {
-                    Iterator i = Meals.FoodTable.keySet().iterator();
+                    Iterator i = MealList.FoodTable.keySet().iterator();
                     while (i.hasNext()) {
                         key = (Integer) i.next();
-                        foodItem = Meals.FoodTable.get(key);
+                        foodItem = MealList.FoodTable.get(key);
                         foodList.add(foodItem.food);
                         Collections.sort(foodList);
                     }
@@ -830,14 +831,14 @@ import static diet.diet.R.layout.activity_main;
                 FoodItem tempValue;
                 Integer key;
                 String food;
-                Iterator i = Meals.FoodTable.keySet().iterator();
+                Iterator i = MealList.FoodTable.keySet().iterator();
 
                 while (i.hasNext()) {
                     key = (Integer) i.next();
-                    tempValue = Meals.FoodTable.get(key);
+                    tempValue = MealList.FoodTable.get(key);
                     food = tempValue.food;
                     if (food.equals(foodSelection)) {
-                        value = Meals.FoodTable.get(key);
+                        value = MealList.FoodTable.get(key);
                         break;
                     }
                 }
@@ -909,7 +910,7 @@ import static diet.diet.R.layout.activity_main;
 //                    pdLoading.setIndeterminate(true);
 //                    pdLoading.setCancelable(false);
                     Log.i("CYBERON", "FoodListLoader");
-//                    Meals.FoodTable = new HashMap<Integer, FoodItem>();
+//                    MealList.FoodTable = new HashMap<Integer, FoodItem>();
                     pdLoading.setMessage("Loading Food List ...");
                     pdLoading.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     WindowManager.LayoutParams wmlp = pdLoading.getWindow().getAttributes();
@@ -920,7 +921,7 @@ import static diet.diet.R.layout.activity_main;
 
                 @Override
                 protected Void doInBackground(Void... params) {
-                    Meals.FoodTable.clear();
+                    MealList.FoodTable.clear();
                     SoapObject request = new SoapObject(CommStrings.NAMESPACE, CommStrings.METHOD_GET_FOOD_LIST);
 
                     SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
@@ -955,7 +956,7 @@ import static diet.diet.R.layout.activity_main;
                                 foodItem.recNum = recNum;
                                 foodItem.food = food;
                                 foodItem.calories = calories;
-                                Meals.FoodTable.put(recNum, foodItem);
+                                MealList.FoodTable.put(recNum, foodItem);
                                 foodList.add(food);
                             }
                         } catch (XmlPullParserException e) {
@@ -1051,7 +1052,7 @@ import static diet.diet.R.layout.activity_main;
                             SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
 
                             totalCalories = Double.parseDouble(response.toString());
-                            Meals.TOTAL_CALORIES = totalCalories;
+                            MealList.TOTAL_CALORIES = totalCalories;
                             dailyTotalCalories = String.format(Locale.US, "%1.1f", totalCalories);
                             success = true; // communications successful
 
@@ -1128,7 +1129,7 @@ import static diet.diet.R.layout.activity_main;
                 @Override
                 protected Void doInBackground(Void... params) {
 
-//                    Meals.MealList = new ArrayList<>();
+//                    MealList.MealList = new ArrayList<>();
 
                     Date today;
                     String date;
@@ -1168,7 +1169,7 @@ import static diet.diet.R.layout.activity_main;
                                 meal.Food = item.getProperty("Food").toString();
                                 meal.Quantity = Double.parseDouble(item.getProperty("Quantity").toString());
                                 meal.Calories = Integer.parseInt(item.getProperty("Calories").toString());
-                                Meals.MealList.add(meal);
+                                MealList.MealList.add(meal);
                             } else {
                                 break;
                             }
