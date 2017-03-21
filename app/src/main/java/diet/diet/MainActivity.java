@@ -1,67 +1,69 @@
         package diet.diet;
 
         import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.TextView;
+        import android.app.ProgressDialog;
+        import android.content.DialogInterface;
+        import android.content.Intent;
+        import android.graphics.Color;
+        import android.net.Uri;
+        import android.net.wifi.WifiInfo;
+        import android.net.wifi.WifiManager;
+        import android.os.AsyncTask;
+        import android.os.Bundle;
+        import android.os.Handler;
+        import android.support.v7.app.AlertDialog;
+        import android.support.v7.app.AppCompatActivity;
+        import android.support.v7.widget.Toolbar;
+        import android.text.Editable;
+        import android.text.TextWatcher;
+        import android.util.Log;
+        import android.view.Gravity;
+        import android.view.Menu;
+        import android.view.MenuItem;
+        import android.view.View;
+        import android.view.Window;
+        import android.view.WindowManager;
+        import android.widget.AdapterView;
+        import android.widget.ArrayAdapter;
+        import android.widget.Button;
+        import android.widget.EditText;
+        import android.widget.ImageView;
+        import android.widget.Spinner;
+        import android.widget.TextView;
+        import android.widget.Toast;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
+        import com.google.android.gms.appindexing.Action;
+        import com.google.android.gms.appindexing.AppIndex;
+        import com.google.android.gms.appindexing.Thing;
+        import com.google.android.gms.common.api.GoogleApiClient;
 
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.SoapFault;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapPrimitive;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.HttpTransportSE;
-import org.xmlpull.v1.XmlPullParserException;
+        import org.ksoap2.SoapEnvelope;
+        import org.ksoap2.SoapFault;
+        import org.ksoap2.serialization.SoapObject;
+        import org.ksoap2.serialization.SoapPrimitive;
+        import org.ksoap2.serialization.SoapSerializationEnvelope;
+        import org.ksoap2.transport.HttpTransportSE;
+        import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.ExecutionException;
+        import java.io.BufferedReader;
+        import java.io.File;
+        import java.io.FileNotFoundException;
+        import java.io.FileReader;
+        import java.io.FileWriter;
+        import java.io.IOException;
+        import java.io.PrintWriter;
+        import java.io.StringWriter;
+        import java.text.SimpleDateFormat;
+        import java.util.ArrayList;
+        import java.util.Calendar;
+        import java.util.Collections;
+        import java.util.Date;
+        import java.util.Iterator;
+        import java.util.List;
+        import java.util.Locale;
+        import java.util.concurrent.ExecutionException;
 
-import static diet.diet.R.layout.activity_main;
+        import static diet.diet.R.layout.activity_main;
 
         public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -70,6 +72,7 @@ import static diet.diet.R.layout.activity_main;
             public static String returnFromActivity = "false";
             Weight weightClass;
             static Meals MealList = new Meals();
+            private Boolean exit = false;
 
             List<String> foodList = new ArrayList<>();  // for Spinner
 
@@ -446,6 +449,11 @@ import static diet.diet.R.layout.activity_main;
                         // show it
                         alertbox.show();
                     }
+                    case R.id.exit:
+                    {
+                        finish();
+                        System.exit(0);
+                    }
                 }
 
                 super.onOptionsItemSelected(item);
@@ -512,6 +520,26 @@ import static diet.diet.R.layout.activity_main;
                         startActivityForResult(intent5, 5);
                         break;
                 }
+            }
+
+            @Override
+            public void onBackPressed() {
+                if (exit) {
+                    finish(); // finish activity
+                    System.exit(0);
+                } else {
+                    Toast.makeText(this, "Press Back again to Exit.",
+                            Toast.LENGTH_SHORT).show();
+                    exit = true;
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            exit = false;
+                        }
+                    }, 3 * 1000);
+
+                }
+
             }
 
             // FirstRun Methods

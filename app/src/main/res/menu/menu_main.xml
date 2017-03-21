@@ -27,4 +27,14 @@
         android:orderInCategory="301"
         android:id="@+id/action_PersonalData"
         app:showAsAction="never" />
+    <item
+        android:title="About"
+        android:orderInCategory="302"
+        android:id="@+id/about"
+        app:showAsAction="never" />
+    <item
+        android:title="Exit"
+        android:orderInCategory="302"
+        android:id="@+id/exit"
+        app:showAsAction="never" />
 </menu>
