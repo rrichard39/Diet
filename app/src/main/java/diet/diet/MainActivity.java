@@ -1,69 +1,68 @@
         package diet.diet;
 
         import android.app.Activity;
-        import android.app.ProgressDialog;
-        import android.content.DialogInterface;
-        import android.content.Intent;
-        import android.graphics.Color;
-        import android.net.Uri;
-        import android.net.wifi.WifiInfo;
-        import android.net.wifi.WifiManager;
-        import android.os.AsyncTask;
-        import android.os.Bundle;
-        import android.os.Handler;
-        import android.support.v7.app.AlertDialog;
-        import android.support.v7.app.AppCompatActivity;
-        import android.support.v7.widget.Toolbar;
-        import android.text.Editable;
-        import android.text.TextWatcher;
-        import android.util.Log;
-        import android.view.Gravity;
-        import android.view.Menu;
-        import android.view.MenuItem;
-        import android.view.View;
-        import android.view.Window;
-        import android.view.WindowManager;
-        import android.widget.AdapterView;
-        import android.widget.ArrayAdapter;
-        import android.widget.Button;
-        import android.widget.EditText;
-        import android.widget.ImageView;
-        import android.widget.Spinner;
-        import android.widget.TextView;
-        import android.widget.Toast;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Color;
+import android.net.Uri;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.os.Handler;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
-        import com.google.android.gms.appindexing.Action;
-        import com.google.android.gms.appindexing.AppIndex;
-        import com.google.android.gms.appindexing.Thing;
-        import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 
-        import org.ksoap2.SoapEnvelope;
-        import org.ksoap2.SoapFault;
-        import org.ksoap2.serialization.SoapObject;
-        import org.ksoap2.serialization.SoapPrimitive;
-        import org.ksoap2.serialization.SoapSerializationEnvelope;
-        import org.ksoap2.transport.HttpTransportSE;
-        import org.xmlpull.v1.XmlPullParserException;
+import org.ksoap2.SoapEnvelope;
+import org.ksoap2.SoapFault;
+import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapPrimitive;
+import org.ksoap2.serialization.SoapSerializationEnvelope;
+import org.ksoap2.transport.HttpTransportSE;
+import org.xmlpull.v1.XmlPullParserException;
 
-        import java.io.BufferedReader;
-        import java.io.File;
-        import java.io.FileNotFoundException;
-        import java.io.FileReader;
-        import java.io.FileWriter;
-        import java.io.IOException;
-        import java.io.PrintWriter;
-        import java.io.StringWriter;
-        import java.text.SimpleDateFormat;
-        import java.util.ArrayList;
-        import java.util.Calendar;
-        import java.util.Collections;
-        import java.util.Date;
-        import java.util.Iterator;
-        import java.util.List;
-        import java.util.Locale;
-        import java.util.concurrent.ExecutionException;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
-        import static diet.diet.R.layout.activity_main;
+import static diet.diet.R.layout.activity_main;
 
         public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -281,8 +280,6 @@
                     }
 
                     if (resultCode == Activity.RESULT_CANCELED) {
-                        String food = data.getStringExtra("foodName");
-                        String cals = data.getStringExtra("calories");
                         try {
                             new FoodListLoader().execute().get();
                         } catch (InterruptedException e) {
@@ -298,27 +295,18 @@
 
                 if (requestCode == 2)           // PersonalDataActivity
                 {
-//                    InitializeFoodList();
-//                    InitializeSpinner();
                 }
 
                 if (requestCode == 3)           // MealsActivity
                 {
-//                    InitializeFoodList();
-//                    InitializeSpinner();
                 }
 
                 if (requestCode == 4)           // DetailsActivity
                 {
-//                    InitializeFoodList();
-//                    InitializeSpinner();
                 }
 
                 if (requestCode == 5)           // WeightGraphActivity
                 {
-//                    InitializeFoodList();
-//                    InitializeSpinner();
-
                 }
             }
 
@@ -328,22 +316,10 @@
                 super.onResume();
                 Log.i("CYBERON", "OnResume Starting");
 
-//                if (ReadPersonalData())     // Retrieve from file
-//                {
-//                    try {
-//                        new GetPersonalData().execute().get(); // Retrieve from database
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    } catch (ExecutionException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-
                 if (!PersonalData.Name.equals(""))
                 {
                     WeightData.FirstRun = false;
                     Log.i("CYBERON", "OnResume clearing FirstRun");
-//                    SetMainScreen();
                 }
                 InitializeFoodList();
                 InitializeSpinner();
@@ -358,7 +334,6 @@
             public void onPostResume()
             {
                 super.onPostResume();
-//                LoadDatabase();
             }
 
             @Override
@@ -451,6 +426,7 @@
                     }
                     case R.id.exit:
                     {
+                        ClearData();
                         finish();
                         System.exit(0);
                     }
@@ -525,6 +501,7 @@
             @Override
             public void onBackPressed() {
                 if (exit) {
+                    ClearData();
                     finish(); // finish activity
                     System.exit(0);
                 } else {
@@ -544,20 +521,9 @@
 
             // FirstRun Methods
             // ----------------------------
-            private void SetSSID(String ssid)  throws IOException
-            {
-                try {
-                    FileWriter out = new FileWriter(new File(this.getFilesDir(), "SSID.txt"));
-                    out.write(ssid);
-                    out.close();
-                } catch (IOException e) {
-                    Log.i("CYBERON", "SetSSID Error: " + e.toString());
-                }
-           }
 
             private boolean ReadPersonalData()
             {
-                StringBuilder stringBuilder = new StringBuilder();
                 String line;
                 String[] data = new String[5];
                 int index = 0;
@@ -604,37 +570,6 @@
                 return result;
             }
 
-            private Boolean TestSSID()
-            {
-                if(!PersonalData.Name.equals(""))
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-//                String filePath = getFilesDir().getAbsolutePath() + File.separator + "DietData" + File.separator + "FirstRun.txt";
-//                File f = new File(filePath);
-//                if (f.exists())
-//                {
-//                    return true;
-//                }
-//                else
-//                {
-//                    return false;
-//                }
-            }
-
-            private void DeleteSSIDFile()
-            {
-                String filePath = getFilesDir().getAbsolutePath() + File.separator + "SSID.txt";
-                File file = new File(filePath);
-                file.delete();
-                filePath = getFilesDir().getAbsolutePath() + File.separator + "SSSID.txt";
-                file = new File(filePath);
-                file.delete();
-            }
             // ----------------------------
 
             // MainActivity Screen Setup Methods
@@ -673,17 +608,48 @@
             }
             // ----------------------------
 
+            private void ClearData()
+            {
+                String err = "";
+                try {
+                    err = "0";
+                    MealList.FoodTable.clear();
+                    err = "1";
+                    MealList.MealList.clear();
+                    err = "2";
+                    MealList.TOTAL_CALORIES = 0;
+                    err = "3";
+                    WeightData.GraphArray.clear();
+                    err = "4";
+                    if (WeightData.GraphWeight != null) {
+                        WeightData.GraphWeight.clear();
+                    }
+                    err = "5";
+                    if (WeightData.GraphTarget != null) {
+                        WeightData.GraphTarget.clear();
+                    }
+                    err = "6";
+                    if (WeightData.GraphActual != null) {
+                        WeightData.GraphActual.clear();
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log.i("CYBERON", "Clear Data error: " + err);
+                    Log.i("CYBERON", "Clear Data error: " + e.getMessage());
+                }
+
+            }
+
             private void AddNewMeal()
             {
                 Meal meal = new Meal();
                 FoodItem thisMeal;
                 Date today;
-                String date;
                 SimpleDateFormat formatter;
 
                 formatter = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
                 today = new Date();
-                date = formatter.format(today);
 
                 if (MealList.DATE == null)
                 {
@@ -710,15 +676,6 @@
                 MealList.TOTAL_CALORIES = MealList.TOTAL_CALORIES + (thisMeal.calories * mealQuantity);
                 tv_DailyTotalCalories.setText("Total calories for today: " + Double.toString(MealList.TOTAL_CALORIES));
                 new EnterNewMeal().execute();
-//                try {
-//                    new EnterNewMeal().execute();
-////                    new GetDailyTotalCalories().execute().get();
-////                    new GetMeals().execute().get();
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                } catch (ExecutionException e) {
-//                    e.printStackTrace();
-//                }
             }
 
             private void LoadDatabase()
@@ -745,7 +702,7 @@
 
             private void SetUpCommumications()
             {
-                WifiManager wifiManager = (WifiManager) this.getSystemService(WIFI_SERVICE);
+                WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(WIFI_SERVICE);
                 WifiInfo wifiInfo = wifiManager.getConnectionInfo();
 
 //                *****************************************************************************
@@ -787,44 +744,6 @@
                 Log.i("CYBERON", "WiFi SSID: " + wifiInfo.getSSID());
                 Log.i("CYBERON", "URL: " + CommStrings.URL);
             }
-
-//            private boolean ReadPersonalData()
-//            {
-//                String filePath = getFilesDir().getAbsolutePath() + File.separator + "DietData" + File.separator + "DietData.txt";
-//
-//                InputStream instream = null;
-//                try {
-//                    // open the file for reading
-//                    instream = new FileInputStream(filePath);
-//                    // if file the available for reading
-//                    if (instream != null) {
-//                        // prepare the file for reading
-//                        InputStreamReader inputreader = new InputStreamReader(instream);
-//                        BufferedReader buffreader = new BufferedReader(inputreader);
-//
-//                        String line;
-//
-//                        line = buffreader.readLine();
-//                        PersonalData.Name = line;
-//                        line = buffreader.readLine();
-//                        PersonalData.Height = Float.parseFloat(line);
-//                        line = buffreader.readLine();
-//                        PersonalData.InitialWeight = Double.parseDouble(line);
-//                        line = buffreader.readLine();
-//                        PersonalData.TargetWeight = Double.parseDouble(line);
-//                        line = buffreader.readLine();
-//                        PersonalData.SSID = line;
-//
-//                        instream.close();
-//                    }
-//                }
-//                catch (Exception ex)
-//                {
-//                    // print stack trace.
-//                    return false;
-//                }
-//                return true;
-//            }
 
             private void InitializeSpinner()
             {
@@ -935,10 +854,7 @@
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
-//                    pdLoading.setIndeterminate(true);
-//                    pdLoading.setCancelable(false);
                     Log.i("CYBERON", "FoodListLoader");
-//                    MealList.FoodTable = new HashMap<Integer, FoodItem>();
                     pdLoading.setMessage("Loading Food List ...");
                     pdLoading.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     WindowManager.LayoutParams wmlp = pdLoading.getWindow().getAttributes();
