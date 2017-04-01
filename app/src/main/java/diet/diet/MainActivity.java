@@ -424,6 +424,7 @@ import static diet.diet.R.layout.activity_main;
 
                         // show it
                         alertbox.show();
+                        break;
                     }
                     case R.id.exit:
                     {
