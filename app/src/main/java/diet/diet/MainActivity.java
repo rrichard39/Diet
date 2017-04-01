@@ -1,6 +1,6 @@
-        package diet.diet;
+package diet.diet;
 
-        import android.app.Activity;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -60,6 +60,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 import static diet.diet.R.layout.activity_main;
@@ -70,7 +71,7 @@ import static diet.diet.R.layout.activity_main;
             static Boolean trigger = false;
             public static String returnFromActivity = "false";
             Weight weightClass;
-            static Meals MealList = new Meals();
+//            static Meals MealList = new Meals();
             private Boolean exit = false;
 
             List<String> foodList = new ArrayList<>();  // for Spinner
@@ -289,7 +290,7 @@ import static diet.diet.R.layout.activity_main;
                         }
                         InitializeFoodList();
                         InitializeSpinner();
-                        tv_DailyTotalCalories.setText("Total calories for today: " + Double.toString(MealList.TOTAL_CALORIES));
+                        tv_DailyTotalCalories.setText("Total calories for today: " + Double.toString(Meals.TOTAL_CALORIES));
                     }
                 }
 
@@ -327,7 +328,7 @@ import static diet.diet.R.layout.activity_main;
                     spnr_FoodList.setSelection(spinnerPosition);
                 }
 
-                tv_DailyTotalCalories.setText("Total calories for today: " + Double.toString(MealList.TOTAL_CALORIES));
+                tv_DailyTotalCalories.setText("Total calories for today: " + Double.toString(Meals.TOTAL_CALORIES));
             }
 
             @Override
@@ -613,11 +614,11 @@ import static diet.diet.R.layout.activity_main;
                 String err = "";
                 try {
                     err = "0";
-                    MealList.FoodTable.clear();
+                    Meals.FoodTable.clear();
                     err = "1";
-                    MealList.MealList.clear();
+                    MealsActivity.MealList.clear();
                     err = "2";
-                    MealList.TOTAL_CALORIES = 0;
+                    Meals.TOTAL_CALORIES = 0;
                     err = "3";
                     WeightData.GraphArray.clear();
                     err = "4";
@@ -646,45 +647,56 @@ import static diet.diet.R.layout.activity_main;
                 Meal meal = new Meal();
                 FoodItem thisMeal;
                 Date today;
-                SimpleDateFormat formatter;
 
-                formatter = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+                String testDate;
+                String mealsDate;
+
+                SimpleDateFormat sdf;
+                sdf = new SimpleDateFormat("yyyy-MM-dd");
                 today = new Date();
 
-                if (MealList.DATE == null)
+                testDate = today.toString().substring(0, 10) + " " + today.toString().substring(24, 28);
+
+                if (Meals.DATE == null)
                 {
-                    MealList.DATE = today;
-                }
-                
-                if (MealList.MealList.isEmpty())
-                {
-                    MealList.DATE = today;
+                    Meals.DATE = today;
                 }
 
-                if (!MealList.DATE.equals(today))
+                mealsDate = Meals.DATE.toString().substring(0, 10) + " " + Meals.DATE.toString().substring(24, 28);
+
+                if (MealsActivity.MealList.isEmpty())
                 {
-                    MealList.DATE = today;
-                    MealList.MealList.clear();
+                    Meals.DATE = today;
+                }
+
+                if (!Objects.equals(testDate, mealsDate))
+                {
+                    Meals.DATE = today;
+                    MealsActivity.MealList.clear();
                 }
 
                 thisMeal = GetFoodItem(foodName);
                 meal.Food = foodName;
                 meal.Calories = thisMeal.calories;
                 meal.Quantity = mealQuantity;
-                MealList.MealList.add(meal);
+                MealsActivity.MealList.add(meal);
 
-                MealList.TOTAL_CALORIES = MealList.TOTAL_CALORIES + (thisMeal.calories * mealQuantity);
-                tv_DailyTotalCalories.setText("Total calories for today: " + Double.toString(MealList.TOTAL_CALORIES));
+                Meals.TOTAL_CALORIES = Meals.TOTAL_CALORIES + (thisMeal.calories * mealQuantity);
+                tv_DailyTotalCalories.setText("Total calories for today: " + Double.toString(Meals.TOTAL_CALORIES));
                 new EnterNewMeal().execute();
             }
 
             private void LoadDatabase()
             {
-                if (MealList.FoodTable.isEmpty())
+                if (Meals.FoodTable.isEmpty())
                 {
                     new FoodListLoader().execute();
                 }
-                if (MealList.MealList.isEmpty())
+                if (MealsActivity.MealList == null)
+                {
+                    MealsActivity.MealList = new ArrayList<>();
+                }
+                if (MealsActivity.MealList.isEmpty())
                 {
                     new GetDailyTotalCalories().execute();
                     new GetMeals().execute();
@@ -763,10 +775,10 @@ import static diet.diet.R.layout.activity_main;
                 foodList.clear();
                 foodList.add("");
                 if (!WeightData.FirstRun) {
-                    Iterator i = MealList.FoodTable.keySet().iterator();
+                    Iterator i = Meals.FoodTable.keySet().iterator();
                     while (i.hasNext()) {
                         key = (Integer) i.next();
-                        foodItem = MealList.FoodTable.get(key);
+                        foodItem = Meals.FoodTable.get(key);
                         foodList.add(foodItem.food);
                         Collections.sort(foodList);
                     }
@@ -778,14 +790,14 @@ import static diet.diet.R.layout.activity_main;
                 FoodItem tempValue;
                 Integer key;
                 String food;
-                Iterator i = MealList.FoodTable.keySet().iterator();
+                Iterator i = Meals.FoodTable.keySet().iterator();
 
                 while (i.hasNext()) {
                     key = (Integer) i.next();
-                    tempValue = MealList.FoodTable.get(key);
+                    tempValue = Meals.FoodTable.get(key);
                     food = tempValue.food;
                     if (food.equals(foodSelection)) {
-                        value = MealList.FoodTable.get(key);
+                        value = Meals.FoodTable.get(key);
                         break;
                     }
                 }
@@ -865,7 +877,7 @@ import static diet.diet.R.layout.activity_main;
 
                 @Override
                 protected Void doInBackground(Void... params) {
-                    MealList.FoodTable.clear();
+                    Meals.FoodTable.clear();
                     SoapObject request = new SoapObject(CommStrings.NAMESPACE, CommStrings.METHOD_GET_FOOD_LIST);
 
                     SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
@@ -900,7 +912,7 @@ import static diet.diet.R.layout.activity_main;
                                 foodItem.recNum = recNum;
                                 foodItem.food = food;
                                 foodItem.calories = calories;
-                                MealList.FoodTable.put(recNum, foodItem);
+                                Meals.FoodTable.put(recNum, foodItem);
                                 foodList.add(food);
                             }
                         } catch (XmlPullParserException e) {
@@ -996,7 +1008,7 @@ import static diet.diet.R.layout.activity_main;
                             SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
 
                             totalCalories = Double.parseDouble(response.toString());
-                            MealList.TOTAL_CALORIES = totalCalories;
+                            Meals.TOTAL_CALORIES = totalCalories;
                             dailyTotalCalories = String.format(Locale.US, "%1.1f", totalCalories);
                             success = true; // communications successful
 
@@ -1113,7 +1125,7 @@ import static diet.diet.R.layout.activity_main;
                                 meal.Food = item.getProperty("Food").toString();
                                 meal.Quantity = Double.parseDouble(item.getProperty("Quantity").toString());
                                 meal.Calories = Integer.parseInt(item.getProperty("Calories").toString());
-                                MealList.MealList.add(meal);
+                                MealsActivity.MealList.add(meal);
                             } else {
                                 break;
                             }

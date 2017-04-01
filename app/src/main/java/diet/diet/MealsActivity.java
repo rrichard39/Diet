@@ -6,11 +6,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
+import java.util.List;
 import java.util.Locale;
 
 public class MealsActivity extends AppCompatActivity {
 
     TextView tv_MealList;
+    public static List<Meal> MealList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +35,11 @@ public class MealsActivity extends AppCompatActivity {
         mealsString += "QTY  MEAL                                CAL\n";
         mealsString += "---------------------------------------------\n";
 
-        for (Integer i = 0; i <  Meals.MealList.size(); i++)
+        for (Integer i = 0; i <  MealList.size(); i++)
         {
-            food = Meals.MealList.get(i).Food.length() > 35 ? Meals.MealList.get(i).Food.substring(0, 32) + " ..." : Meals.MealList.get(i).Food;
-            quantity = Meals.MealList.get(i).Quantity;
-            total = Meals.MealList.get(i).Quantity * Meals.MealList.get(i).Calories;
+            food = MealList.get(i).Food.length() > 35 ? MealList.get(i).Food.substring(0, 32) + " ..." : MealList.get(i).Food;
+            quantity = MealList.get(i).Quantity;
+            total = MealList.get(i).Quantity * MealList.get(i).Calories;
             mealsString += String.format(Locale.US, "%4.1f %-33s %+6.1f\n", quantity, food, total);
         }
         mealsString += "---------------------------------------------\n";
