@@ -71,7 +71,7 @@ import static diet.diet.R.layout.activity_main;
             static Boolean trigger = false;
             public static String returnFromActivity = "false";
             Weight weightClass;
-//            static Meals MealList = new Meals();
+//            static FoodData MealList = new FoodData();
             private Boolean exit = false;
 
             List<String> foodList = new ArrayList<>();  // for Spinner
@@ -290,7 +290,7 @@ import static diet.diet.R.layout.activity_main;
                         }
                         InitializeFoodList();
                         InitializeSpinner();
-                        tv_DailyTotalCalories.setText("Total calories for today: " + Double.toString(Meals.TOTAL_CALORIES));
+                        tv_DailyTotalCalories.setText("Total calories for today: " + Double.toString(FoodData.TOTAL_CALORIES));
                     }
                 }
 
@@ -328,7 +328,7 @@ import static diet.diet.R.layout.activity_main;
                     spnr_FoodList.setSelection(spinnerPosition);
                 }
 
-                tv_DailyTotalCalories.setText("Total calories for today: " + Double.toString(Meals.TOTAL_CALORIES));
+                tv_DailyTotalCalories.setText("Total calories for today: " + Double.toString(FoodData.TOTAL_CALORIES));
             }
 
             @Override
@@ -615,11 +615,11 @@ import static diet.diet.R.layout.activity_main;
                 String err = "";
                 try {
                     err = "0";
-                    Meals.FoodTable.clear();
+                    FoodData.FoodTable.clear();
                     err = "1";
-                    MealsActivity.MealList.clear();
+                    FoodData.MealList.clear();
                     err = "2";
-                    Meals.TOTAL_CALORIES = 0;
+                    FoodData.TOTAL_CALORIES = 0;
                     err = "3";
                     WeightData.GraphArray.clear();
                     err = "4";
@@ -658,46 +658,46 @@ import static diet.diet.R.layout.activity_main;
 
                 testDate = today.toString().substring(0, 10) + " " + today.toString().substring(24, 28);
 
-                if (Meals.DATE == null)
+                if (FoodData.DATE == null)
                 {
-                    Meals.DATE = today;
+                    FoodData.DATE = today;
                 }
 
-                mealsDate = Meals.DATE.toString().substring(0, 10) + " " + Meals.DATE.toString().substring(24, 28);
+                mealsDate = FoodData.DATE.toString().substring(0, 10) + " " + FoodData.DATE.toString().substring(24, 28);
 
-                if (MealsActivity.MealList.isEmpty())
+                if (FoodData.MealList.isEmpty())
                 {
-                    Meals.DATE = today;
+                    FoodData.DATE = today;
                 }
 
                 if (!Objects.equals(testDate, mealsDate))
                 {
-                    Meals.DATE = today;
-                    MealsActivity.MealList.clear();
+                    FoodData.DATE = today;
+                    FoodData.MealList.clear();
                 }
 
                 thisMeal = GetFoodItem(foodName);
                 meal.Food = foodName;
                 meal.Calories = thisMeal.calories;
                 meal.Quantity = mealQuantity;
-                MealsActivity.MealList.add(meal);
+                FoodData.MealList.add(meal);
 
-                Meals.TOTAL_CALORIES = Meals.TOTAL_CALORIES + (thisMeal.calories * mealQuantity);
-                tv_DailyTotalCalories.setText("Total calories for today: " + Double.toString(Meals.TOTAL_CALORIES));
+                FoodData.TOTAL_CALORIES = FoodData.TOTAL_CALORIES + (thisMeal.calories * mealQuantity);
+                tv_DailyTotalCalories.setText("Total calories for today: " + Double.toString(FoodData.TOTAL_CALORIES));
                 new EnterNewMeal().execute();
             }
 
             private void LoadDatabase()
             {
-                if (Meals.FoodTable.isEmpty())
+                if (FoodData.FoodTable.isEmpty())
                 {
                     new FoodListLoader().execute();
                 }
-                if (MealsActivity.MealList == null)
+                if (FoodData.MealList == null)
                 {
-                    MealsActivity.MealList = new ArrayList<>();
+                    FoodData.MealList = new ArrayList<>();
                 }
-                if (MealsActivity.MealList.isEmpty())
+                if (FoodData.MealList.isEmpty())
                 {
                     new GetDailyTotalCalories().execute();
                     new GetMeals().execute();
@@ -776,10 +776,10 @@ import static diet.diet.R.layout.activity_main;
                 foodList.clear();
                 foodList.add("");
                 if (!WeightData.FirstRun) {
-                    Iterator i = Meals.FoodTable.keySet().iterator();
+                    Iterator i = FoodData.FoodTable.keySet().iterator();
                     while (i.hasNext()) {
                         key = (Integer) i.next();
-                        foodItem = Meals.FoodTable.get(key);
+                        foodItem = FoodData.FoodTable.get(key);
                         foodList.add(foodItem.food);
                         Collections.sort(foodList);
                     }
@@ -791,14 +791,14 @@ import static diet.diet.R.layout.activity_main;
                 FoodItem tempValue;
                 Integer key;
                 String food;
-                Iterator i = Meals.FoodTable.keySet().iterator();
+                Iterator i = FoodData.FoodTable.keySet().iterator();
 
                 while (i.hasNext()) {
                     key = (Integer) i.next();
-                    tempValue = Meals.FoodTable.get(key);
+                    tempValue = FoodData.FoodTable.get(key);
                     food = tempValue.food;
                     if (food.equals(foodSelection)) {
-                        value = Meals.FoodTable.get(key);
+                        value = FoodData.FoodTable.get(key);
                         break;
                     }
                 }
@@ -878,7 +878,7 @@ import static diet.diet.R.layout.activity_main;
 
                 @Override
                 protected Void doInBackground(Void... params) {
-                    Meals.FoodTable.clear();
+                    FoodData.FoodTable.clear();
                     SoapObject request = new SoapObject(CommStrings.NAMESPACE, CommStrings.METHOD_GET_FOOD_LIST);
 
                     SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
@@ -913,7 +913,7 @@ import static diet.diet.R.layout.activity_main;
                                 foodItem.recNum = recNum;
                                 foodItem.food = food;
                                 foodItem.calories = calories;
-                                Meals.FoodTable.put(recNum, foodItem);
+                                FoodData.FoodTable.put(recNum, foodItem);
                                 foodList.add(food);
                             }
                         } catch (XmlPullParserException e) {
@@ -1009,7 +1009,7 @@ import static diet.diet.R.layout.activity_main;
                             SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
 
                             totalCalories = Double.parseDouble(response.toString());
-                            Meals.TOTAL_CALORIES = totalCalories;
+                            FoodData.TOTAL_CALORIES = totalCalories;
                             dailyTotalCalories = String.format(Locale.US, "%1.1f", totalCalories);
                             success = true; // communications successful
 
@@ -1075,7 +1075,7 @@ import static diet.diet.R.layout.activity_main;
                     pdLoading.setIndeterminate(true);
                     pdLoading.setCancelable(false);
                     Log.i("CYBERON", "GetMeals");
-                    pdLoading.setMessage("Loading Daily Meals ...");
+                    pdLoading.setMessage("Loading Daily FoodData ...");
                     pdLoading.requestWindowFeature(Window.FEATURE_NO_TITLE);
                     WindowManager.LayoutParams wmlp = pdLoading.getWindow().getAttributes();
                     wmlp.gravity = Gravity.TOP;
@@ -1126,7 +1126,7 @@ import static diet.diet.R.layout.activity_main;
                                 meal.Food = item.getProperty("Food").toString();
                                 meal.Quantity = Double.parseDouble(item.getProperty("Quantity").toString());
                                 meal.Calories = Integer.parseInt(item.getProperty("Calories").toString());
-                                MealsActivity.MealList.add(meal);
+                                FoodData.MealList.add(meal);
                             } else {
                                 break;
                             }
@@ -1280,7 +1280,7 @@ import static diet.diet.R.layout.activity_main;
                     Log.i("CYBERON", "EnterNewMeal");
                     pdLoading.setIndeterminate(true);
                     pdLoading.setCancelable(false);
-                    pdLoading.setMessage("Adding daily meal to Today's Meals ...");
+                    pdLoading.setMessage("Adding daily meal to Today's FoodData ...");
                     pdLoading.show();
                 }
 
