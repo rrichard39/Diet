@@ -141,24 +141,24 @@ public class DetailsActivity extends AppCompatActivity implements View.OnClickLi
         weekLoss = (WeightData.StartWeight - WeightData.LastWeight) / weeks;
         dayLoss = (WeightData.StartWeight - WeightData.LastWeight) / days;
 
-        tv_StartDate.setText(String.format(Locale.US, "%-19s %s", "Start date:", formatter.format(WeightData.StartDate)));
-        tv_LowestWeightDate.setText(String.format(Locale.US, "%-19s %s", "Lowest weight date:", WeightData.LowestWeightDate));
-        tv_TargetDate.setText(String.format(Locale.US, "%-19s %s", "Target date:", formatter.format(WeightData.TargetDate)));
-        tv_AchieveDate.setText(String.format(Locale.US, "%-19s %s", "Achieve date:", formatter.format(WeightData.AchieveDate)));
+        tv_StartDate.setText(String.format(Locale.US, "%-18s %s", "Start date:", formatter.format(WeightData.StartDate)));
+        tv_LowestWeightDate.setText(String.format(Locale.US, "%-18s %s", "Lowest wt date:", WeightData.LowestWeightDate));
+        tv_TargetDate.setText(String.format(Locale.US, "%-18s %s", "Target date:", formatter.format(WeightData.TargetDate)));
+        tv_AchieveDate.setText(String.format(Locale.US, "%-18s %s", "Achieve date:", formatter.format(WeightData.AchieveDate)));
 
-        tv_StartWeight.setText(String.format(Locale.US, "%-20s %5.1f lbs", "Start weight:", WeightData.StartWeight));
-        tv_LastWeight.setText(String.format(Locale.US, "%-20s %5.1f lbs", "Last weight:", WeightData.LastWeight));
-        tv_DevFromLS.setText(String.format(Locale.US, "%-20s %+5.1f lbs", "Dev. From LS:", WeightData.DevFromLS));
-        tv_GainLoss.setText(String.format(Locale.US, "%-20s %+5.1f lbs", "Week Loss/Gain:", WeightData.GainLoss));
-        tv_LowestWeight.setText(String.format(Locale.US, "%-20s %5.1f lbs", "Lowest weight:", WeightData.LowestWeight));
-        tv_TargetWeight.setText(String.format(Locale.US, "%-20s %5.1f lbs", "Target weight:", PersonalData.TargetWeight));
-        tv_Variance.setText(String.format(Locale.US, "%-20s %5.1f lbs", "Left to lose:", WeightData.Variance));
+        tv_StartWeight.setText(String.format(Locale.US, "%-19s %5.1f lbs", "Start weight:", WeightData.StartWeight));
+        tv_LastWeight.setText(String.format(Locale.US, "%-19s %5.1f lbs", "Last weight:", WeightData.LastWeight));
+        tv_DevFromLS.setText(String.format(Locale.US, "%-19s %+5.1f lbs", "Dev. From LS:", WeightData.DevFromLS));
+        tv_GainLoss.setText(String.format(Locale.US, "%-19s %+5.1f lbs", "Week Loss/Gain:", WeightData.GainLoss));
+        tv_LowestWeight.setText(String.format(Locale.US, "%-19s %5.1f lbs", "Lowest weight:", WeightData.LowestWeight));
+        tv_TargetWeight.setText(String.format(Locale.US, "%-19s %5.1f lbs", "Target weight:", PersonalData.TargetWeight));
+        tv_Variance.setText(String.format(Locale.US, "%-19s %5.1f lbs", "Left to lose:", WeightData.Variance));
 
-        tv_TotalLoss.setText(String.format(Locale.US, "%-20s %5.1f lbs", "Total loss:",  totalLoss));
-        tv_WeeklyLoss.setText(String.format(Locale.US, "%-20s %5.1f lbs", "Avg. Weekly loss:", weekLoss));
-        tv_DailyLoss.setText(String.format(Locale.US, "%-20s %5.1f lbs", "Avg. Daily loss:", dayLoss));
+        tv_TotalLoss.setText(String.format(Locale.US, "%-19s %5.1f lbs", "Total loss:",  totalLoss));
+        tv_WeeklyLoss.setText(String.format(Locale.US, "%-19s %5.1f lbs", "Avg. Weekly loss:", weekLoss));
+        tv_DailyLoss.setText(String.format(Locale.US, "%-19s %5.1f lbs", "Avg. Daily loss:", dayLoss));
 
-        tv_BMI.setText(String.format(Locale.US, "%-20s %5.1f", "BMI:", WeightData.BMI));
+        tv_BMI.setText(String.format(Locale.US, "%-19s %5.1f", "BMI:", WeightData.BMI));
     }
 
     @Override
